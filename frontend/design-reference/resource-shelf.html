@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margins — Resource Shelf</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"DM Sans",sans-serif;color:#292721;min-height:100vh;
+background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.55),transparent 25%),
+radial-gradient(circle at 85% 70%,rgba(130,90,40,.08),transparent 25%),
+radial-gradient(rgba(90,65,35,.09) 1px,transparent 1px);
+background-size:auto,auto,9px 9px;background-color:#e9dcc3}
+:root{--ink:#282722;--ink-soft:#59564f;--paper:#fffdf3;--blue:#345f9e;--blue-light:#dae6f4;
+--red:#d74b42;--yellow:#efd477;--green:#bdd7bc}
+.page{width:min(1450px,calc(100% - 28px));margin:auto;padding:28px 0 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:51px;height:51px;display:grid;place-items:center;font-family:"Caveat",cursive;
+font-size:25px;font-weight:700;color:#fff;background:var(--blue);border-radius:7px 12px 8px 13px;
+transform:rotate(-5deg);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.brand-name{font-size:18px;font-weight:800}
+.brand-subtitle{margin-top:2px;font-size:9px;letter-spacing:.18em;opacity:.45}
+h1.title{font-family:"Caveat",cursive;font-size:clamp(40px,5vw,60px);line-height:.85;margin-bottom:6px}
+.subtitle{font-size:13px;color:var(--ink-soft);margin-bottom:22px}
+.search{padding:12px 18px;background:rgba(255,253,243,.85);border:2px solid var(--ink);
+box-shadow:3px 4px 0 var(--ink);font-family:"Patrick Hand",cursive;font-size:16px;width:100%;
+max-width:480px;margin-bottom:24px}
+.subjects{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.subject-pill{padding:8px 16px;background:var(--blue-light);border:2px solid var(--ink);
+box-shadow:2px 3px 0 var(--ink);font-family:"Patrick Hand",cursive;font-size:15px;cursor:pointer}
+.subject-pill b{margin-left:6px;opacity:.6;font-family:"DM Sans",sans-serif;font-size:12px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.rcard{position:relative;padding:16px;background:rgba(255,253,243,.92);border:2px solid var(--ink);
+box-shadow:4px 5px 0 var(--ink);transform:rotate(-.4deg)}
+.rcard:nth-child(even){transform:rotate(.4deg)}
+.rcard .filetype{display:inline-block;padding:2px 8px;background:var(--yellow);border:1px solid var(--ink);
+font-size:9px;font-weight:800;letter-spacing:.06em;margin-bottom:8px}
+.rcard h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.rcard .desc{font-size:11px;color:var(--ink-soft);margin-bottom:10px;line-height:1.4}
+.rcard .meta{display:flex;justify-content:space-between;align-items:center;font-family:"Patrick Hand",cursive;
+font-size:13px;opacity:.6;border-top:1.5px dashed rgba(40,40,35,.25);padding-top:8px}
+.footer{margin-top:42px;text-align:center;font-family:"Caveat",cursive;font-size:24px;color:#596779}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="topbar">
+<div class="brand"><div class="brand-mark">M</div>
+<div><div class="brand-name">MARGINS</div><div class="brand-subtitle">AI&DS · DIVISION A</div></div></div>
+</header>
+
+<h1 class="title">resource shelf 📚</h1>
+<p class="subtitle">notes, PYQs & links — shared by the class</p>
+
+<input class="search" placeholder="🔍 search resources...">
+
+<div class="subjects">
+<span class="subject-pill">DBMS <b>24</b></span>
+<span class="subject-pill">Python <b>18</b></span>
+<span class="subject-pill">Maths <b>31</b></span>
+<span class="subject-pill">Statistics <b>12</b></span>
+</div>
+
+<div class="grid-cards">
+<div class="rcard"><span class="filetype">PDF</span><h4>DBMS Unit 3 Notes</h4>
+<div class="desc">Complete handwritten notes covering normalization, BCNF, functional dependencies.</div>
+<div class="meta"><span>Rahul S.</span><span>🔖 14</span></div></div>
+
+<div class="rcard"><span class="filetype">LINK</span><h4>NPTEL DBMS Lecture</h4>
+<div class="desc">External video lecture on transaction management.</div>
+<div class="meta"><span>Ishan G.</span><span>🔖 6</span></div></div>
+
+<div class="rcard"><span class="filetype">PDF</span><h4>Python PYQ 2025</h4>
+<div class="desc">Previous year question paper with marking scheme.</div>
+<div class="meta"><span>Arjun S.</span><span>🔖 22</span></div></div>
+
+<div class="rcard"><span class="filetype">PDF</span><h4>Maths Unit 2 Formulas</h4>
+<div class="desc">Quick reference sheet — Laplace transforms.</div>
+<div class="meta"><span>Neha M.</span><span>🔖 9</span></div></div>
+</div>
+
+<div class="footer">— the shelf grows with every upload —</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Margins — TCET Student Hub. A student-first campus dashboard for notices, resources, doubts, people, and personal activity." />
+  <title>Margins — TCET Student Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================
+       MARGINS — COMPLETE FRONTEND PROTOTYPE
+       Visual language: premium sketchbook / study-desk / paper UI
+       ========================================================= */
+    :root {
+      --bg: #e9dfcb;
+      --bg-deep: #dcccad;
+      --paper: #fffdf5;
+      --paper-2: #f8f1df;
+      --ink: #25241f;
+      --ink-soft: #69665d;
+      --line: rgba(37, 36, 31, .14);
+      --line-strong: rgba(37, 36, 31, .26);
+      --blue: #3b64a3;
+      --blue-dark: #294d7f;
+      --blue-soft: #dce8f4;
+      --yellow: #edd779;
+      --yellow-soft: #f6edbd;
+      --green: #cfe0c8;
+      --green-dark: #567053;
+      --red: #d85e55;
+      --red-soft: #f3c7c0;
+      --lavender: #ddd5e9;
+      --white: #ffffff;
+      --shadow: 5px 6px 0 var(--ink);
+      --shadow-sm: 3px 4px 0 var(--ink);
+      --radius: 16px;
+      --sidebar: 246px;
+      --max: 1480px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 11%, rgba(255,255,255,.62), transparent 21%),
+        radial-gradient(circle at 84% 72%, rgba(95,74,44,.08), transparent 24%),
+        radial-gradient(rgba(87,67,39,.09) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, auto, 11px 11px, auto;
+      font-family: "DM Sans", sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .45;
+      background:
+        linear-gradient(rgba(48,73,101,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(48,73,101,.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+      z-index: -1;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+    :focus-visible { outline: 3px solid rgba(59,100,163,.55); outline-offset: 3px; }
+
+    .app {
+      width: min(100%, var(--max));
+      min-height: 100vh;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      min-height: 100vh;
+      padding: 26px 16px 20px;
+      border-right: 1px dashed rgba(37,36,31,.2);
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      z-index: 20;
+    }
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 4px 6px 22px;
+    }
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: white;
+      border: 2px solid var(--ink);
+      border-radius: 7px 12px 8px 13px;
+      transform: rotate(-5deg);
+      box-shadow: 4px 4px 0 var(--ink);
+      font: 700 25px/1 "Caveat", cursive;
+    }
+    .brand-copy strong { display: block; font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+    .brand-copy span { display: block; margin-top: 2px; font-size: 9px; letter-spacing: .17em; opacity: .48; }
+
+    .nav-title {
+      padding: 5px 12px 9px;
+      font: 16px "Patrick Hand", cursive;
+      color: var(--blue-dark);
+    }
+    .nav { display: grid; gap: 5px; }
+    .nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      text-align: left;
+      color: var(--ink-soft);
+      background: transparent;
+      border: 2px solid transparent;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: .18s var(--ease);
+    }
+    .nav button:hover { background: rgba(255,253,245,.56); transform: translateX(2px); }
+    .nav button.active {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--ink);
+      box-shadow: 3px 3px 0 rgba(37,36,31,.25);
+      transform: rotate(-.5deg);
+    }
+    .nav button.active .nav-icon { color: var(--blue); }
+    .nav-label { font-size: 12px; font-weight: 700; }
+    .nav-count {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--yellow-soft);
+      font-size: 9px;
+      font-weight: 800;
+    }
+    .nav-sep { margin: 12px 8px; border-top: 1px dashed var(--line-strong); }
+    .sidebar-note {
+      margin-top: 18px;
+      padding: 14px;
+      background: var(--green);
+      border: 2px solid var(--ink);
+      transform: rotate(1deg);
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-note small { display: block; font-family: "Patrick Hand", cursive; font-size: 14px; opacity: .65; }
+    .sidebar-note strong { display: block; margin: 2px 0 4px; font: 25px/.92 "Caveat", cursive; color: var(--green-dark); }
+    .sidebar-note p { font-size: 9px; line-height: 1.45; opacity: .7; }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 18px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--ink-soft);
+      font: 14px "Patrick Hand", cursive;
+    }
+    .sidebar-footer a { text-decoration: underline; text-decoration-style: wavy; text-underline-offset: 3px; }
+
+    /* ---------- MAIN ---------- */
+    .main { min-width: 0; padding: 24px 24px 56px; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      padding: 4px 0 10px;
+      backdrop-filter: blur(8px);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .mobile-brand { display: none; }
+    .search-trigger {
+      min-width: 280px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 14px;
+      background: rgba(255,253,245,.76);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      box-shadow: 3px 4px 0 rgba(37,36,31,.2);
+      cursor: pointer;
+      color: var(--ink-soft);
+      text-align: left;
+    }
+    .search-trigger span { font-size: 11px; }
+    .top-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,253,245,.8);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      box-shadow: 3px 4px 0 var(--ink);
+      cursor: pointer;
+      transition: .18s var(--ease);
+      position: relative;
+    }
+    .icon-btn:hover { transform: translate(2px,2px); box-shadow: 1px 2px 0 var(--ink); }
+    .notif-dot {
+      position: absolute;
+      top: 3px;
+      right: 2px;
+      width: 9px;
+      height: 9px;
+      background: var(--red);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+    }
+    .avatar {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 45% 55% 52% 48%;
+      background: var(--lavender);
+      font: 700 18px "Caveat", cursive;
+      box-shadow: 3px 4px 0 var(--ink);
+      transform: rotate(2deg);
+      cursor: pointer;
+    }
+
+    .view { display: none; animation: viewIn .28s var(--ease); }
+    .view.active { display: block; }
+    @keyframes viewIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---------- COMMON ---------- */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--blue);
+      font: 18px "Patrick Hand", cursive;
+      transform: rotate(-1deg);
+      border-bottom: 2px wavy var(--blue);
+      text-underline-offset: 4px;
+    }
+    .hand { font-family: "Caveat", cursive; }
+    .muted { color: var(--ink-soft); }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 15px; }
+    .section-head h2 { font: 38px/.95 "Caveat", cursive; letter-spacing: -.03em; }
+    .section-head p { max-width: 580px; margin-top: 5px; color: var(--ink-soft); font-size: 11px; line-height: 1.6; }
+    .section-link { font: 15px "Patrick Hand", cursive; color: var(--blue); text-decoration: underline; text-decoration-style: wavy; text-underline-offset: 4px; cursor: pointer; background: none; }
+
+    .card {
+      position: relative;
+      background: rgba(255,253,245,.92);
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+    .card-soft { box-shadow: var(--shadow-sm); }
+    .inner-line::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(37,36,31,.12);
+      pointer-events: none;
+    }
+    .btn {
+      min-height: 40px;
+      padding: 9px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: .18s var(--ease);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .btn:hover { transform: translate(2px,2px); box-shadow: 1px 2px 0 var(--ink); }
+    .btn.primary { background: var(--blue); color: white; }
+    .btn.yellow { background: var(--yellow); }
+    .btn.green { background: var(--green); }
+    .btn.ghost { background: transparent; box-shadow: none; border-color: var(--line-strong); }
+    .btn.small { min-height: 34px; padding: 7px 11px; font-size: 10px; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip {
+      padding: 6px 10px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      background: var(--paper);
+      font: 14px "Patrick Hand", cursive;
+      cursor: pointer;
+      transition: .16s var(--ease);
+    }
+    .chip:hover, .chip.active { background: var(--blue); color: white; transform: translateY(-1px); }
+    .input, .select, .textarea {
+      width: 100%;
+      border: 2px solid var(--ink);
+      background: rgba(255,255,255,.65);
+      padding: 11px 12px;
+      border-radius: 9px;
+      color: var(--ink);
+      font-size: 11px;
+    }
+    .textarea { min-height: 115px; resize: vertical; }
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: 10px; font-weight: 800; }
+
+    /* ---------- HOME ---------- */
+    .home-intro { display: flex; justify-content: space-between; gap: 22px; align-items: end; margin: 16px 0 22px; }
+    .home-intro h1 { margin-top: 3px; font: 700 clamp(52px,6vw,84px)/.84 "Caveat", cursive; letter-spacing: -.055em; }
+    .home-intro p { margin-top: 12px; font-size: 12px; color: var(--ink-soft); }
+    .date-note { min-width: 158px; padding: 18px 21px; background: #dbe5cc; border: 2px solid var(--ink); box-shadow: var(--shadow); transform: rotate(2deg); position: relative; }
+    .date-note::before { content:""; position:absolute; top:-10px; left:50%; width:78px; height:19px; transform:translateX(-50%) rotate(-3deg); background:rgba(221,197,143,.8); }
+    .date-note small { display:block; font: 14px "Patrick Hand", cursive; opacity:.65; }
+    .date-note strong { display:block; margin:2px 0; font: 700 34px/.85 "Caveat", cursive; }
+
+    .hero-wrap { position: relative; margin-bottom: 22px; }
+    .hero-note { position: absolute; right: 18px; top: -18px; color: var(--red); font: 20px "Caveat", cursive; transform: rotate(6deg); z-index: 2; }
+    .hero-note::after { content:"↙"; display:block; margin-left:-15px; margin-top:-4px; font-size:25px; }
+    .hero { padding: 29px 34px 30px; transform: rotate(-.45deg); overflow: hidden; }
+    .hero .decor { position:absolute; right:34px; bottom:-25px; width:210px; height:210px; border:1.5px solid rgba(59,100,163,.17); border-radius:52% 48% 60% 40%; transform:rotate(24deg); }
+    .hero-label { position:relative; z-index:2; display:flex; align-items:center; gap:8px; font-size:10px; letter-spacing:.14em; font-weight:800; color:var(--red); }
+    .hero-dot { width:9px; height:9px; border-radius:50%; background:var(--red); border:2px solid var(--ink); }
+    .hero h2 { position:relative; z-index:2; max-width:850px; margin-top:10px; font:700 clamp(42px,5vw,68px)/.88 "Caveat", cursive; color:var(--blue-dark); }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:7px 13px; margin-top:17px; color:var(--ink-soft); font:15px "Patrick Hand", cursive; position:relative; z-index:2; }
+    .hero-actions { display:flex; gap:10px; margin-top:19px; position:relative; z-index:2; }
+
+    .filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin: 0 0 18px; }
+    .filter-title { margin-right:4px; font:17px "Patrick Hand", cursive; color:var(--ink-soft); }
+
+    .home-grid { display:grid; grid-template-columns:minmax(0,1fr) 332px; gap:18px; align-items:start; }
+    .stack { display:grid; gap:18px; }
+    .panel { padding: 20px; }
+    .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; position:relative; z-index:2; }
+    .panel-head h3 { font: 31px/.95 "Caveat", cursive; }
+    .panel-head a { font:15px "Patrick Hand", cursive; color:var(--blue); text-decoration:underline; text-decoration-style:wavy; }
+
+    .notice-row { display:grid; grid-template-columns:44px minmax(0,1fr) auto; gap:12px; align-items:center; padding:14px 4px; border-bottom:1.5px dashed rgba(37,36,31,.19); cursor:pointer; transition:.18s var(--ease); position:relative; z-index:2; }
+    .notice-row:last-child { border-bottom:0; }
+    .notice-row:hover { transform:translateX(4px) rotate(-.25deg); }
+    .mini-icon { width:42px; height:42px; display:grid; place-items:center; border:2px solid var(--ink); background:var(--blue-soft); border-radius:45% 55% 48% 52%; box-shadow:2px 2px 0 rgba(37,36,31,.25); font-weight:800; }
+    .row-tag { display:inline-block; padding:2px 7px; border:1px solid var(--ink); margin-bottom:4px; font-size:8px; letter-spacing:.08em; font-weight:800; }
+    .row-tag.exam { background:var(--red-soft); } .row-tag.placement { background:var(--yellow); } .row-tag.general { background:#cedbee; } .row-tag.event { background:var(--green); } .row-tag.holiday { background:#e4d7eb; }
+    .row-title { font-size:12px; line-height:1.4; font-weight:700; }
+    .row-date { font:14px "Patrick Hand", cursive; opacity:.5; white-space:nowrap; }
+    .row-sub { margin-top:2px; font-size:9px; color:var(--ink-soft); }
+
+    .sticky { padding:23px 20px; background:var(--yellow); transform:rotate(1deg); }
+    .sticky-title { margin-bottom:11px; font: 31px/.95 "Caveat", cursive; }
+    .event { display:grid; grid-template-columns:49px 1fr; gap:12px; padding:10px 0; border-bottom:1.5px dashed rgba(37,36,31,.2); align-items:center; }
+    .event:last-child { border-bottom:0; }
+    .event-date { padding:7px 4px; text-align:center; border:2px solid var(--ink); background:#dce8df; transform:rotate(-3deg); font:17px/.85 "Caveat", cursive; }
+    .event-title { font-size:11px; font-weight:800; } .event-meta { margin-top:3px; font-size:9px; opacity:.5; }
+
+    .tool-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .tool { min-height:110px; padding:13px; text-align:left; border:2px solid var(--ink); box-shadow:var(--shadow-sm); cursor:pointer; transition:.2s var(--ease); }
+    .tool:nth-child(1){ background:#edd978; transform:rotate(-1deg); }
+    .tool:nth-child(2){ background:#c8d9ea; transform:rotate(.8deg); }
+    .tool:nth-child(3){ background:#c5ddb9; transform:rotate(.7deg); }
+    .tool:nth-child(4){ background:#eabdb3; transform:rotate(-.7deg); }
+    .tool:hover { transform:translateY(-3px) rotate(0); box-shadow:2px 2px 0 var(--ink); }
+    .tool-icon { font-size:21px; margin-bottom:8px; } .tool-name { font:17px "Patrick Hand", cursive; } .tool-description { margin-top:2px; font-size:8px; opacity:.55; line-height:1.4; }
+
+    .ai-card { padding:22px; background:#d7e4ef; transform:rotate(-1deg); overflow:hidden; }
+    .ai-card::before { content:"thinking..."; position:absolute; right:16px; top:10px; color:var(--blue); font:16px "Caveat", cursive; transform:rotate(7deg); opacity:.72; }
+    .ai-card::after { content:"↗"; position:absolute; right:15px; top:26px; color:var(--blue); font:25px "Caveat", cursive; transform:rotate(11deg); }
+    .ai-title { font:31px/.95 "Caveat", cursive; color:var(--blue-dark); }
+    .ai-text { max-width:245px; margin-top:5px; font-size:10px; line-height:1.6; opacity:.62; }
+    .ai-button { margin-top:14px; width:100%; }
+
+    .community-banner { margin-top:18px; padding:15px 18px; background:rgba(255,253,245,.82); border:2px dashed var(--ink); display:flex; align-items:center; justify-content:space-between; gap:14px; transform:rotate(.15deg); }
+    .community-banner strong { display:block; font:24px/.9 "Caveat", cursive; } .community-banner span { display:block; margin-top:3px; font-size:10px; color:var(--ink-soft); }
+
+    /* ---------- LIST / DETAIL PAGES ---------- */
+    .page-cover { padding:22px 23px; margin-bottom:17px; background:var(--paper); transform:rotate(-.2deg); }
+    .page-cover.greenish { background:#e3ecd9; }
+    .page-cover.blueish { background:#dfeaf4; }
+    .page-cover h1 { font:700 55px/.88 "Caveat", cursive; color:var(--blue-dark); }
+    .page-cover p { margin-top:8px; max-width:720px; color:var(--ink-soft); font-size:11px; line-height:1.6; }
+    .toolbar { display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+    .toolbar .search-box { flex:1 1 240px; }
+    .search-box { position:relative; }
+    .search-box svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.45; }
+    .search-box input { padding-left:36px; }
+
+    .notice-card { padding:17px; margin-bottom:11px; cursor:pointer; transition:.18s var(--ease); }
+    .notice-card:hover { transform:translateY(-2px) rotate(-.15deg); }
+    .notice-card-grid { display:grid; grid-template-columns:44px 1fr auto; gap:12px; align-items:start; }
+    .notice-card h3 { font-size:15px; line-height:1.35; }
+    .notice-card p { margin-top:5px; font-size:10px; line-height:1.55; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .notice-card-side { text-align:right; font:14px "Patrick Hand", cursive; color:var(--ink-soft); }
+    .pin { margin-top:5px; padding:3px 6px; display:inline-block; border:1px solid var(--ink); background:var(--yellow); font-size:8px; font-family:"DM Sans",sans-serif; font-weight:800; }
+
+    /* ---------- RESOURCES ---------- */
+    .resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; }
+    .resource { padding:14px; min-height:185px; cursor:pointer; transition:.18s var(--ease); }
+    .resource:hover { transform:translateY(-3px) rotate(-.25deg); }
+    .resource-top { display:flex; align-items:center; justify-content:space-between; }
+    .file-icon { width:44px; height:49px; display:grid; place-items:center; border:2px solid var(--ink); background:var(--blue-soft); border-radius:8px 5px 9px 4px; font-weight:900; box-shadow:2px 2px 0 rgba(37,36,31,.22); }
+    .resource-type { padding:4px 7px; background:var(--paper-2); border:1px solid var(--ink); font-size:8px; font-weight:800; }
+    .resource h3 { margin-top:14px; font-size:13px; line-height:1.35; }
+    .resource p { margin-top:5px; font-size:9px; color:var(--ink-soft); line-height:1.5; }
+    .resource-meta { margin-top:11px; display:flex; justify-content:space-between; align-items:center; color:var(--ink-soft); font-size:9px; }
+    .star { background:none; cursor:pointer; font-size:18px; }
+    .resource-foot { margin-top:11px; display:flex; gap:6px; flex-wrap:wrap; }
+    .micro-pill { padding:4px 6px; border:1px solid var(--line-strong); border-radius:999px; font-size:8px; }
+
+    .request-card { margin-top:16px; padding:17px; background:var(--lavender); transform:rotate(.2deg); }
+    .request-card h3 { font:27px/.9 "Caveat", cursive; } .request-card p { margin-top:4px; font-size:10px; color:var(--ink-soft); }
+
+    /* ---------- DOUBTS ---------- */
+    .doubt-list { display:grid; gap:10px; }
+    .doubt-card { padding:16px; }
+    .doubt-main { display:grid; grid-template-columns:1fr auto; gap:12px; }
+    .doubt-title { font-size:14px; line-height:1.35; font-weight:800; }
+    .doubt-excerpt { margin-top:5px; font-size:10px; color:var(--ink-soft); line-height:1.55; }
+    .doubt-foot { display:flex; align-items:center; justify-content:space-between; margin-top:12px; gap:8px; flex-wrap:wrap; }
+    .status { padding:5px 8px; border:1px solid var(--ink); font-size:8px; font-weight:800; background:var(--green); }
+    .status.open { background:var(--red-soft); }
+    .status.answered { background:var(--yellow); }
+    .statline { display:flex; gap:12px; font-size:9px; color:var(--ink-soft); }
+
+    /* ---------- PEOPLE ---------- */
+    .people-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; }
+    .person { padding:16px; }
+    .person-head { display:flex; align-items:center; gap:11px; }
+    .person-avatar { width:54px; height:54px; flex:0 0 54px; display:grid; place-items:center; border:2px solid var(--ink); box-shadow:2px 3px 0 var(--ink); font:700 22px "Caveat", cursive; }
+    .person:nth-child(3n+1) .person-avatar { background:#dfd4ec; transform:rotate(-4deg); }
+    .person:nth-child(3n+2) .person-avatar { background:#d6e5d1; transform:rotate(3deg); }
+    .person:nth-child(3n+3) .person-avatar { background:#f1d9a1; transform:rotate(-2deg); }
+    .person h3 { font-size:13px; } .person-role { margin-top:2px; font-size:9px; color:var(--ink-soft); }
+    .person-bio { margin-top:11px; font-size:9px; color:var(--ink-soft); line-height:1.5; min-height:29px; }
+    .skill-list { display:flex; flex-wrap:wrap; gap:5px; margin-top:11px; }
+    .skill { padding:4px 6px; border:1px solid var(--ink); background:var(--paper-2); font-size:8px; }
+    .person-stats { margin-top:13px; padding-top:10px; border-top:1px dashed var(--line-strong); display:flex; justify-content:space-between; font-size:8px; color:var(--ink-soft); }
+
+    /* ---------- ACTIVITY / SAVED ---------- */
+    .two-col { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr); gap:16px; }
+    .activity-list { display:grid; gap:8px; }
+    .activity-item { padding:13px 14px; display:grid; grid-template-columns:35px 1fr auto; gap:10px; align-items:center; }
+    .activity-dot { width:31px; height:31px; display:grid; place-items:center; border:1.5px solid var(--ink); border-radius:50%; background:var(--blue-soft); font-size:13px; }
+    .activity-item h4 { font-size:11px; } .activity-item p { margin-top:3px; font-size:8px; color:var(--ink-soft); }
+    .activity-date { font:13px "Patrick Hand", cursive; opacity:.55; }
+    .stats-card { padding:19px; background:#e3ecd9; }
+    .stats-card h3 { font:28px/.9 "Caveat", cursive; }
+    .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:13px; }
+    .stat { padding:11px; border:1.5px solid var(--ink); background:rgba(255,253,245,.55); }
+    .stat strong { display:block; font:25px/.9 "Caveat", cursive; color:var(--blue-dark); } .stat span { display:block; margin-top:4px; font-size:8px; color:var(--ink-soft); }
+
+    /* ---------- NOTIFICATIONS ---------- */
+    .notif-list { display:grid; gap:9px; }
+    .notif-item { padding:13px; display:grid; grid-template-columns:38px 1fr auto; gap:10px; align-items:center; }
+    .notif-icon { width:36px; height:36px; display:grid; place-items:center; border:2px solid var(--ink); border-radius:50%; background:var(--yellow); }
+    .notif-item.unread { background:#eef3f7; }
+    .notif-item h4 { font-size:10px; } .notif-item p { margin-top:3px; font-size:8px; color:var(--ink-soft); }
+    .notif-time { font:13px "Patrick Hand", cursive; opacity:.48; }
+
+    /* ---------- SETTINGS ---------- */
+    .settings-grid { display:grid; grid-template-columns:190px minmax(0,1fr); gap:15px; align-items:start; }
+    .settings-tabs { display:grid; gap:6px; position:sticky; top:78px; }
+    .settings-tab { padding:11px 12px; text-align:left; border:2px solid transparent; background:rgba(255,253,245,.5); cursor:pointer; font-size:10px; font-weight:800; }
+    .settings-tab.active { background:var(--paper); border-color:var(--ink); box-shadow:3px 3px 0 rgba(37,36,31,.18); }
+    .settings-panel { padding:20px; }
+    .settings-panel h3 { font:31px/.9 "Caveat", cursive; }
+    .settings-panel .sub { margin-top:5px; margin-bottom:16px; font-size:9px; color:var(--ink-soft); line-height:1.5; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+    .visibility-list { display:grid; gap:8px; }
+    .visibility-item { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px dashed var(--line-strong); }
+    .visibility-item:last-child { border-bottom:0; }
+    .visibility-item strong { display:block; font-size:10px; } .visibility-item span { display:block; margin-top:2px; font-size:8px; color:var(--ink-soft); }
+    .toggle { width:44px; height:24px; border:2px solid var(--ink); border-radius:999px; background:#d5d1c8; padding:2px; cursor:pointer; transition:.18s var(--ease); flex:0 0 auto; }
+    .toggle::after { content:""; display:block; width:16px; height:16px; border-radius:50%; background:var(--paper); border:1.5px solid var(--ink); transition:.18s var(--ease); }
+    .toggle.on { background:var(--blue); } .toggle.on::after { transform:translateX(18px); }
+    .trust-box { margin-top:17px; padding:15px; background:var(--yellow-soft); border:2px dashed var(--ink); }
+    .trust-box strong { font:23px/.9 "Caveat", cursive; } .trust-box p { margin-top:4px; font-size:9px; line-height:1.6; color:var(--ink-soft); }
+    .danger-box { margin-top:18px; padding:15px; border:2px solid var(--red); background:rgba(243,199,192,.45); }
+    .danger-box strong { color:#8f2d27; font-size:10px; } .danger-box p { margin-top:3px; font-size:8px; color:var(--ink-soft); }
+
+    /* ---------- EMPTY / STATES ---------- */
+    .empty { padding:40px 18px; text-align:center; border:2px dashed var(--ink); background:rgba(255,253,245,.6); }
+    .empty-art { font:48px "Caveat", cursive; color:var(--blue); transform:rotate(-4deg); }
+    .empty h3 { margin-top:6px; font:29px/.95 "Caveat", cursive; }
+    .empty p { max-width:390px; margin:6px auto 13px; font-size:10px; line-height:1.6; color:var(--ink-soft); }
+    .state-banner { padding:12px 14px; margin-bottom:12px; border:2px dashed var(--ink); background:#eef3f7; font-size:9px; color:var(--ink-soft); }
+
+    /* ---------- MODAL ---------- */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(34,31,24,.36); display:none; align-items:center; justify-content:center; padding:18px; z-index:100; backdrop-filter:blur(3px); }
+    .modal-backdrop.open { display:flex; animation:fadeIn .18s ease; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .modal { width:min(720px,100%); max-height:min(82vh,760px); overflow:auto; padding:23px; background:var(--paper); border:2px solid var(--ink); box-shadow:9px 10px 0 var(--ink); transform:rotate(-.35deg); position:relative; }
+    .modal-close { position:absolute; top:12px; right:12px; width:35px; height:35px; border:2px solid var(--ink); border-radius:50%; background:var(--yellow); cursor:pointer; }
+    .modal-kicker { font-size:9px; letter-spacing:.14em; font-weight:800; color:var(--red); }
+    .modal h2 { margin-top:9px; padding-right:45px; font:42px/.92 "Caveat", cursive; color:var(--blue-dark); }
+    .modal-meta { display:flex; flex-wrap:wrap; gap:6px 13px; margin-top:9px; font:15px "Patrick Hand", cursive; color:var(--ink-soft); }
+    .modal-body { margin-top:18px; font-size:11px; color:var(--ink-soft); line-height:1.8; }
+    .modal-body p + p { margin-top:12px; }
+    .modal-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+
+    /* ---------- TOAST ---------- */
+    .toast { position:fixed; left:50%; bottom:25px; transform:translate(-50%,20px); opacity:0; pointer-events:none; padding:11px 15px; background:var(--ink); color:white; border:2px solid white; box-shadow:4px 4px 0 var(--blue); z-index:120; font-size:10px; font-weight:700; transition:.22s var(--ease); }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+
+    /* ---------- SEARCH OVERLAY ---------- */
+    .search-overlay { position:fixed; inset:0; background:rgba(34,31,24,.34); backdrop-filter:blur(4px); z-index:110; display:none; align-items:flex-start; justify-content:center; padding:80px 18px 18px; }
+    .search-overlay.open { display:flex; }
+    .search-dialog { width:min(720px,100%); padding:17px; background:var(--paper); border:2px solid var(--ink); box-shadow:9px 10px 0 var(--ink); }
+    .search-dialog input { width:100%; padding:14px; border:2px solid var(--ink); background:#fff; font-size:13px; }
+    .search-results { margin-top:10px; display:grid; gap:7px; max-height:55vh; overflow:auto; }
+    .search-result { padding:11px; background:var(--paper-2); border:1.5px solid var(--line-strong); cursor:pointer; }
+    .search-result strong { display:block; font-size:10px; } .search-result span { display:block; margin-top:3px; font-size:8px; color:var(--ink-soft); }
+
+    /* ---------- MOBILE NAV ---------- */
+    .mobile-nav { display:none; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 1180px) {
+      :root { --sidebar: 220px; }
+      .resource-grid, .people-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .home-grid { grid-template-columns:minmax(0,1fr) 300px; }
+    }
+    @media (max-width: 980px) {
+      :root { --sidebar: 78px; }
+      .sidebar { padding:19px 10px; }
+      .brand { justify-content:center; padding-inline:0; }
+      .brand-copy, .nav-title, .nav-label, .nav-count, .sidebar-note, .sidebar-footer { display:none; }
+      .nav button { grid-template-columns:1fr; justify-items:center; padding:12px 7px; }
+      .nav-sep { margin:10px 4px; }
+      .home-grid, .two-col { grid-template-columns:1fr; }
+      .home-grid .stack:last-child { display:grid; grid-template-columns:1fr 1fr; align-items:start; }
+      .ai-card { grid-column:1 / -1; }
+    }
+    @media (max-width: 740px) {
+      .app { display:block; }
+      .sidebar { display:none; }
+      .main { padding:14px 12px 88px; }
+      .topbar { position:relative; margin-bottom:10px; padding:0; }
+      .mobile-brand { display:flex; align-items:center; gap:9px; }
+      .mobile-brand .brand-mark { width:40px; height:40px; font-size:20px; box-shadow:3px 3px 0 var(--ink); }
+      .mobile-brand strong { display:block; font-size:15px; }
+      .mobile-brand span { display:block; font-size:7px; letter-spacing:.12em; opacity:.5; }
+      .search-trigger { min-width:0; flex:1; max-width:250px; }
+      .search-trigger span { font-size:9px; }
+      .top-actions .icon-btn:not(:last-child) { display:none; }
+      .avatar { width:39px; height:39px; }
+      .home-intro { align-items:flex-start; flex-direction:column; }
+      .home-intro h1 { font-size:62px; }
+      .date-note { align-self:flex-start; }
+      .hero { padding:25px 19px; }
+      .hero h2 { font-size:45px; }
+      .hero-meta { font-size:13px; }
+      .section-head { align-items:flex-start; flex-direction:column; }
+      .resource-grid, .people-grid { grid-template-columns:1fr; }
+      .home-grid .stack:last-child { grid-template-columns:1fr; }
+      .settings-grid { grid-template-columns:1fr; }
+      .settings-tabs { display:flex; overflow-x:auto; position:static; }
+      .settings-tab { white-space:nowrap; }
+      .form-grid { grid-template-columns:1fr; }
+      .notice-card-grid { grid-template-columns:40px 1fr; }
+      .notice-card-side { grid-column:2; text-align:left; }
+      .notice-row { grid-template-columns:42px 1fr; }
+      .row-date { grid-column:2; }
+      .mobile-nav { position:fixed; left:10px; right:10px; bottom:10px; display:grid; grid-template-columns:repeat(5,1fr); gap:4px; padding:6px; background:rgba(255,253,245,.94); border:2px solid var(--ink); box-shadow:5px 6px 0 var(--ink); z-index:80; }
+      .mobile-nav button { display:grid; gap:2px; justify-items:center; padding:6px 2px; border-radius:8px; background:transparent; color:var(--ink-soft); cursor:pointer; font-size:8px; }
+      .mobile-nav button.active { background:var(--blue-soft); color:var(--ink); border:1.5px solid var(--ink); }
+      .mobile-nav .nav-icon { font-size:16px; }
+    }
+    @media (max-width: 420px) {
+      .search-trigger { display:none; }
+      .home-intro h1 { font-size:55px; }
+      .hero h2 { font-size:40px; }
+      .tool-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div class="brand-copy">
+          <strong>Margins</strong>
+          <span>TCET STUDENT HUB</span>
+        </div>
+      </div>
+
+      <div class="nav-title">your corner of campus ✎</div>
+      <nav class="nav">
+        <button class="nav-btn active" data-view="home"><span class="nav-icon">⌂</span><span class="nav-label">Home</span><span></span></button>
+        <button class="nav-btn" data-view="notices"><span class="nav-icon">▤</span><span class="nav-label">Notices</span><span class="nav-count">4</span></button>
+        <button class="nav-btn" data-view="resources"><span class="nav-icon">▧</span><span class="nav-label">Resources</span><span></span></button>
+        <button class="nav-btn" data-view="doubts"><span class="nav-icon">?</span><span class="nav-label">Doubts</span><span class="nav-count">7</span></button>
+        <button class="nav-btn" data-view="people"><span class="nav-icon">◎</span><span class="nav-label">People</span><span></span></button>
+        <div class="nav-sep"></div>
+        <button class="nav-btn" data-view="activity"><span class="nav-icon">◴</span><span class="nav-label">My Activity</span><span></span></button>
+        <button class="nav-btn" data-view="saved"><span class="nav-icon">☆</span><span class="nav-label">Saved</span><span></span></button>
+        <button class="nav-btn" data-view="notifications"><span class="nav-icon">◉</span><span class="nav-label">Notifications</span><span class="nav-count">3</span></button>
+        <button class="nav-btn" data-view="settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span><span></span></button>
+      </nav>
+
+      <div class="sidebar-note">
+        <small>small reminder</small>
+        <strong>your class ≠ your whole campus.</strong>
+        <p>Find people, share notes, ask better questions, and leave things a little more useful than you found them.</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <span>v1.0 demo</span>
+        <a href="#" onclick="showToast('Community guidelines are coming into the launch flow.'); return false;">guidelines</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="mobile-brand">
+            <div class="brand-mark">M</div>
+            <div><strong>Margins</strong><span>TCET STUDENT HUB</span></div>
+          </div>
+          <button class="search-trigger" id="searchTrigger" aria-label="Open global search">
+            <span aria-hidden="true">⌕</span>
+            <span>Search notices, resources, doubts, people...</span>
+          </button>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="searchIcon" aria-label="Search">⌕</button>
+          <button class="icon-btn" id="notifIcon" aria-label="Notifications"><span class="notif-dot"></span>◉</button>
+          <button class="avatar" id="profileAvatar" aria-label="Open profile">IG</button>
+        </div>
+      </header>
+
+      <!-- ================= HOME ================= -->
+      <section class="view active" id="view-home">
+        <section class="home-intro">
+          <div>
+            <div class="eyebrow">✎ Wednesday, 30 September 2026</div>
+            <h1>hey, Ishan!</h1>
+            <p>here's the useful stuff happening around campus — without the digging.</p>
+          </div>
+          <div class="date-note"><small>TODAY</small><strong>30 SEP</strong><small>Wednesday</small></div>
+        </section>
+
+        <div class="hero-wrap">
+          <div class="hero-note">don't miss this!</div>
+          <section class="card hero inner-line">
+            <div class="decor" aria-hidden="true"></div>
+            <div class="hero-label"><span class="hero-dot"></span>IMPORTANT NOTICE</div>
+            <h2>End Semester Examination Timetable Released</h2>
+            <div class="hero-meta"><span>Examination Cell</span><span>•</span><span>posted 2 hours ago</span><span>•</span><span>30 September 2026</span></div>
+            <div class="hero-actions">
+              <button class="btn yellow" onclick="openNotice('n1')">read the original notice →</button>
+              <button class="btn ghost" onclick="saveItem('n1')">☆ save</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="filter-bar">
+          <span class="filter-title">show me:</span>
+          <button class="chip active home-filter" data-filter="all">✦ all</button>
+          <button class="chip home-filter" data-filter="exam">exams</button>
+          <button class="chip home-filter" data-filter="placement">placements</button>
+          <button class="chip home-filter" data-filter="event">events</button>
+          <button class="chip home-filter" data-filter="general">general</button>
+          <button class="chip home-filter" data-filter="holiday">holidays</button>
+        </div>
+
+        <div class="home-grid">
+          <div class="stack">
+            <section class="card panel inner-line">
+              <div class="panel-head"><h3>today's notices ✎</h3><button class="section-link" data-view-link="notices">see everything →</button></div>
+              <div id="homeNoticeList"></div>
+            </section>
+            <section class="card community-banner">
+              <div><strong>need something that isn't here?</strong><span>Ask for it. Someone from your batch may already have it.</span></div>
+              <button class="btn small primary" onclick="showView('doubts')">go to community →</button>
+            </section>
+          </div>
+
+          <div class="stack">
+            <section class="card sticky">
+              <div class="sticky-title">upcoming stuff ✦</div>
+              <div id="eventList"></div>
+            </section>
+
+            <section class="card panel inner-line">
+              <div class="panel-head"><h3>quick stuff ✦</h3></div>
+              <div class="tool-grid">
+                <button class="tool" onclick="openTool('timetable')"><div class="tool-icon">▦</div><div class="tool-name">timetable</div><div class="tool-description">check your classes</div></button>
+                <button class="tool" onclick="showView('resources')"><div class="tool-icon">▧</div><div class="tool-name">resources</div><div class="tool-description">notes + PYQs</div></button>
+                <button class="tool" onclick="openTool('sgpa')"><div class="tool-icon">∑</div><div class="tool-name">SGPA</div><div class="tool-description">calculate grades</div></button>
+                <button class="tool" onclick="openTool('attendance')"><div class="tool-icon">◷</div><div class="tool-name">attendance</div><div class="tool-description">check percentage</div></button>
+              </div>
+            </section>
+
+            <section class="card ai-card">
+              <div class="ai-title">ask TCET AI ✦</div>
+              <div class="ai-text">confused about a notice? ask a question and the assistant can pull out dates, deadlines, documents and the useful bits.</div>
+              <button class="btn ai-button" onclick="showToast('AI is scoped for a later phase — the interaction is ready.');">ask something →</button>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= NOTICES ================= -->
+      <section class="view" id="view-notices">
+        <div class="card page-cover">
+          <div class="eyebrow">campus bulletin · official + community</div>
+          <h1>notices, without the noise.</h1>
+          <p>Everything important in one place. Open a notice for the full text and the original source. Pinned items stay visible until they are unpinned.</p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box"><span>⌕</span><input class="input" id="noticeSearch" placeholder="Search notices..." /></div>
+          <div class="chip-row" id="noticeFilters">
+            <button class="chip active" data-notice-filter="all">all</button><button class="chip" data-notice-filter="exam">exams</button><button class="chip" data-notice-filter="placement">placements</button><button class="chip" data-notice-filter="event">events</button><button class="chip" data-notice-filter="general">general</button><button class="chip" data-notice-filter="holiday">holidays</button>
+          </div>
+          <button class="btn yellow" onclick="openNoticeComposer()">+ post a notice</button>
+        </div>
+        <div id="noticeList"></div>
+      </section>
+
+      <!-- ================= RESOURCES ================= -->
+      <section class="view" id="view-resources">
+        <div class="card page-cover blueish">
+          <div class="eyebrow">shared shelf · notes + links</div>
+          <h1>resources that are actually findable.</h1>
+          <p>Filter by subject, type, or recency. Each resource has a clear owner, tags, and a save action — so the useful stuff doesn't disappear in a class chat.</p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box"><span>⌕</span><input class="input" id="resourceSearch" placeholder="Search title, subject or description..." /></div>
+          <select class="select" style="max-width:140px" id="resourceSubject"><option value="all">All subjects</option><option value="dbms">DBMS</option><option value="dsa">DSA</option><option value="maths">Maths</option><option value="web">Web Dev</option><option value="ai">AI / ML</option></select>
+          <select class="select" style="max-width:140px" id="resourceType"><option value="all">All types</option><option value="pdf">PDF</option><option value="link">Link</option><option value="image">Image</option><option value="doc">Doc</option></select>
+          <button class="btn primary" onclick="openResourceComposer()">+ upload</button>
+        </div>
+        <div id="resourceGrid" class="resource-grid"></div>
+        <section class="card request-card">
+          <h3>can't find what you need?</h3>
+          <p>Post a small request and let the batch fill the gap.</p>
+          <div style="margin-top:11px"><button class="btn small yellow" onclick="openRequestComposer()">request a resource →</button></div>
+        </section>
+      </section>
+
+      <!-- ================= DOUBTS ================= -->
+      <section class="view" id="view-doubts">
+        <div class="card page-cover greenish">
+          <div class="eyebrow">community board · ask + answer</div>
+          <h1>stuck? ask here.</h1>
+          <p>Questions stay searchable after the chat has moved on. Follow a doubt, vote on useful answers, and mark the accepted answer when you're the one who asked it.</p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box"><span>⌕</span><input class="input" id="doubtSearch" placeholder="Search doubts..." /></div>
+          <div class="chip-row" id="doubtFilters"><button class="chip active" data-doubt-filter="all">all</button><button class="chip" data-doubt-filter="open">open</button><button class="chip" data-doubt-filter="answered">answered</button><button class="chip" data-doubt-filter="solved">solved</button></div>
+          <button class="btn primary" onclick="openDoubtComposer()">+ ask a doubt</button>
+        </div>
+        <div id="doubtList" class="doubt-list"></div>
+      </section>
+
+      <!-- ================= PEOPLE ================= -->
+      <section class="view" id="view-people">
+        <div class="card page-cover">
+          <div class="eyebrow">your batch, beyond the attendance sheet</div>
+          <h1>people you can actually learn with.</h1>
+          <p>Browse public profiles by skill and interest. Students control what classmates can see from Settings → Privacy.</p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box"><span>⌕</span><input class="input" id="peopleSearch" placeholder="Search people, skills, interests..." /></div>
+          <button class="chip active">all</button><button class="chip">frontend</button><button class="chip">dsa</button><button class="chip">design</button><button class="chip">ai/ml</button>
+        </div>
+        <div id="peopleGrid" class="people-grid"></div>
+      </section>
+
+      <!-- ================= ACTIVITY ================= -->
+      <section class="view" id="view-activity">
+        <div class="card page-cover blueish">
+          <div class="eyebrow">your footprint · private area</div>
+          <h1>my activity.</h1>
+          <p>Your doubts, answers, uploads and other contribution history. This area is private by default.</p>
+        </div>
+        <div class="two-col">
+          <section class="card panel inner-line"><div class="panel-head"><h3>recent activity</h3></div><div id="activityList" class="activity-list"></div></section>
+          <aside class="card stats-card"><h3>little contribution log ✦</h3><div class="stat-grid"><div class="stat"><strong>18</strong><span>resources shared</span></div><div class="stat"><strong>7</strong><span>doubts answered</span></div><div class="stat"><strong>92%</strong><span>profile visibility</span></div><div class="stat"><strong>14</strong><span>saved items</span></div></div><div class="trust-box"><strong>what classmates see</strong><p>Your public profile only shows fields you have made visible. Private activity stays in this area.</p></div></aside>
+        </div>
+      </section>
+
+      <!-- ================= SAVED ================= -->
+      <section class="view" id="view-saved">
+        <div class="card page-cover greenish">
+          <div class="eyebrow">bookmarked for later</div>
+          <h1>your saved pile.</h1>
+          <p>A single shelf for saved notices, resources and doubts. Nothing disappears just because the home feed moved on.</p>
+        </div>
+        <div id="savedGrid"></div>
+      </section>
+
+      <!-- ================= NOTIFICATIONS ================= -->
+      <section class="view" id="view-notifications">
+        <div class="card page-cover">
+          <div class="eyebrow">updates that matter</div>
+          <h1>notifications.</h1>
+          <p>New notices, answers to your doubts, accepted answers, mentions, and fulfilled resource requests.</p>
+        </div>
+        <div class="toolbar"><button class="btn yellow" onclick="markNotificationsRead()">mark all as read</button></div>
+        <div id="notificationList" class="notif-list"></div>
+      </section>
+
+      <!-- ================= SETTINGS ================= -->
+      <section class="view" id="view-settings">
+        <div class="card page-cover">
+          <div class="eyebrow">your account · your visibility</div>
+          <h1>settings.</h1>
+          <p>Control profile visibility, security, sessions, and your data. The defaults are designed to make privacy easy to understand.</p>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-tabs">
+            <button class="settings-tab active" data-settings-tab="profile">Profile</button>
+            <button class="settings-tab" data-settings-tab="privacy">Privacy</button>
+            <button class="settings-tab" data-settings-tab="security">Security</button>
+            <button class="settings-tab" data-settings-tab="data">Data</button>
+          </div>
+          <div>
+            <section class="card settings-panel settings-section active" data-settings-section="profile">
+              <h3>profile ✎</h3><p class="sub">This is the information classmates can see when you choose to make it public.</p>
+              <div class="form-grid">
+                <div class="field"><label>DISPLAY NAME</label><input class="input" value="Ishan Gupta" /></div>
+                <div class="field"><label>COURSE / CLASS</label><input class="input" value="CSE · 2026 batch" /></div>
+                <div class="field" style="grid-column:1/-1"><label>BIO</label><textarea class="textarea">Frontend builder. Learning by making small things and shipping them.</textarea></div>
+                <div class="field"><label>SKILLS</label><input class="input" value="React, Next.js, Tailwind, UI" /></div>
+                <div class="field"><label>CURRENTLY LEARNING</label><input class="input" value="AI-assisted product building" /></div>
+              </div>
+              <div style="margin-top:14px"><button class="btn primary" onclick="showToast('Profile saved locally for this prototype.');">save changes</button></div>
+            </section>
+
+            <section class="card settings-panel settings-section" data-settings-section="privacy" hidden>
+              <h3>privacy, in plain language.</h3><p class="sub">Your display name is always visible. Everything else below can be switched off.</p>
+              <div class="visibility-list">
+                <div class="visibility-item"><div><strong>Bio</strong><span>Show your short profile description</span></div><button class="toggle on" data-toggle></button></div>
+                <div class="visibility-item"><div><strong>Skills & interests</strong><span>Help classmates discover what you know</span></div><button class="toggle on" data-toggle></button></div>
+                <div class="visibility-item"><div><strong>Contribution stats</strong><span>Show resource / answer counts</span></div><button class="toggle" data-toggle></button></div>
+                <div class="visibility-item"><div><strong>Email</strong><span>Hidden from classmates by default</span></div><button class="toggle" data-toggle></button></div>
+              </div>
+              <div class="trust-box"><strong>what classmates never see</strong><p>Your password, private activity, account security information, and anything you keep off your public profile. This wording is intentionally visible here because privacy should not feel like a mystery.</p></div>
+            </section>
+
+            <section class="card settings-panel settings-section" data-settings-section="security" hidden>
+              <h3>security.</h3><p class="sub">Keep the account controls in one predictable place.</p>
+              <div class="stack" style="gap:10px">
+                <div class="card card-soft" style="padding:14px"><strong style="font-size:11px">Change password</strong><p style="margin-top:4px;font-size:8px;color:var(--ink-soft)">Update the password used to sign in.</p><button class="btn small" style="margin-top:10px" onclick="showToast('Password change flow opened.');">change password</button></div>
+                <div class="card card-soft" style="padding:14px"><strong style="font-size:11px">Active sessions</strong><p style="margin-top:4px;font-size:8px;color:var(--ink-soft)">Chrome on Windows · Mumbai · active now</p><button class="btn small" style="margin-top:10px" onclick="showToast('Session review is ready for backend wiring.');">review sessions</button></div>
+                <div class="card card-soft" style="padding:14px"><strong style="font-size:11px">Sign out everywhere</strong><p style="margin-top:4px;font-size:8px;color:var(--ink-soft)">Useful after using a shared or borrowed device.</p><button class="btn small yellow" style="margin-top:10px" onclick="showToast('All-session sign out confirmed in demo mode.');">sign out everywhere</button></div>
+              </div>
+            </section>
+
+            <section class="card settings-panel settings-section" data-settings-section="data" hidden>
+              <h3>your data.</h3><p class="sub">Keep export and deletion controls separate from day-to-day profile settings.</p>
+              <div class="card card-soft" style="padding:14px"><strong style="font-size:11px">Download my data</strong><p style="margin-top:4px;font-size:8px;color:var(--ink-soft)">Request a structured export of profile and contribution data.</p><button class="btn small green" style="margin-top:10px" onclick="showToast('Data export requested.');">request export</button></div>
+              <div class="danger-box"><strong>Delete account</strong><p>This action is designed as an explicit confirmation flow in production so it cannot happen by accident.</p><button class="btn small" style="margin-top:10px" onclick="confirmDeleteAccount()">start deletion</button></div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <button class="active" data-view="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button data-view="notices"><span class="nav-icon">▤</span><span>Notices</span></button>
+    <button data-view="resources"><span class="nav-icon">▧</span><span>Resources</span></button>
+    <button data-view="doubts"><span class="nav-icon">?</span><span>Doubts</span></button>
+    <button data-view="people"><span class="nav-icon">◎</span><span>People</span></button>
+  </nav>
+
+  <!-- GLOBAL MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-label="Dialog">
+    <div class="modal" id="modalContent"></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-dialog">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <div class="hand" style="font-size:26px">search everything ✦</div>
+        <button class="btn small" onclick="closeSearch()">esc</button>
+      </div>
+      <input id="globalSearchInput" style="margin-top:11px" placeholder="Try “DBMS”, “exam”, “React”, or a student's name..." autocomplete="off" />
+      <div class="search-results" id="globalSearchResults"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* =========================================================
+       DATA — intentionally mocked for frontend prototype
+       ========================================================= */
+    const notices = [
+      {id:'n1', category:'exam', tag:'EXAM', icon:'▤', title:'End Semester Examination Timetable Released', date:'30 Sep', meta:'Examination Cell · 2 hours ago', body:'The end semester examination timetable has been released. Students are advised to review the paper-wise schedule, reporting times and examination instructions in the original circular.', pinned:true},
+      {id:'n2', category:'exam', tag:'EXAM', icon:'▤', title:'Examination form submission deadline extended', date:'29 Sep', meta:'Examination Cell · yesterday', body:'The submission window has been extended. Verify your form details before the updated deadline and keep the confirmation receipt for your records.', pinned:true},
+      {id:'n3', category:'placement', tag:'PLACEMENT', icon:'★', title:'Infosys campus drive registration is now open', date:'28 Sep', meta:'Placement Cell · 2 days ago', body:'Registration is open for eligible students. Check the complete role details, eligibility criteria and registration instructions from the original placement notice.'},
+      {id:'n4', category:'general', tag:'GENERAL', icon:'▧', title:'Library will remain closed on 4th October', date:'27 Sep', meta:'Library · 3 days ago', body:'The library will remain closed for scheduled maintenance. Digital resources and previously issued material remain unaffected.'},
+      {id:'n5', category:'event', tag:'EVENT', icon:'✦', title:'IEEE workshop on AI & Machine Learning', date:'26 Sep', meta:'IEEE Student Branch · 4 days ago', body:'An introductory workshop covering practical AI/ML workflows, model evaluation and student project ideas.'},
+      {id:'n6', category:'holiday', tag:'HOLIDAY', icon:'☼', title:'Campus holiday on 2nd October', date:'25 Sep', meta:'Administration · 5 days ago', body:'Academic activities will remain closed on the notified holiday. Please refer to the official academic calendar for updates.'}
+    ];
+
+    const events = [
+      {date:'08\nOCT', title:'Technical Workshop', meta:'TCET Campus · 10:30 AM'},
+      {date:'12\nOCT', title:'Hackathon 2026', meta:'Innovation Lab · 9:00 AM'},
+      {date:'15\nOCT', title:"Teacher's Day Celebration", meta:'Auditorium · 11:00 AM'}
+    ];
+
+    const resources = [
+      {id:'r1',type:'pdf',label:'PDF',subject:'dbms',title:'DBMS Unit 3 — Transactions & Recovery',desc:'Clean handwritten-style revision notes with examples and the important diagrams.',by:'Aarav Shah',date:'29 Sep',size:'2.4 MB',tags:['DBMS','Unit 3'],saved:true},
+      {id:'r2',type:'pdf',label:'PDF',subject:'dsa',title:'DSA PYQ Pack — Mid + End Sem',desc:'Previous-year questions grouped by topic with a compact checklist of common patterns.',by:'Meera K.',date:'28 Sep',size:'4.1 MB',tags:['DSA','PYQ'],saved:true},
+      {id:'r3',type:'link',label:'LINK',subject:'web',title:'Next.js App Router — useful reference',desc:'A curated reference page for layouts, server components and route patterns.',by:'Ishan G.',date:'27 Sep',size:'Web',tags:['Next.js','Web'],saved:false},
+      {id:'r4',type:'doc',label:'DOC',subject:'maths',title:'Engineering Maths Formula Sheet',desc:'One-screen formula collection for integration, differential equations and transforms.',by:'Riya P.',date:'26 Sep',size:'1.2 MB',tags:['Maths','Formula'],saved:true},
+      {id:'r5',type:'image',label:'IMG',subject:'ai',title:'ML Evaluation Cheat Sheet',desc:'Precision, recall, F1, confusion matrix and when each metric makes sense.',by:'Kabir N.',date:'25 Sep',size:'640 KB',tags:['AI / ML','Cheat sheet'],saved:false},
+      {id:'r6',type:'pdf',label:'PDF',subject:'web',title:'Frontend Interview Notes — DOM to React',desc:'Short prep pack with browser basics, state, rendering and common interview prompts.',by:'Ananya S.',date:'24 Sep',size:'3.6 MB',tags:['Frontend','Interview'],saved:false}
+    ];
+
+    const doubts = [
+      {id:'d1',status:'solved',subject:'DSA',title:'Why does the two-pointer approach work for this sorted array problem?',excerpt:'I understand the code, but I want the intuition for why moving the left/right pointer cannot skip a valid answer.',author:'Rohan Mehta',answers:5, votes:13, tags:['two pointers','intuition'], followed:true},
+      {id:'d2',status:'answered',subject:'DBMS',title:'Can someone explain conflict serializability with one proper example?',excerpt:'The graph method makes sense until the cycles part. Looking for a small example I can reproduce in an exam.',author:'Priya N.',answers:3, votes:9, tags:['serializability','exam'], followed:false},
+      {id:'d3',status:'open',subject:'Web Dev',title:'Next.js: server action vs API route — when should I use which?',excerpt:'Building a small app and getting confused about where validation and database calls belong.',author:'Yash V.',answers:0, votes:4, tags:['next.js','backend'], followed:true},
+      {id:'d4',status:'answered',subject:'Maths',title:'Laplace transform question from the assignment',excerpt:'I got a different constant than the solution manual after partial fractions. Can someone check the setup?',author:'Aisha S.',answers:2, votes:7, tags:['laplace','assignment'], followed:false},
+      {id:'d5',status:'open',subject:'AI / ML',title:'What is the simplest way to compare two classification models fairly?',excerpt:'I know about accuracy, but I am not sure what to report when the classes are imbalanced.',author:'Dev K.',answers:0, votes:6, tags:['metrics','classification'], followed:false}
+    ];
+
+    const people = [
+      {name:'Aarav Shah',role:'CSE · 3rd year',initials:'AS',bio:'Explains DBMS concepts with suspiciously good diagrams.',skills:['DBMS','SQL','Figma'],stats:'24 resources · 11 answers'},
+      {name:'Meera Kulkarni',role:'CSE · 3rd year',initials:'MK',bio:'DSA notes, PYQs, and trying to make recursion less scary.',skills:['DSA','C++','Python'],stats:'19 resources · 8 answers'},
+      {name:'Riya Patil',role:'IT · 3rd year',initials:'RP',bio:'UI person. Always looking for better ways to explain systems visually.',skills:['UI/UX','React','Figma'],stats:'15 resources · 13 answers'},
+      {name:'Kabir Nair',role:'CSE · 2nd year',initials:'KN',bio:'ML experiments, evaluation metrics and too many spreadsheets.',skills:['AI/ML','Python','Data'],stats:'9 resources · 6 answers'},
+      {name:'Ananya Shah',role:'AI & DS · 3rd year',initials:'AN',bio:'Frontend builder learning to ship small tools every week.',skills:['Next.js','React','Design'],stats:'17 resources · 5 answers'},
+      {name:'Yash Verma',role:'CSE · 3rd year',initials:'YV',bio:'Backend curiosity + football references in every explanation.',skills:['Node','Supabase','APIs'],stats:'12 resources · 9 answers'}
+    ];
+
+    const activity = [
+      {icon:'▧',title:'Uploaded “Next.js App Router — useful reference”',meta:'Resource Shelf · Web Dev',date:'Today'},
+      {icon:'?',title:'Answered “Conflict serializability”',meta:'Doubt Board · DBMS',date:'Yesterday'},
+      {icon:'☆',title:'Saved “DBMS Unit 3”',meta:'Resource Shelf',date:'2 days ago'},
+      {icon:'▤',title:'Viewed “End Semester Examination Timetable”',meta:'Notice Board',date:'2 days ago'},
+      {icon:'◎',title:'Updated profile skills',meta:'Settings',date:'5 days ago'}
+    ];
+
+    let notifications = [
+      {icon:'↳',title:'Aarav answered your doubt',body:'“Next.js server action vs API route” has a new answer.',time:'12m',unread:true},
+      {icon:'✓',title:'Your answer was accepted',body:'Riya marked your DBMS explanation as the accepted answer.',time:'1h',unread:true},
+      {icon:'@',title:'You were mentioned',body:'Kabir mentioned you in “ML evaluation metrics”.',time:'3h',unread:true},
+      {icon:'▧',title:'Resource request fulfilled',body:'Someone added the Maths formula sheet you requested.',time:'Yesterday',unread:false}
+    ];
+
+    /* =========================================================
+       UTILITIES
+       ========================================================= */
+    function esc(value){return String(value).replace(/[&<>'"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));}
+    function showToast(message){
+      const toast=document.getElementById('toast'); toast.textContent=message; toast.classList.add('show');
+      clearTimeout(window.__toast); window.__toast=setTimeout(()=>toast.classList.remove('show'),2400);
+    }
+    function showView(name){
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      const target=document.getElementById('view-'+name); if(!target) return;
+      target.classList.add('active');
+      document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+      window.scrollTo({top:0,behavior:'smooth'});
+      if(name==='notices') renderNotices();
+      if(name==='resources') renderResources();
+      if(name==='doubts') renderDoubts();
+      if(name==='people') renderPeople();
+      if(name==='activity') renderActivity();
+      if(name==='saved') renderSaved();
+      if(name==='notifications') renderNotifications();
+    }
+
+    document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
+    document.querySelectorAll('[data-view-link]').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.viewLink)));
+
+    /* =========================================================
+       HOME
+       ========================================================= */
+    function renderHomeNotices(filter='all'){
+      const root=document.getElementById('homeNoticeList');
+      const list=notices.filter(n=>filter==='all'||n.category===filter).slice(0,4);
+      root.innerHTML=list.length?list.map(n=>`
+        <article class="notice-row" onclick="openNotice('${n.id}')">
+          <div class="mini-icon">${n.icon}</div>
+          <div><span class="row-tag ${n.category}">${n.tag}</span><div class="row-title">${esc(n.title)}</div><div class="row-sub">${esc(n.meta)}</div></div>
+          <div class="row-date">${n.date}</div>
+        </article>`).join(''):`<div class="empty"><div class="empty-art">nothing here ✎</div><h3>no notices in this filter.</h3><p>Try another category or browse the full notice board.</p></div>`;
+    }
+    function renderEvents(){
+      document.getElementById('eventList').innerHTML=events.map(e=>`<div class="event"><div class="event-date">${e.date}</div><div><div class="event-title">${e.title}</div><div class="event-meta">${e.meta}</div></div></div>`).join('');
+    }
+    document.querySelectorAll('.home-filter').forEach(btn=>btn.addEventListener('click',()=>{
+      document.querySelectorAll('.home-filter').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderHomeNotices(btn.dataset.filter);
+    }));
+
+    /* =========================================================
+       NOTICES
+       ========================================================= */
+    let noticeFilter='all';
+    function renderNotices(){
+      const term=(document.getElementById('noticeSearch')?.value||'').trim().toLowerCase();
+      const list=notices.filter(n=>(noticeFilter==='all'||n.category===noticeFilter) && (!term || (n.title+n.body+n.meta).toLowerCase().includes(term)));
+      const root=document.getElementById('noticeList');
+      if(!list.length){root.innerHTML=`<div class="empty"><div class="empty-art">↺</div><h3>no matching notices.</h3><p>Try a different category or search phrase. Your current filters are not permanent.</p></div>`; return;}
+      root.innerHTML=list.map(n=>`<article class="card notice-card" onclick="openNotice('${n.id}')"><div class="notice-card-grid"><div class="mini-icon">${n.icon}</div><div><div><span class="row-tag ${n.category}">${n.tag}</span>${n.pinned?'<span class="pin">PINNED</span>':''}</div><h3>${esc(n.title)}</h3><p>${esc(n.body)}</p><div class="row-sub" style="margin-top:7px">${esc(n.meta)}</div></div><div class="notice-card-side">${n.date}<div style="margin-top:5px">→</div></div></div></article>`).join('');
+    }
+    document.getElementById('noticeSearch').addEventListener('input',renderNotices);
+    document.querySelectorAll('[data-notice-filter]').forEach(btn=>btn.addEventListener('click',()=>{
+      noticeFilter=btn.dataset.noticeFilter; document.querySelectorAll('[data-notice-filter]').forEach(b=>b.classList.toggle('active',b===btn)); renderNotices();
+    }));
+
+    /* =========================================================
+       RESOURCES
+       ========================================================= */
+    function renderResources(){
+      const term=(document.getElementById('resourceSearch')?.value||'').trim().toLowerCase();
+      const subject=document.getElementById('resourceSubject')?.value||'all';
+      const type=document.getElementById('resourceType')?.value||'all';
+      const list=resources.filter(r=>(subject==='all'||r.subject===subject)&&(type==='all'||r.type===type)&&(!term||(r.title+r.desc+r.tags.join(' ')+r.by).toLowerCase().includes(term)));
+      const root=document.getElementById('resourceGrid');
+      if(!list.length){root.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-art">⌕</div><h3>no resources found.</h3><p>Try another subject or upload the thing your batch keeps asking for.</p><button class="btn yellow" onclick="openResourceComposer()">+ upload a resource</button></div>`; return;}
+      root.innerHTML=list.map(r=>`<article class="card resource" onclick="openResource('${r.id}')"><div class="resource-top"><div class="file-icon">${r.type==='pdf'?'PDF':r.type==='link'?'↗':r.type==='image'?'IMG':'DOC'}</div><button class="star" aria-label="Save resource" onclick="event.stopPropagation();toggleResourceSave('${r.id}')">${r.saved?'★':'☆'}</button></div><div style="margin-top:10px"><span class="resource-type">${r.label}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.desc)}</p><div class="resource-meta"><span>by ${esc(r.by)}</span><span>${r.date}</span></div><div class="resource-foot">${r.tags.map(t=>`<span class="micro-pill">${esc(t)}</span>`).join('')}</div></article>`).join('');
+    }
+    ['resourceSearch','resourceSubject','resourceType'].forEach(id=>document.getElementById(id).addEventListener('input',renderResources));
+    function toggleResourceSave(id){const r=resources.find(x=>x.id===id); if(!r)return; r.saved=!r.saved; renderResources(); showToast(r.saved?'Saved to your pile.':'Removed from saved.');}
+
+    /* =========================================================
+       DOUBTS
+       ========================================================= */
+    let doubtFilter='all';
+    function renderDoubts(){
+      const term=(document.getElementById('doubtSearch')?.value||'').trim().toLowerCase();
+      const list=doubts.filter(d=>(doubtFilter==='all'||d.status===doubtFilter)&&(!term||(d.title+d.excerpt+d.subject+d.tags.join(' ')).toLowerCase().includes(term)));
+      const root=document.getElementById('doubtList');
+      if(!list.length){root.innerHTML=`<div class="empty"><div class="empty-art">?</div><h3>no doubts match.</h3><p>Try another filter or ask a fresh question for your batch.</p></div>`;return;}
+      root.innerHTML=list.map(d=>`<article class="card doubt-card"><div class="doubt-main"><div><span class="row-tag" style="background:${d.status==='solved'?'var(--green)':d.status==='answered'?'var(--yellow)':'var(--red-soft)'}">${d.subject}</span><h3 class="doubt-title" style="margin-top:5px">${esc(d.title)}</h3><p class="doubt-excerpt">${esc(d.excerpt)}</p></div><button class="btn small ghost" onclick="toggleFollow('${d.id}')">${d.followed?'following':'follow'}</button></div><div class="doubt-foot"><div class="statline"><span>▲ ${d.votes} helpful</span><span>↳ ${d.answers} answers</span><span>asked by ${esc(d.author)}</span></div><div style="display:flex;align-items:center;gap:7px"><span class="status ${d.status==='open'?'open':d.status==='answered'?'answered':''}">${d.status}</span><button class="btn small" onclick="openDoubt('${d.id}')">open →</button></div></div></article>`).join('');
+    }
+    document.getElementById('doubtSearch').addEventListener('input',renderDoubts);
+    document.querySelectorAll('[data-doubt-filter]').forEach(btn=>btn.addEventListener('click',()=>{doubtFilter=btn.dataset.doubtFilter;document.querySelectorAll('[data-doubt-filter]').forEach(b=>b.classList.toggle('active',b===btn));renderDoubts();}));
+    function toggleFollow(id){const d=doubts.find(x=>x.id===id); if(!d)return; d.followed=!d.followed; renderDoubts(); showToast(d.followed?'Following this doubt.':'Unfollowed this doubt.');}
+
+    /* =========================================================
+       PEOPLE / ACTIVITY / SAVED / NOTIFICATIONS
+       ========================================================= */
+    function renderPeople(){
+      const term=(document.getElementById('peopleSearch')?.value||'').trim().toLowerCase();
+      const list=people.filter(p=>(p.name+p.bio+p.skills.join(' ')).toLowerCase().includes(term));
+      const root=document.getElementById('peopleGrid');
+      root.innerHTML=list.length?list.map(p=>`<article class="card person"><div class="person-head"><div class="person-avatar">${p.initials}</div><div><h3>${esc(p.name)}</h3><div class="person-role">${esc(p.role)}</div></div></div><p class="person-bio">${esc(p.bio)}</p><div class="skill-list">${p.skills.map(s=>`<span class="skill">${esc(s)}</span>`).join('')}</div><div class="person-stats"><span>${esc(p.stats)}</span><button class="section-link" style="font-size:13px" onclick="openPerson('${p.initials}')">view →</button></div></article>`).join(''):`<div class="empty" style="grid-column:1/-1"><div class="empty-art">⌕</div><h3>nobody found.</h3><p>Try a different name, skill, or interest.</p></div>`;
+    }
+    document.getElementById('peopleSearch').addEventListener('input',renderPeople);
+    function renderActivity(){document.getElementById('activityList').innerHTML=activity.map(a=>`<article class="card card-soft activity-item"><div class="activity-dot">${a.icon}</div><div><h4>${esc(a.title)}</h4><p>${esc(a.meta)}</p></div><div class="activity-date">${a.date}</div></article>`).join('');}
+    function renderSaved(){
+      const savedR=resources.filter(r=>r.saved); const savedN=notices.filter(n=>n.id==='n1'||n.id==='n2');
+      const root=document.getElementById('savedGrid');
+      root.innerHTML=`<div class="two-col"><section><div class="section-head"><div><h2>saved resources</h2><p>${savedR.length} resources in your pile.</p></div></div><div class="resource-grid">${savedR.map(r=>`<article class="card resource" onclick="openResource('${r.id}')"><div class="resource-top"><div class="file-icon">${r.type==='pdf'?'PDF':r.type==='link'?'↗':r.type==='image'?'IMG':'DOC'}</div><button class="star" onclick="event.stopPropagation();toggleResourceSave('${r.id}')">★</button></div><h3>${esc(r.title)}</h3><p>${esc(r.desc)}</p><div class="resource-meta"><span>by ${esc(r.by)}</span><span>${r.date}</span></div></article>`).join('')}</div></section><aside><div class="section-head"><div><h2>saved notices</h2><p>Things you don't want to lose.</p></div></div>${savedN.map(n=>`<article class="card notice-card" onclick="openNotice('${n.id}')"><div class="notice-card-grid"><div class="mini-icon">${n.icon}</div><div><span class="row-tag ${n.category}">${n.tag}</span><h3>${esc(n.title)}</h3><p>${esc(n.body)}</p></div><div class="notice-card-side">${n.date}</div></div></article>`).join('')}</aside></div>`;
+    }
+    function renderNotifications(){document.getElementById('notificationList').innerHTML=notifications.map((n,i)=>`<article class="card notif-item ${n.unread?'unread':''}"><div class="notif-icon">${n.icon}</div><div><h4>${esc(n.title)}</h4><p>${esc(n.body)}</p></div><div class="notif-time">${n.time}</div></article>`).join('');}
+    function markNotificationsRead(){notifications=notifications.map(n=>({...n,unread:false}));renderNotifications();showToast('All notifications marked as read.');document.querySelectorAll('.notif-dot').forEach(x=>x.style.display='none');}
+
+    /* =========================================================
+       MODALS / COMPOSERS
+       ========================================================= */
+    const modalBackdrop=document.getElementById('modalBackdrop'); const modalContent=document.getElementById('modalContent');
+    function openModal(html){modalContent.innerHTML=html;modalBackdrop.classList.add('open');document.body.style.overflow='hidden';}
+    function closeModal(){modalBackdrop.classList.remove('open');document.body.style.overflow='';}
+    modalBackdrop.addEventListener('click',e=>{if(e.target===modalBackdrop)closeModal();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeSearch();}});
+
+    function openNotice(id){const n=notices.find(x=>x.id===id);if(!n)return;openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">${n.tag} · OFFICIAL NOTICE</div><h2>${esc(n.title)}</h2><div class="modal-meta"><span>${esc(n.meta)}</span><span>•</span><span>${n.date}</span></div><div class="modal-body"><p>${esc(n.body)}</p><p>This prototype detail view demonstrates the route that the Home hero and notice cards are designed to open. Production wiring should load the full notice, original URL, expiry information and any attachment from Supabase.</p></div><div class="modal-actions"><button class="btn yellow" onclick="showToast('Original notice link opened in demo mode.');">read original source ↗</button><button class="btn" onclick="saveItem('${n.id}');closeModal();">${(n.id==='n1'||n.id==='n2')?'★ saved':'☆ save this notice'}</button></div>`);}
+    function openResource(id){const r=resources.find(x=>x.id===id);if(!r)return;openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">RESOURCE · ${r.label}</div><h2>${esc(r.title)}</h2><div class="modal-meta"><span>${esc(r.subject.toUpperCase())}</span><span>•</span><span>uploaded by ${esc(r.by)}</span><span>•</span><span>${r.date}</span></div><div class="modal-body"><p>${esc(r.desc)}</p><p>Files should be delivered through signed URLs in production. For links, validate that the destination is HTTPS before saving it.</p></div><div class="modal-actions"><button class="btn primary" onclick="showToast('${r.type==='link'?'External resource opened.':'Signed download flow opened.'}');">${r.type==='link'?'open link ↗':'download '+r.size}</button><button class="btn" onclick="toggleResourceSave('${r.id}');closeModal()">${r.saved?'★ remove from saved':'☆ save resource'}</button></div>`);}
+    function openDoubt(id){const d=doubts.find(x=>x.id===id);if(!d)return;openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">${d.subject} · DOUBT BOARD</div><h2>${esc(d.title)}</h2><div class="modal-meta"><span>${d.status}</span><span>•</span><span>asked by ${esc(d.author)}</span></div><div class="modal-body"><p>${esc(d.excerpt)}</p><p><strong>Answers</strong></p><div class="card card-soft" style="padding:13px;margin-top:7px"><strong style="font-size:10px">Aarav Shah</strong><p style="margin-top:4px;font-size:9px">Think of the pointer move as eliminating a whole set of impossible pairs at once. Because the array is sorted, moving the correct side cannot discard a solution that remains feasible.</p><div style="margin-top:7px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:8px;color:var(--ink-soft)">▲ 7 helpful</span><button class="btn small green" onclick="showToast('Answer marked helpful.');">helpful</button></div></div></div><div class="modal-actions"><button class="btn primary" onclick="showToast('Answer composer opened.');">+ answer this doubt</button><button class="btn" onclick="toggleFollow('${d.id}');closeModal()">${d.followed?'following':'follow'} doubt</button></div>`);}
+    function openPerson(initials){const p=people.find(x=>x.initials===initials);if(!p)return;openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">PUBLIC PROFILE</div><div style="display:flex;align-items:center;gap:13px;margin-top:8px"><div class="person-avatar" style="width:66px;height:66px;flex:0 0 66px;background:var(--lavender);font-size:28px">${p.initials}</div><div><h2 style="padding:0;margin:0">${esc(p.name)}</h2><div class="modal-meta" style="margin-top:3px">${esc(p.role)}</div></div></div><div class="modal-body"><p>${esc(p.bio)}</p><div class="skill-list" style="margin-top:9px">${p.skills.map(s=>`<span class="skill">${esc(s)}</span>`).join('')}</div></div><div class="modal-actions"><button class="btn primary" onclick="showToast('Profile interaction is ready for a messaging / mention flow.');">mention @${esc(p.name.split(' ')[0])}</button></div>`);}
+
+    function openNoticeComposer(){openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">CR COMPOSER</div><h2>post a notice.</h2><div class="form-grid" style="margin-top:17px"><div class="field" style="grid-column:1/-1"><label>TITLE</label><input class="input" placeholder="Clear, specific notice title" /></div><div class="field"><label>CATEGORY</label><select class="select"><option>Exam</option><option>Placement</option><option>General</option><option>Event</option><option>Holiday</option></select></div><div class="field"><label>EXPIRES</label><input class="input" type="date" /></div><div class="field" style="grid-column:1/-1"><label>CONTENT</label><textarea class="textarea" placeholder="Write the useful details, not just a headline."></textarea></div></div><div class="modal-actions"><button class="btn primary" onclick="showToast('Notice draft validated. Backend save is the next wiring step.');closeModal();">post notice</button><button class="btn" onclick="closeModal()">cancel</button></div>`);}
+    function openResourceComposer(){openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">RESOURCE UPLOAD</div><h2>put something useful on the shelf.</h2><div class="form-grid" style="margin-top:17px"><div class="field" style="grid-column:1/-1"><label>TITLE</label><input class="input" placeholder="What is this?" /></div><div class="field"><label>SUBJECT</label><select class="select"><option>DBMS</option><option>DSA</option><option>Maths</option><option>Web Dev</option><option>AI / ML</option></select></div><div class="field"><label>TYPE</label><select class="select"><option>PDF</option><option>Link</option><option>Document</option><option>Image</option></select></div><div class="field" style="grid-column:1/-1"><label>FILE OR HTTPS LINK</label><input class="input" type="text" placeholder="Choose a file or paste a secure link" /></div></div><div style="margin-top:11px;padding:12px;border:2px dashed var(--ink);background:var(--paper-2);font-size:8px;color:var(--ink-soft)">Production flow: validate size + MIME → upload progress → success state → signed URL for downloads.</div><div class="modal-actions"><button class="btn primary" onclick="showToast('Upload flow validated in demo mode.');closeModal();">upload</button><button class="btn" onclick="closeModal()">cancel</button></div>`);}
+    function openRequestComposer(){openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">RESOURCE REQUEST</div><h2>what are you looking for?</h2><div class="field" style="margin-top:17px"><label>REQUEST TITLE</label><input class="input" placeholder="e.g. Unit 4 OS notes" /></div><div class="field" style="margin-top:11px"><label>DETAILS</label><textarea class="textarea" placeholder="Mention the subject, unit, preferred format, or deadline."></textarea></div><div class="modal-actions"><button class="btn primary" onclick="showToast('Resource request posted.');closeModal();">post request</button></div>`);}
+    function openDoubtComposer(){openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">DOUBT COMPOSER</div><h2>ask a good question.</h2><div class="form-grid" style="margin-top:17px"><div class="field" style="grid-column:1/-1"><label>TITLE</label><input class="input" placeholder="What exactly are you stuck on?" /></div><div class="field"><label>SUBJECT</label><select class="select"><option>DSA</option><option>DBMS</option><option>Maths</option><option>Web Dev</option><option>AI / ML</option></select></div><div class="field"><label>TAGS</label><input class="input" placeholder="two pointers, exam..." /></div><div class="field" style="grid-column:1/-1"><label>BODY</label><textarea class="textarea" placeholder="Show the part you already understand. It helps people answer better."></textarea></div></div><div class="modal-actions"><button class="btn primary" onclick="showToast('Doubt posted.');closeModal();">ask the community</button></div>`);}
+
+    function openTool(type){
+      const content={
+        timetable:{title:'your timetable',body:'A future-ready timetable panel can pull the current batch schedule and highlight today’s classes. This demo shows the interaction surface.',action:'open timetable'},
+        sgpa:{title:'SGPA calculator',body:'Choose subjects, credits and grades. The final implementation can keep the calculator local to the device so it never needs to store these numbers.',action:'calculate SGPA'},
+        attendance:{title:'attendance check',body:'Enter total lectures and attended lectures to calculate the current percentage. Keep the calculation client-side unless you later connect a college attendance feed.',action:'calculate attendance'}
+      }[type];
+      if(!content)return;
+      openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">QUICK TOOL</div><h2>${content.title}</h2><div class="modal-body"><p>${content.body}</p></div><div class="modal-actions"><button class="btn primary" onclick="showToast('${content.action} is ready for the next UI pass.');">${content.action} →</button></div>`);
+    }
+    function saveItem(id){showToast('Saved for later.');}
+    function confirmDeleteAccount(){openModal(`<button class="modal-close" onclick="closeModal()">×</button><div class="modal-kicker">ACCOUNT DATA</div><h2>delete your account?</h2><div class="modal-body"><p>This prototype intentionally asks for an extra confirmation. Production should explain what gets removed, what may remain in public content, and the recovery window before the final destructive action.</p></div><div class="modal-actions"><button class="btn" onclick="closeModal()">keep my account</button><button class="btn" style="background:var(--red-soft)" onclick="showToast('Demo only: no account was deleted.');closeModal();">continue to confirmation</button></div>`);}
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+    const searchOverlay=document.getElementById('searchOverlay'); const globalInput=document.getElementById('globalSearchInput');
+    function openSearch(){searchOverlay.classList.add('open');setTimeout(()=>globalInput.focus(),30);renderGlobalSearch('');}
+    function closeSearch(){searchOverlay.classList.remove('open');}
+    document.getElementById('searchTrigger').addEventListener('click',openSearch); document.getElementById('searchIcon').addEventListener('click',openSearch); document.getElementById('notifIcon').addEventListener('click',()=>showView('notifications')); document.getElementById('profileAvatar').addEventListener('click',()=>showView('settings'));
+    searchOverlay.addEventListener('click',e=>{if(e.target===searchOverlay)closeSearch();});
+    globalInput.addEventListener('input',e=>renderGlobalSearch(e.target.value));
+    function renderGlobalSearch(term){
+      const q=term.trim().toLowerCase();
+      const rows=[];
+      notices.forEach(n=>{if(!q||(n.title+n.body).toLowerCase().includes(q)) rows.push({kind:'Notice',title:n.title,sub:n.meta,fn:`openNotice('${n.id}')`});});
+      resources.forEach(r=>{if(!q||(r.title+r.desc+r.tags.join(' ')).toLowerCase().includes(q)) rows.push({kind:'Resource',title:r.title,sub:`${r.subject.toUpperCase()} · ${r.by}`,fn:`openResource('${r.id}')`});});
+      doubts.forEach(d=>{if(!q||(d.title+d.excerpt+d.tags.join(' ')).toLowerCase().includes(q)) rows.push({kind:'Doubt',title:d.title,sub:`${d.subject} · ${d.status}`,fn:`openDoubt('${d.id}')`});});
+      people.forEach(p=>{if(!q||(p.name+p.bio+p.skills.join(' ')).toLowerCase().includes(q)) rows.push({kind:'People',title:p.name,sub:`${p.role} · ${p.skills.join(', ')}`,fn:`openPerson('${p.initials}')`});});
+      document.getElementById('globalSearchResults').innerHTML=rows.slice(0,9).map(r=>`<button class="search-result" style="width:100%;text-align:left" onclick="closeSearch();${r.fn}"><strong>${esc(r.kind)} · ${esc(r.title)}</strong><span>${esc(r.sub)}</span></button>`).join('') || `<div class="empty" style="padding:22px"><div class="empty-art">⌕</div><h3>no results yet.</h3><p>Try the name of a subject, a notice keyword, or someone in your batch.</p></div>`;
+    }
+
+    /* =========================================================
+       SETTINGS TABS + TOGGLES
+       ========================================================= */
+    document.querySelectorAll('[data-settings-tab]').forEach(tab=>tab.addEventListener('click',()=>{
+      const key=tab.dataset.settingsTab; document.querySelectorAll('[data-settings-tab]').forEach(x=>x.classList.toggle('active',x===tab)); document.querySelectorAll('.settings-section').forEach(x=>{x.hidden=x.dataset.settingsSection!==key;x.classList.toggle('active',x.dataset.settingsSection===key);});
+    }));
+    document.querySelectorAll('[data-toggle]').forEach(toggle=>toggle.addEventListener('click',()=>toggle.classList.toggle('on')));
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    renderHomeNotices('all'); renderEvents(); renderNotices(); renderResources(); renderDoubts(); renderPeople(); renderActivity(); renderSaved(); renderNotifications();
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margins — Doubt Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"DM Sans",sans-serif;color:#292721;min-height:100vh;
+background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.55),transparent 25%),
+radial-gradient(circle at 85% 70%,rgba(130,90,40,.08),transparent 25%),
+radial-gradient(rgba(90,65,35,.09) 1px,transparent 1px);
+background-size:auto,auto,9px 9px;background-color:#e9dcc3}
+:root{--ink:#282722;--ink-soft:#59564f;--paper:#fffdf3;--blue:#345f9e;--blue-light:#dae6f4;
+--red:#d74b42;--yellow:#efd477;--green:#bdd7bc}
+.page{width:min(1000px,calc(100% - 28px));margin:auto;padding:28px 0 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:51px;height:51px;display:grid;place-items:center;font-family:"Caveat",cursive;
+font-size:25px;font-weight:700;color:#fff;background:var(--blue);border-radius:7px 12px 8px 13px;
+transform:rotate(-5deg);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.brand-name{font-size:18px;font-weight:800}
+.brand-subtitle{margin-top:2px;font-size:9px;letter-spacing:.18em;opacity:.45}
+.row-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:14px}
+h1.title{font-family:"Caveat",cursive;font-size:clamp(40px,5vw,60px);line-height:.85}
+.subtitle{font-size:13px;color:var(--ink-soft);margin-top:6px}
+.ask-btn{padding:11px 20px;border:2px solid var(--ink);background:var(--yellow);box-shadow:3px 3px 0 var(--ink);
+font-family:"Patrick Hand",cursive;font-size:17px;cursor:pointer;transform:rotate(-1deg)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.filter{padding:7px 15px;background:rgba(255,253,243,.78);border:2px solid var(--ink);
+box-shadow:2px 3px 0 rgba(40,40,35,.35);font-family:"Patrick Hand",cursive;font-size:15px;cursor:pointer}
+.filter.active{background:var(--blue);color:#fff}
+.doubt-card{position:relative;padding:18px 20px;margin-bottom:14px;background:rgba(255,253,243,.92);
+border:2px solid var(--ink);box-shadow:4px 5px 0 var(--ink);transform:rotate(-.25deg)}
+.doubt-card:nth-child(even){transform:rotate(.25deg)}
+.dc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dc-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.dc-meta{font-family:"Patrick Hand",cursive;font-size:13px;opacity:.6}
+.status{padding:2px 9px;border:1px solid var(--ink);font-size:9px;font-weight:800;white-space:nowrap}
+.status.solved{background:var(--green)}
+.status.open{background:#f1c2bd}
+.tagline{font-size:11px;color:var(--ink-soft);margin-top:8px}
+.footer{margin-top:42px;text-align:center;font-family:"Caveat",cursive;font-size:24px;color:#596779}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="topbar">
+<div class="brand"><div class="brand-mark">M</div>
+<div><div class="brand-name">MARGINS</div><div class="brand-subtitle">AI&DS · DIVISION A</div></div></div>
+</header>
+
+<div class="row-top">
+<div><h1 class="title">doubt board 💡</h1><div class="subtitle">ask, answer, help each other out</div></div>
+<button class="ask-btn">+ ask a doubt</button>
+</div>
+
+<div class="filters">
+<span class="filter active">✦ all</span>
+<span class="filter">DBMS</span>
+<span class="filter">Python</span>
+<span class="filter">Maths</span>
+<span class="filter">open</span>
+<span class="filter">solved</span>
+</div>
+
+<div class="doubt-card">
+<div class="dc-top"><div><div class="dc-title">How does BCNF differ from 3NF?</div>
+<div class="dc-meta">DBMS · 8 answers · asked by Ishan G. · 2h ago</div></div>
+<span class="status solved">✓ SOLVED</span></div>
+</div>
+
+<div class="doubt-card">
+<div class="dc-top"><div><div class="dc-title">Why is this SQL query returning NULL?</div>
+<div class="dc-meta">SQL · 3 answers · asked by Rahul S. · yesterday</div></div>
+<span class="status open">OPEN</span></div>
+</div>
+
+<div class="doubt-card">
+<div class="dc-top"><div><div class="dc-title">Difference between list and tuple in Python?</div>
+<div class="dc-meta">Python · 5 answers · asked by Neha M. · 2 days ago</div></div>
+<span class="status solved">✓ SOLVED</span></div>
+</div>
+
+<div class="doubt-card">
+<div class="dc-top"><div><div class="dc-title">Confused about eigenvalues in this problem set</div>
+<div class="dc-meta">Maths · 1 answer · asked by Arjun S. · 3 days ago</div></div>
+<span class="status open">OPEN</span></div>
+</div>
+
+<div class="footer">— no doubt left behind —</div>
+</main>
+</body>
+</html>

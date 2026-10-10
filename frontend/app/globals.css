@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Margins sketchbook background — applies app-wide */
+body {
+  font-family: "DM Sans", sans-serif;
+  color: #292721;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.55), transparent 25%),
+    radial-gradient(circle at 85% 70%, rgba(130,90,40,.08), transparent 25%),
+    radial-gradient(rgba(90,65,35,.09) 1px, transparent 1px);
+  background-size: auto, auto, 9px 9px;
+  background-color: #e9dcc3;
+}
+
+/* =========================================================
+   MARGINS DESIGN SYSTEM — ported from tcet-student-hub.html
+   ========================================================= */
+:root {
+  --bg: #e9dfcb;
+  --bg-deep: #dcccad;
+  --paper: #fffdf5;
+  --paper-2: #f8f1df;
+  --ink: #25241f;
+  --ink-soft: #69665d;
+  --line: rgba(37, 36, 31, .14);
+  --line-strong: rgba(37, 36, 31, .26);
+  --blue: #3b64a3;
+  --blue-dark: #294d7f;
+  --blue-soft: #dce8f4;
+  --yellow: #edd779;
+  --yellow-soft: #f6edbd;
+  --green: #cfe0c8;
+  --green-dark: #567053;
+  --red: #d85e55;
+  --red-soft: #f3c7c0;
+  --lavender: #ddd5e9;
+  --shadow: 5px 6px 0 var(--ink);
+  --shadow-sm: 3px 4px 0 var(--ink);
+  --sidebar: 246px;
+  --max: 1480px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 12% 11%, rgba(255,255,255,.62), transparent 21%),
+    radial-gradient(circle at 84% 72%, rgba(95,74,44,.08), transparent 24%),
+    radial-gradient(rgba(87,67,39,.09) 1px, transparent 1px),
+    var(--bg);
+  background-size: auto, auto, 11px 11px, auto;
+  font-family: "DM Sans", sans-serif;
+}
+:focus-visible { outline: 3px solid rgba(59,100,163,.55); outline-offset: 3px; }
+
+/* shared primitives, used across pages */
+.card {
+  position: relative;
+  background: rgba(255,253,245,.92);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow);
+}
+.card-soft { box-shadow: var(--shadow-sm); }
+.btn {
+  min-height: 40px; padding: 9px 14px; display: inline-flex; align-items: center;
+  justify-content: center; gap: 7px; border: 2px solid var(--ink); background: var(--paper);
+  box-shadow: var(--shadow-sm); cursor: pointer; transition: .18s var(--ease);
+  font-size: 11px; font-weight: 800; font-family: "DM Sans", sans-serif;
+}
+.btn:hover { transform: translate(2px,2px); box-shadow: 1px 2px 0 var(--ink); }
+.btn.primary { background: var(--blue); color: white; }
+.btn.yellow { background: var(--yellow); }
+.btn.small { min-height: 34px; padding: 7px 11px; font-size: 10px; }
+.input, .select, .textarea {
+  width: 100%; border: 2px solid var(--ink); background: rgba(255,255,255,.65);
+  padding: 11px 12px; border-radius: 9px; color: var(--ink); font-size: 11px; font-family: "DM Sans", sans-serif;
+}
+.textarea { min-height: 100px; resize: vertical; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 6px; color: var(--blue);
+  font: 18px "Patrick Hand", cursive; transform: rotate(-1deg);
+  border-bottom: 2px solid var(--blue); text-underline-offset: 4px;
+}
