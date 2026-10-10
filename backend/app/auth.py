@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import jwt
 from fastapi import Header, HTTPException
 from .config import SUPABASE_JWT_SECRET
+from .db import supabase_admin
 
 
 @dataclass
@@ -14,10 +15,24 @@ def get_current_user(authorization: str = Header(...)) -> CurrentUser:
     if not authorization.lower().startswith("bearer "):
         raise HTTPException(401, "Missing bearer token")
     token = authorization[7:].strip()
+
+    # Fast local JWT decode if secret is provided
+    if SUPABASE_JWT_SECRET and SUPABASE_JWT_SECRET != "your-jwt-secret":
+        try:
+            payload = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=["HS256"], audience="authenticated")
+            return CurrentUser(user_id=payload["sub"], email=payload.get("email"))
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(401, "Session expired, please log in again")
+        except jwt.InvalidTokenError:
+            pass
+
+    # Reliable fallback to Supabase GoTrue server verification
     try:
-        payload = jwt.decode(token, SUPABASE_JWT_SECRET, algorithms=["HS256"], audience="authenticated")
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(401, "Session expired, please log in again")
-    except jwt.InvalidTokenError:
-        raise HTTPException(401, "Invalid token")
-    return CurrentUser(user_id=payload["sub"], email=payload.get("email"))
+        user_res = supabase_admin.auth.get_user(token)
+        if user_res and user_res.user:
+            return CurrentUser(user_id=user_res.user.id, email=user_res.user.email)
+    except Exception:
+        pass
+
+    raise HTTPException(401, "Invalid or expired token")
+
