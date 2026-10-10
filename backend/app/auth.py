@@ -11,9 +11,9 @@ class CurrentUser:
     email: str | None
 
 
-def get_current_user(authorization: str = Header(...)) -> CurrentUser:
-    if not authorization.lower().startswith("bearer "):
-        raise HTTPException(401, "Missing bearer token")
+def get_current_user(authorization: str | None = Header(None)) -> CurrentUser:
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(401, "Missing or invalid authorization header")
     token = authorization[7:].strip()
 
     # Fast local JWT decode if secret is provided
