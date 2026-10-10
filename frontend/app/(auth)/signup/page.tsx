@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { API_URL } from "@/lib/api";
 
@@ -61,8 +62,11 @@ export default function SignupPage() {
   return (
     <main className="dh-page">
       <div className="dh-card">
-        <div className="dh-wordmark">
-          <span className="dh-wordmark-m">M</span>argins
+        <div className="dh-top-bar">
+          <Link href="/intro" className="dh-brand-link">
+            <span className="dh-wordmark-m">M</span>argins
+          </Link>
+          <span className="dh-tag">DIV A · TCET</span>
         </div>
         <h1 className="dh-title">join the margins <span className="dh-title-mark">✎</span></h1>
         <p className="dh-sub">you'll need the invite code from your CR</p>
@@ -130,6 +134,21 @@ export default function SignupPage() {
             {loading ? "creating account..." : "enter margins →"}
           </button>
         </form>
+
+        <div className="dh-links-wrap">
+          <p className="dh-switch-text">
+            Already have an account?{" "}
+            <Link href="/login" className="dh-link-highlight">
+              Log in here →
+            </Link>
+          </p>
+          <div className="dh-divider">
+            <span>or</span>
+          </div>
+          <Link href="/intro" className="dh-intro-link">
+            ✎ New here? Read what Margins is for & guide
+          </Link>
+        </div>
       </div>
 
       <style jsx global>{`
@@ -244,14 +263,99 @@ export default function SignupPage() {
           font-family: "Patrick Hand", cursive;
           font-size: 17px;
           cursor: pointer;
+          transition: transform 0.15s ease;
+        }
+        .dh-button:hover {
+          transform: translate(1px, 1px);
+          box-shadow: 2px 2px 0 #282722;
         }
         .dh-button:disabled {
           opacity: 0.6;
           cursor: not-allowed;
+          transform: none;
         }
         .dh-error {
           font-size: 12px;
           color: #d74b42;
+          font-weight: 500;
+        }
+        .dh-top-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 12px;
+        }
+        .dh-brand-link {
+          text-decoration: none;
+          font-weight: 700;
+          font-size: 15px;
+          letter-spacing: .14em;
+          text-transform: uppercase;
+          color: #59564f;
+        }
+        .dh-tag {
+          font-family: "Patrick Hand", cursive;
+          font-size: 13px;
+          color: #345f9e;
+          background: #dce8f4;
+          border: 1.5px solid #282722;
+          padding: 2px 8px;
+          border-radius: 4px;
+        }
+        .dh-links-wrap {
+          margin-top: 22px;
+          padding-top: 18px;
+          border-top: 1.5px dashed rgba(40, 39, 34, 0.25);
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .dh-switch-text {
+          font-size: 13px;
+          color: #59564f;
+        }
+        .dh-link-highlight {
+          color: #345f9e;
+          font-weight: 700;
+          text-decoration: none;
+          border-bottom: 1.5px solid #345f9e;
+          padding-bottom: 1px;
+        }
+        .dh-link-highlight:hover {
+          color: #204175;
+          border-color: #204175;
+        }
+        .dh-divider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          margin: 4px 0;
+        }
+        .dh-divider span {
+          background: #fffdf5;
+          padding: 0 8px;
+          font-family: "Patrick Hand", cursive;
+          font-size: 13px;
+          color: #8e8b81;
+        }
+        .dh-intro-link {
+          font-family: "Patrick Hand", cursive;
+          font-size: 15px;
+          color: #49463e;
+          text-decoration: none;
+          background: #fbf6e3;
+          border: 1.5px solid #282722;
+          padding: 6px 12px;
+          border-radius: 6px;
+          box-shadow: 2px 2px 0 #282722;
+          transition: all 0.15s ease;
+        }
+        .dh-intro-link:hover {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0 #282722;
+          background: #f5eed0;
         }
       `}</style>
     </main>

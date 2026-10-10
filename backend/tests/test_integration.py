@@ -1,5 +1,8 @@
 import httpx
 import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def run_tests():
     results = []
@@ -64,23 +67,30 @@ def run_tests():
     except Exception as e:
         results.append(("Frontend /signup route", False, str(e)))
 
-    # 7. Frontend / root route protection (redirect to login)
+    # 7. Frontend /intro page
+    try:
+        r = httpx.get("http://127.0.0.1:3000/intro", timeout=5)
+        results.append(("Frontend /intro page (200 OK)", r.status_code == 200, f"status={r.status_code}"))
+    except Exception as e:
+        results.append(("Frontend /intro page", False, str(e)))
+
+    # 8. Frontend / root route protection (redirect to intro)
     try:
         r = httpx.get("http://127.0.0.1:3000/", follow_redirects=False, timeout=5)
         loc = r.headers.get("location", "")
-        passed = r.status_code == 307 and "/login" in loc
-        results.append(("Frontend / route auth redirect", passed, f"status={r.status_code}, redirect={loc}"))
+        passed = r.status_code == 307 and ("/intro" in loc or "/login" in loc)
+        results.append(("Frontend / route unauth redirect", passed, f"status={r.status_code}, redirect={loc}"))
     except Exception as e:
-        results.append(("Frontend / route auth redirect", False, str(e)))
+        results.append(("Frontend / route unauth redirect", False, str(e)))
 
-    # 8. Frontend /notices route protection (redirect to login)
+    # 9. Frontend /notices route protection (redirect to intro)
     try:
         r = httpx.get("http://127.0.0.1:3000/notices", follow_redirects=False, timeout=5)
         loc = r.headers.get("location", "")
-        passed = r.status_code == 307 and "/login" in loc
-        results.append(("Frontend /notices route auth redirect", passed, f"status={r.status_code}, redirect={loc}"))
+        passed = r.status_code == 307 and ("/intro" in loc or "/login" in loc)
+        results.append(("Frontend /notices route unauth redirect", passed, f"status={r.status_code}, redirect={loc}"))
     except Exception as e:
-        results.append(("Frontend /notices route auth redirect", False, str(e)))
+        results.append(("Frontend /notices route unauth redirect", False, str(e)))
 
     print("\n" + "=" * 78)
     print("                MARGINS SYSTEM INTEGRATION TEST REPORT")
