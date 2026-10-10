@@ -1,5 +1,6 @@
 import re
 import uuid
+import time
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -15,8 +16,17 @@ ALLOWED_EXTENSIONS = {
 }
 MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
 
+_MEMBERSHIP_CACHE: dict[str, tuple[float, str]] = {}
+_SUBJECTS_CACHE: dict[str, tuple[float, list]] = {}
+
 
 def _membership(user: CurrentUser) -> str:
+    now = time.time()
+    if user.user_id in _MEMBERSHIP_CACHE:
+        exp, cid = _MEMBERSHIP_CACHE[user.user_id]
+        if now < exp:
+            return cid
+
     m = (
         supabase_admin.table("class_memberships")
         .select("class_id")
@@ -27,7 +37,9 @@ def _membership(user: CurrentUser) -> str:
     )
     if not m or not m.data:
         raise HTTPException(403, "You are not an active member of a class")
-    return m.data["class_id"]
+    cid = m.data["class_id"]
+    _MEMBERSHIP_CACHE[user.user_id] = (now + 60.0, cid)
+    return cid
 
 
 def _is_cr(user_id: str) -> bool:
@@ -58,6 +70,11 @@ class ResourceCreateIn(BaseModel):
 @router.get("/subjects")
 def list_subjects(user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
+    now = time.time()
+    if class_id in _SUBJECTS_CACHE:
+        exp, cached = _SUBJECTS_CACHE[class_id]
+        if now < exp:
+            return cached
     subjects = (
         supabase_admin.table("subjects")
         .select("id, name, code, semester")
@@ -84,6 +101,7 @@ def list_subjects(user: CurrentUser = Depends(get_current_user)):
     for s in subjects:
         s["resource_count"] = count_map.get(s["id"], 0)
 
+    _SUBJECTS_CACHE[class_id] = (now + 60.0, subjects)
     return subjects
 
 

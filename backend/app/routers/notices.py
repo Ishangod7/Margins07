@@ -7,7 +7,17 @@ router = APIRouter(prefix="/notices", tags=["notices"])
 CATEGORIES = {"Academic", "Deadline", "Exam", "Assignment", "General", "Important"}
 
 
+import time
+
+_MEMBERSHIP_CACHE: dict[str, tuple[float, str]] = {}
+
 def _membership(user: CurrentUser) -> str:
+    now = time.time()
+    if user.user_id in _MEMBERSHIP_CACHE:
+        exp, cid = _MEMBERSHIP_CACHE[user.user_id]
+        if now < exp:
+            return cid
+
     m = (
         supabase_admin.table("class_memberships")
         .select("class_id")
@@ -18,7 +28,9 @@ def _membership(user: CurrentUser) -> str:
     )
     if not m or not m.data:
         raise HTTPException(403, "You are not an active member of a class")
-    return m.data["class_id"]
+    cid = m.data["class_id"]
+    _MEMBERSHIP_CACHE[user.user_id] = (now + 60.0, cid)
+    return cid
 
 
 def _require_cr(user: CurrentUser) -> str:

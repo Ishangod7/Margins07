@@ -1,9 +1,11 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { apiFetch, ApiError, type Me } from "@/lib/api";
 
 // Server-side: get the Supabase access token from the cookie session, then ask the API who we are.
-export async function requireSession() {
+// Cached per-request to avoid redundant network round-trips in Server Components.
+export const requireSession = cache(async () => {
   const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) redirect("/intro");
@@ -15,4 +17,4 @@ export async function requireSession() {
     if (e instanceof ApiError && e.status === 401) redirect("/login?expired=1");
     throw e;
   }
-}
+});
