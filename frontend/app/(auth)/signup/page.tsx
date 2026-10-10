@@ -68,7 +68,7 @@ export default function SignupPage() {
           </Link>
           <span className="dh-tag">DIV A · TCET</span>
         </div>
-        <h1 className="dh-title">join the margins <span className="dh-title-mark">✎</span></h1>
+        <h1 className="dh-title">join the margins</h1>
         <p className="dh-sub">you'll need the invite code from your CR</p>
 
         <form onSubmit={handleSubmit} className="dh-form">
@@ -146,7 +146,7 @@ export default function SignupPage() {
             <span>or</span>
           </div>
           <Link href="/intro" className="dh-intro-link">
-            ✎ New here? Read what Margins is for & guide
+            New here? Read what Margins is for & guide →
           </Link>
         </div>
       </div>

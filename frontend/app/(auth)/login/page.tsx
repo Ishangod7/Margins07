@@ -77,7 +77,7 @@ export default function LoginPage() {
             <span>or</span>
           </div>
           <Link href="/intro" className="dh-intro-link">
-            ✎ New here? Read what Margins is for & guide
+            New here? Read what Margins is for & guide →
           </Link>
         </div>
       </div>

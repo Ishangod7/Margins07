@@ -2,6 +2,7 @@ import AppShell from "@/components/layout/AppShell";
 import { NoticeComposer, NoticeActions } from "@/components/notices/NoticeTools";
 import { apiFetch, ApiError, type Notice } from "@/lib/api";
 import { requireSession } from "@/lib/session";
+import { DocIcon, PinIcon } from "@/components/ui/Icons";
 import styles from "./notices.module.css";
 
 function timeAgo(iso: string) {
@@ -24,7 +25,7 @@ export default async function NoticeBoardPage() {
   return (
     <AppShell noticeCount={notices.length} displayName={me.profile?.display_name}>
       <section className={`card ${styles.pageCover}`}>
-        <h1>notice board 📌</h1>
+        <h1>notice board</h1>
         <p>announcements & deadlines for the class, all in one place.</p>
       </section>
 
@@ -41,10 +42,17 @@ export default async function NoticeBoardPage() {
       {notices.map((n) => (
         <article key={n.id} className={`card ${styles.noticeCard}`}>
           <div className={styles.noticeCardGrid}>
-            <div className={styles.miniIcon}>📄</div>
+            <div className={styles.miniIcon} aria-hidden="true">
+              <DocIcon size={20} />
+            </div>
             <div>
               <span className={styles.rowTag}>{n.category.toUpperCase()}</span>
-              {n.is_pinned && <span className={styles.pin}>📌 PINNED</span>}
+              {n.is_pinned && (
+                <span className={styles.pin}>
+                  <PinIcon size={11} style={{ display: "inline-block", verticalAlign: "middle", marginRight: 3 }} />
+                  PINNED
+                </span>
+              )}
               <h3>{n.title}</h3>
               <p>{n.content}</p>
               {isCr && <NoticeActions id={n.id} pinned={n.is_pinned} />}

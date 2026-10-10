@@ -1,12 +1,15 @@
 import AppShell from "@/components/layout/AppShell";
 import { apiFetch, type Notice } from "@/lib/api";
 import { requireSession } from "@/lib/session";
+import {
+  DocIcon,
+  ResourceIcon,
+  DoubtIcon,
+  NoticeIcon,
+  SettingsIcon,
+  SparklesIcon,
+} from "@/components/ui/Icons";
 import styles from "./home.module.css";
-
-const ICONS: Record<string, string> = {
-  Exam: "📄", Deadline: "📄", Assignment: "📄",
-  Academic: "📚", General: "📚", Important: "✦",
-};
 
 function fmtDate(d: Date) {
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
@@ -29,7 +32,7 @@ export default async function HomePage() {
     <AppShell noticeCount={noticeCount} displayName={profile?.display_name}>
       <section className={styles.homeIntro}>
         <div>
-          <div className="eyebrow">✎ {weekday}, {dateLong}</div>
+          <div className="eyebrow">{weekday}, {dateLong}</div>
           <h1>hey, {profile?.display_name?.split(" ")[0] ?? "student"}!</h1>
           <p>here's what's happening in your division today.</p>
         </div>
@@ -71,7 +74,7 @@ export default async function HomePage() {
         <div className={styles.stack}>
           <section className={`card ${styles.panel}`}>
             <div className={styles.panelHead}>
-              <h3>today's notices ✎</h3>
+              <h3>today's notices</h3>
               <a href="/notices">see everything →</a>
             </div>
             {(!notices || notices.length === 0) && (
@@ -79,7 +82,9 @@ export default async function HomePage() {
             )}
             {notices?.map((n) => (
               <a key={n.id} href="/notices" className={styles.noticeRow}>
-                <div className={styles.miniIcon}>{ICONS[n.category] ?? "📄"}</div>
+                <div className={styles.miniIcon} aria-hidden="true">
+                  <DocIcon size={20} />
+                </div>
                 <div>
                   <span className={styles.rowTag}>{n.category.toUpperCase()}</span>
                   <div className={styles.rowTitle}>{n.title}</div>
@@ -92,7 +97,7 @@ export default async function HomePage() {
 
         <aside className={styles.stack}>
           <section className={`card ${styles.sticky}`}>
-            <div className={styles.stickyTitle}>upcoming stuff ✦</div>
+            <div className={styles.stickyTitle}>upcoming stuff</div>
             <div className={styles.event}>
               <div className={styles.eventDate}>—<br />—</div>
               <div>
@@ -103,25 +108,33 @@ export default async function HomePage() {
           </section>
 
           <section className={`card ${styles.panel}`}>
-            <div className={styles.panelHead}><h3>quick stuff ✦</h3></div>
+            <div className={styles.panelHead}><h3>quick stuff</h3></div>
             <div className={styles.toolGrid}>
               <a href="/resources" className={styles.tool}>
-                <div className={styles.toolIcon}>📚</div>
+                <div className={styles.toolIcon} aria-hidden="true">
+                  <ResourceIcon size={22} />
+                </div>
                 <div className={styles.toolName}>resources</div>
                 <div className={styles.toolDescription}>notes + PYQs</div>
               </a>
               <a href="/doubts" className={styles.tool}>
-                <div className={styles.toolIcon}>💡</div>
+                <div className={styles.toolIcon} aria-hidden="true">
+                  <DoubtIcon size={22} />
+                </div>
                 <div className={styles.toolName}>doubts</div>
                 <div className={styles.toolDescription}>ask + answer</div>
               </a>
               <a href="/notices" className={styles.tool}>
-                <div className={styles.toolIcon}>📌</div>
+                <div className={styles.toolIcon} aria-hidden="true">
+                  <NoticeIcon size={22} />
+                </div>
                 <div className={styles.toolName}>notices</div>
                 <div className={styles.toolDescription}>all announcements</div>
               </a>
               <a href="/settings" className={styles.tool}>
-                <div className={styles.toolIcon}>⚙</div>
+                <div className={styles.toolIcon} aria-hidden="true">
+                  <SettingsIcon size={22} />
+                </div>
                 <div className={styles.toolName}>settings</div>
                 <div className={styles.toolDescription}>your profile</div>
               </a>
@@ -129,7 +142,7 @@ export default async function HomePage() {
           </section>
 
           <section className={`card ${styles.aiCard}`}>
-            <div className={styles.aiTitle}>ask margins AI ✦</div>
+            <div className={styles.aiTitle}>ask margins AI</div>
             <div className={styles.aiText}>confused about a notice? ask me and I'll find the useful bits for you.</div>
             <button className="btn primary" style={{ marginTop: 14, width: "100%" }} disabled>coming soon →</button>
           </section>
