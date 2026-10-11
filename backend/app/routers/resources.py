@@ -18,6 +18,8 @@ MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
 
 _MEMBERSHIP_CACHE: dict[str, tuple[float, str]] = {}
 _SUBJECTS_CACHE: dict[str, tuple[float, list]] = {}
+_SUBJECTS_MAP_CACHE: dict[str, tuple[float, dict]] = {}
+_PROFILES_NAME_CACHE: dict[str, tuple[float, str]] = {}
 
 
 def _membership(user: CurrentUser) -> str:
@@ -159,21 +161,38 @@ def list_resources(
 
     resources = query.execute().data or []
 
-    # Populate subject names
-    sub_ids = list({r["subject_id"] for r in resources if r.get("subject_id")})
+    now = time.time()
+    # Populate subject names with cache
+    sub_ids = [r["subject_id"] for r in resources if r.get("subject_id")]
     sub_map = {}
-    if sub_ids:
-        subs = supabase_admin.table("subjects").select("id, name, code").in_("id", sub_ids).execute().data or []
+    missing_sub_ids = []
+    for sid in set(sub_ids):
+        if sid in _SUBJECTS_MAP_CACHE and now < _SUBJECTS_MAP_CACHE[sid][0]:
+            sub_map[sid] = _SUBJECTS_MAP_CACHE[sid][1]
+        else:
+            missing_sub_ids.append(sid)
+
+    if missing_sub_ids:
+        subs = supabase_admin.table("subjects").select("id, name, code").in_("id", missing_sub_ids).execute().data or []
         for s in subs:
             sub_map[s["id"]] = s
+            _SUBJECTS_MAP_CACHE[s["id"]] = (now + 300.0, s)
 
-    # Populate author names
-    author_ids = list({r["created_by"] for r in resources if r.get("created_by")})
+    # Populate author names with cache
+    author_ids = [r["created_by"] for r in resources if r.get("created_by")]
     name_map = {}
-    if author_ids:
-        profiles = supabase_admin.table("profiles").select("id, display_name").in_("id", author_ids).execute().data or []
+    missing_author_ids = []
+    for aid in set(author_ids):
+        if aid in _PROFILES_NAME_CACHE and now < _PROFILES_NAME_CACHE[aid][0]:
+            name_map[aid] = _PROFILES_NAME_CACHE[aid][1]
+        else:
+            missing_author_ids.append(aid)
+
+    if missing_author_ids:
+        profiles = supabase_admin.table("profiles").select("id, display_name").in_("id", missing_author_ids).execute().data or []
         for p in profiles:
             name_map[p["id"]] = p["display_name"]
+            _PROFILES_NAME_CACHE[p["id"]] = (now + 300.0, p["display_name"])
 
     # Check saves for current user
     saved_ids = set()
