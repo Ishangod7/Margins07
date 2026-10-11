@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import ALLOWED_ORIGINS
-from .routers import auth_routes, me, notices, resources
+from .routers import auth_routes, me, notices, resources, doubts
 
 app = FastAPI(title="Margins API")
 app.add_middleware(
@@ -16,6 +16,8 @@ app.include_router(auth_routes.router)
 app.include_router(me.router)
 app.include_router(notices.router)
 app.include_router(resources.router)
+app.include_router(doubts.router)
+app.include_router(doubts.answers_router)
 
 
 @app.get("/health")

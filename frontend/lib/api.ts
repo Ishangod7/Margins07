@@ -11,6 +11,39 @@ export type Me = {
   id: string; email: string | null; class_id: string | null;
   profile: { display_name: string; role: "member" | "cr" } | null;
 };
+export type Subject = {
+  id: string; name: string; code?: string; semester?: string;
+};
+export type Doubt = {
+  id: string;
+  title: string;
+  body: string;
+  status: "open" | "answered" | "solved";
+  tags: string[];
+  accepted_answer_id: string | null;
+  answer_count: number;
+  follow_count: number;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  subject?: Subject | null;
+  author_name: string;
+  is_followed: boolean;
+  is_mine: boolean;
+};
+export type Answer = {
+  id: string;
+  doubt_id: string;
+  body: string;
+  is_accepted: boolean;
+  helpful_count: number;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  author_name: string;
+  is_mine: boolean;
+  has_voted: boolean;
+};
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }

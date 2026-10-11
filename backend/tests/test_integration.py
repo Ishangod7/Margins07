@@ -4,6 +4,9 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+BACKEND_URL = os.environ.get("TEST_BACKEND_URL", "http://127.0.0.1:8000")
+FRONTEND_URL = os.environ.get("TEST_FRONTEND_URL", "http://127.0.0.1:3000")
+
 def run_tests():
     results = []
 
@@ -113,12 +116,54 @@ def run_tests():
 
     # 12. Frontend /resources route protection (redirect to intro)
     try:
-        r = httpx.get("http://127.0.0.1:3000/resources", follow_redirects=False, timeout=5)
+        r = httpx.get(f"{FRONTEND_URL}/resources", follow_redirects=False, timeout=8)
         loc = r.headers.get("location", "")
         passed = r.status_code == 307 and ("/intro" in loc or "/login" in loc)
         results.append(("Frontend /resources route unauth redirect", passed, f"status={r.status_code}, redirect={loc}"))
     except Exception as e:
         results.append(("Frontend /resources route unauth redirect", False, str(e)))
+
+    # 13. Supabase Doubt Board Tables Schema Verification
+    try:
+        from app.db import supabase_admin
+        d_tables = supabase_admin.table("doubts").select("id").limit(1).execute()
+        a_tables = supabase_admin.table("answers").select("id").limit(1).execute()
+        v_tables = supabase_admin.table("answer_votes").select("id").limit(1).execute()
+        f_tables = supabase_admin.table("doubt_follows").select("id").limit(1).execute()
+        passed = (
+            d_tables.data is not None and
+            a_tables.data is not None and
+            v_tables.data is not None and
+            f_tables.data is not None
+        )
+        results.append(("Supabase Doubts Schema (4 tables live)", passed, "doubts, answers, answer_votes, doubt_follows"))
+    except Exception as e:
+        results.append(("Supabase Doubts Schema (4 tables live)", False, str(e)))
+
+    # 14. Backend /doubts auth guard
+    try:
+        r = httpx.get(f"{BACKEND_URL}/doubts", timeout=8)
+        passed = r.status_code in (401, 403)
+        results.append(("Backend /doubts auth guard", passed, f"status={r.status_code}"))
+    except Exception as e:
+        results.append(("Backend /doubts auth guard", False, str(e)))
+
+    # 15. Backend /answers/fake-id/vote auth guard
+    try:
+        r = httpx.post(f"{BACKEND_URL}/answers/00000000-0000-0000-0000-000000000000/vote", timeout=8)
+        passed = r.status_code in (401, 403)
+        results.append(("Backend /answers vote auth guard", passed, f"status={r.status_code}"))
+    except Exception as e:
+        results.append(("Backend /answers vote auth guard", False, str(e)))
+
+    # 16. Frontend /doubts route protection (redirect to intro)
+    try:
+        r = httpx.get(f"{FRONTEND_URL}/doubts", follow_redirects=False, timeout=8)
+        loc = r.headers.get("location", "")
+        passed = r.status_code == 307 and ("/intro" in loc or "/login" in loc)
+        results.append(("Frontend /doubts route unauth redirect", passed, f"status={r.status_code}, redirect={loc}"))
+    except Exception as e:
+        results.append(("Frontend /doubts route unauth redirect", False, str(e)))
 
     print("\n" + "=" * 80)
     print("                MARGINS SYSTEM INTEGRATION TEST REPORT")
