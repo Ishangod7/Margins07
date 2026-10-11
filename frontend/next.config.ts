@@ -7,3 +7,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+// Production API connected: https://margins07.onrender.com
