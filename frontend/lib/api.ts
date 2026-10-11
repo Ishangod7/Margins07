@@ -22,6 +22,7 @@ export async function apiFetch<T>(path: string, token: string | null, init: Requ
     cache: "no-store",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(init.headers ?? {}),
     },
