@@ -39,7 +39,7 @@ export default async function DoubtBoardPage(props: {
   if (currentSort) queryParams.set("sort", currentSort);
 
   const [subjects, doubts] = await Promise.all([
-    apiFetch<Subject[]>("/resources/subjects", token).catch(() => [] as Subject[]),
+    apiFetch<Subject[]>("/resources/subjects", token, { next: { revalidate: 300 } } as any).catch(() => [] as Subject[]),
     apiFetch<Doubt[]>(`/doubts?${queryParams.toString()}`, token).catch(() => [] as Doubt[]),
   ]);
 

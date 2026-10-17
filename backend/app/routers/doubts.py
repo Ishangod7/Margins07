@@ -10,6 +10,7 @@ router = APIRouter(prefix="/doubts", tags=["doubts"])
 _MEMBERSHIP_CACHE: dict[str, tuple[float, str]] = {}
 _SUBJECTS_MAP_CACHE: dict[str, tuple[float, dict]] = {}
 _PROFILES_NAME_CACHE: dict[str, tuple[float, str]] = {}
+_DOUBTS_CACHE: dict[str, tuple[float, list, dict, dict]] = {}
 
 
 def _membership(user: CurrentUser) -> str:
@@ -78,51 +79,59 @@ def list_doubts(
     user: CurrentUser = Depends(get_current_user),
 ):
     class_id = _membership(user)
-
-    query = supabase_admin.table("doubts").select("*").eq("class_id", class_id)
-
-    if subject_id:
-        query = query.eq("subject_id", subject_id)
-
-    if status and status in ("open", "answered", "solved"):
-        query = query.eq("status", status)
-
-    if mine:
-        query = query.eq("created_by", user.user_id)
-
-    if q and q.strip():
-        term = q.strip()
-        query = query.or_(f"title.ilike.%{term}%,body.ilike.%{term}%")
-
-    if sort == "unanswered":
-        query = query.eq("answer_count", 0).order("created_at", desc=True)
-    elif sort == "popular":
-        query = query.order("follow_count", desc=True).order("answer_count", desc=True)
-    else:
-        query = query.order("created_at", desc=True)
-
-    doubts = query.limit(50).execute().data or []
-
     now = time.time()
-    # Resolve subjects
-    sub_ids = [d["subject_id"] for d in doubts if d.get("subject_id")]
-    sub_map = {}
-    missing_sub_ids = []
-    for sid in set(sub_ids):
-        if sid in _SUBJECTS_MAP_CACHE and now < _SUBJECTS_MAP_CACHE[sid][0]:
-            sub_map[sid] = _SUBJECTS_MAP_CACHE[sid][1]
+    is_default = (not subject_id and not status and not mine and not q and sort == "recent")
+
+    if is_default and class_id in _DOUBTS_CACHE and now < _DOUBTS_CACHE[class_id][0]:
+        _, cached_doubts, sub_map, name_map = _DOUBTS_CACHE[class_id]
+        doubts = [dict(d) for d in cached_doubts]
+    else:
+        query = supabase_admin.table("doubts").select("*").eq("class_id", class_id)
+
+        if subject_id:
+            query = query.eq("subject_id", subject_id)
+
+        if status and status in ("open", "answered", "solved"):
+            query = query.eq("status", status)
+
+        if mine:
+            query = query.eq("created_by", user.user_id)
+
+        if q and q.strip():
+            term = q.strip()
+            query = query.or_(f"title.ilike.%{term}%,body.ilike.%{term}%")
+
+        if sort == "unanswered":
+            query = query.eq("answer_count", 0).order("created_at", desc=True)
+        elif sort == "popular":
+            query = query.order("follow_count", desc=True).order("answer_count", desc=True)
         else:
-            missing_sub_ids.append(sid)
+            query = query.order("created_at", desc=True)
 
-    if missing_sub_ids:
-        subs = supabase_admin.table("subjects").select("id, name, code").in_("id", missing_sub_ids).execute().data or []
-        for s in subs:
-            sub_map[s["id"]] = s
-            _SUBJECTS_MAP_CACHE[s["id"]] = (now + 300.0, s)
+        doubts = query.limit(50).execute().data or []
 
-    # Resolve author names
-    author_ids = [d["created_by"] for d in doubts if d.get("created_by")]
-    name_map = _get_profile_names(author_ids)
+        # Resolve subjects
+        sub_ids = [d["subject_id"] for d in doubts if d.get("subject_id")]
+        sub_map = {}
+        missing_sub_ids = []
+        for sid in set(sub_ids):
+            if sid in _SUBJECTS_MAP_CACHE and now < _SUBJECTS_MAP_CACHE[sid][0]:
+                sub_map[sid] = _SUBJECTS_MAP_CACHE[sid][1]
+            else:
+                missing_sub_ids.append(sid)
+
+        if missing_sub_ids:
+            subs = supabase_admin.table("subjects").select("id, name, code").in_("id", missing_sub_ids).execute().data or []
+            for s in subs:
+                sub_map[s["id"]] = s
+                _SUBJECTS_MAP_CACHE[s["id"]] = (now + 300.0, s)
+
+        # Resolve author names
+        author_ids = [d["created_by"] for d in doubts if d.get("created_by")]
+        name_map = _get_profile_names(author_ids)
+
+        if is_default:
+            _DOUBTS_CACHE[class_id] = (now + 20.0, [dict(d) for d in doubts], sub_map, name_map)
 
     # Check follows for current user
     doubt_ids = [d["id"] for d in doubts]
@@ -179,6 +188,7 @@ def create_doubt(body: DoubtCreateIn, user: CurrentUser = Depends(get_current_us
     res = supabase_admin.table("doubts").insert(row).execute()
     if not res.data:
         raise HTTPException(500, "Failed to create doubt")
+    _DOUBTS_CACHE.pop(class_id, None)
     return res.data[0]
 
 

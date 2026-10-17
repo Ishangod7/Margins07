@@ -50,14 +50,15 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, token: string | null, init: RequestInit = {}): Promise<T> {
+  const { headers, cache, next, ...rest } = init as RequestInit & { next?: any };
   const res = await fetch(`${API_URL}${path}`, {
-    ...init,
-    cache: "no-store",
+    ...rest,
+    cache: cache ?? "no-store",
+    ...(next ? { next } : {}),
     headers: {
       "Content-Type": "application/json",
-      "ngrok-skip-browser-warning": "true",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(init.headers ?? {}),
+      ...(headers ?? {}),
     },
   });
   if (res.status === 204) return undefined as T;

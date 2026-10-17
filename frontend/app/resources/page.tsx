@@ -45,7 +45,7 @@ export default async function ResourceShelfPage(props: {
   if (currentSort) queryParams.set("sort", currentSort);
 
   const [subjects, resources] = await Promise.all([
-    apiFetch<SubjectItem[]>("/resources/subjects", token).catch(() => [] as SubjectItem[]),
+    apiFetch<SubjectItem[]>("/resources/subjects", token, { next: { revalidate: 300 } } as any).catch(() => [] as SubjectItem[]),
     apiFetch<ResourceItem[]>(`/resources?${queryParams.toString()}`, token).catch(() => [] as ResourceItem[]),
   ]);
 

@@ -10,6 +10,7 @@ CATEGORIES = {"Academic", "Deadline", "Exam", "Assignment", "General", "Importan
 import time
 
 _MEMBERSHIP_CACHE: dict[str, tuple[float, str]] = {}
+_NOTICES_CACHE: dict[str, tuple[float, list]] = {}
 
 def _membership(user: CurrentUser) -> str:
     now = time.time()
@@ -50,6 +51,12 @@ class NoticeIn(BaseModel):
 @router.get("")
 def list_notices(user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
+    now = time.time()
+    if class_id in _NOTICES_CACHE:
+        exp, cached = _NOTICES_CACHE[class_id]
+        if now < exp:
+            return cached
+
     rows = (
         supabase_admin.table("notices")
         .select("*")
@@ -57,7 +64,7 @@ def list_notices(user: CurrentUser = Depends(get_current_user)):
         .order("is_pinned", desc=True)
         .order("published_at", desc=True)
         .execute()
-        .data
+        .data or []
     )
     ids = list({r["created_by"] for r in rows if r.get("created_by")})
     names = {}
@@ -66,6 +73,8 @@ def list_notices(user: CurrentUser = Depends(get_current_user)):
             names[p["id"]] = p["display_name"]
     for r in rows:
         r["author_name"] = names.get(r.get("created_by"))
+
+    _NOTICES_CACHE[class_id] = (now + 30.0, rows)
     return rows
 
 
@@ -80,6 +89,7 @@ def create_notice(body: NoticeIn, user: CurrentUser = Depends(get_current_user))
                  "category": body.category, "created_by": user.user_id})
         .execute()
     )
+    _NOTICES_CACHE.pop(class_id, None)
     return res.data[0]
 
 
@@ -95,6 +105,7 @@ def toggle_pin(notice_id: str, user: CurrentUser = Depends(get_current_user)):
     class_id = _require_cr(user)
     n = _own_notice(notice_id, class_id)
     res = supabase_admin.table("notices").update({"is_pinned": not n["is_pinned"]}).eq("id", notice_id).execute()
+    _NOTICES_CACHE.pop(class_id, None)
     return res.data[0]
 
 
@@ -103,3 +114,4 @@ def delete_notice(notice_id: str, user: CurrentUser = Depends(get_current_user))
     class_id = _require_cr(user)
     _own_notice(notice_id, class_id)
     supabase_admin.table("notices").delete().eq("id", notice_id).execute()
+    _NOTICES_CACHE.pop(class_id, None)
