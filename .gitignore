@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 !.env.local.example
+bin/
 
 # Node / Frontend
 node_modules/
