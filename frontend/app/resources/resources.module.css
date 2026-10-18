@@ -329,22 +329,34 @@
 /* Modal Styles */
 .modalOverlay {
   position: fixed;
-  inset: 0;
-  background: rgba(37, 36, 31, 0.6);
-  backdrop-filter: blur(2px);
-  z-index: 100;
-  display: grid;
-  place-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(20, 18, 14, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .modalCard {
   width: min(540px, 100%);
-  padding: 26px;
-  background: rgba(255, 253, 245, 0.98);
-  box-shadow: 6px 8px 0 var(--ink);
+  padding: 28px;
+  background: #fffdf5 !important;
+  border: 2px solid var(--ink);
+  box-shadow: 8px 10px 0 var(--ink);
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+  z-index: 100000;
+  box-sizing: border-box;
 }
 
 .modalHeader {
@@ -399,6 +411,32 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.modalForm input,
+.modalForm select,
+.modalForm textarea {
+  background: #ffffff !important;
+  opacity: 1 !important;
+  border: 2px solid var(--ink);
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+  color: var(--ink);
+}
+
+.modalForm input:focus,
+.modalForm select:focus,
+.modalForm textarea:focus {
+  background: #ffffff !important;
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px var(--blue);
+}
+
+.modalForm input[type="file"] {
+  background: #ffffff !important;
+  padding: 8px 10px;
+  cursor: pointer;
 }
 
 .label {
