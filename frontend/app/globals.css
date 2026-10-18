@@ -27,7 +27,7 @@ body {
 
 /* Margins sketchbook background — applies app-wide */
 body {
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
   color: #292721;
   background:
     radial-gradient(circle at 20% 15%, rgba(255,255,255,.55), transparent 25%),
@@ -41,6 +41,8 @@ body {
    MARGINS DESIGN SYSTEM — ported from tcet-student-hub.html
    ========================================================= */
 :root {
+  --font-hand: var(--font-caveat), "Caveat", cursive;
+  --font-note: var(--font-patrick-hand), "Patrick Hand", cursive;
   --bg: #e9dfcb;
   --bg-deep: #dcccad;
   --paper: #fffdf5;

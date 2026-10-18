@@ -11,7 +11,7 @@ export const requireSession = cache(async () => {
   if (!session) redirect("/intro");
   const token = session.access_token;
   try {
-    const me = await apiFetch<Me>("/me", token);
+    const me = await apiFetch<Me>("/me", token, { next: { revalidate: 120 } } as any);
     return { token, me };
   } catch (e) {
     if (e instanceof ApiError && e.status === 401) redirect("/login?expired=1");
