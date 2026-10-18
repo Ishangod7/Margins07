@@ -1,0 +1,86 @@
+/* Margins Saved Shelf Stylesheet */
+
+.pageCover {
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  background: var(--paper);
+  transform: rotate(-0.3deg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.coverText h1 {
+  font: 700 48px / 0.95 "Caveat", cursive;
+  color: var(--blue-dark);
+}
+
+.coverText p {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 26px;
+  margin-bottom: 14px;
+  border-bottom: 2px dashed rgba(37, 36, 31, 0.2);
+  padding-bottom: 8px;
+}
+
+.sectionTitle {
+  font: 700 32px / 1 "Caveat", cursive;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemCount {
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--ink-soft);
+}
+
+.resourceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+.doubtList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.emptyBlock {
+  padding: 36px 20px;
+  background: rgba(255, 253, 245, 0.7);
+  border: 2px dashed rgba(37, 36, 31, 0.2);
+  text-align: center;
+  border-radius: 4px;
+}
+
+.emptyBlock h4 {
+  font: 700 24px / 1 "Caveat", cursive;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.emptyBlock p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  max-width: 400px;
+  margin: 0 auto 12px;
+}

@@ -53,6 +53,17 @@
   box-shadow: 3px 4px 0 rgba(37,36,31,.2); cursor: pointer; color: var(--ink-soft); text-align: left;
   font-size: 11px; font-family: "DM Sans", sans-serif;
 }
+.shortcutKey {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink-soft);
+  box-shadow: 1px 1px 0 var(--ink);
+}
 .topActions { display: flex; gap: 8px; }
 .iconBtn {
   width: 43px; height: 43px; display: grid; place-items: center; background: rgba(255,253,245,.8);

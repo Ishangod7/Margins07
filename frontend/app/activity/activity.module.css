@@ -1,0 +1,140 @@
+/* Margins Personal Activity Stylesheet */
+
+.pageCover {
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  background: var(--paper);
+  transform: rotate(-0.3deg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.coverText h1 {
+  font: 700 48px / 0.95 "Caveat", cursive;
+  color: var(--blue-dark);
+}
+
+.coverText p {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+@media (max-width: 680px) {
+  .metricsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metricCard {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 5px 0 var(--ink);
+  padding: 18px;
+  text-align: center;
+}
+
+.metricValue {
+  font: 700 36px / 1 "Caveat", cursive;
+  color: var(--blue-dark);
+}
+
+.metricLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  border-bottom: 2px dashed rgba(37, 36, 31, 0.2);
+  padding-bottom: 6px;
+}
+
+.sectionTitle {
+  font: 700 30px / 1 "Caveat", cursive;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityItem {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 4px 0 var(--ink);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease;
+}
+
+.activityItem:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.itemMain {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.itemHeading {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.itemSnippet {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.itemBadge {
+  font-family: "Patrick Hand", cursive;
+  font-size: 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.emptyState {
+  padding: 32px 16px;
+  background: rgba(255, 253, 245, 0.7);
+  border: 2px dashed rgba(37, 36, 31, 0.2);
+  text-align: center;
+  border-radius: 4px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}

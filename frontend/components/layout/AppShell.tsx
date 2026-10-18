@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { SearchOverlay } from "@/components/search/SearchOverlay";
 import styles from "./AppShell.module.css";
 import {
   HomeIcon,
@@ -9,6 +12,8 @@ import {
   ResourceIcon,
   DoubtIcon,
   PeopleIcon,
+  StarIcon,
+  ActivityIcon,
   SettingsIcon,
   SearchIcon,
 } from "@/components/ui/Icons";
@@ -19,9 +24,16 @@ const NAV_ITEMS = [
   { href: "/resources", label: "Resources", icon: ResourceIcon },
   { href: "/doubts", label: "Doubts", icon: DoubtIcon },
   { href: "/people", label: "People", icon: PeopleIcon },
+  { href: "/saved", label: "Saved", icon: StarIcon },
 ];
 
-const BOTTOM_NAV_ITEMS = NAV_ITEMS.slice(0, 4);
+const BOTTOM_NAV_ITEMS = [
+  { href: "/", label: "Home", icon: HomeIcon },
+  { href: "/notices", label: "Notices", icon: NoticeIcon },
+  { href: "/resources", label: "Resources", icon: ResourceIcon },
+  { href: "/doubts", label: "Doubts", icon: DoubtIcon },
+  { href: "/people", label: "People", icon: PeopleIcon },
+];
 
 type Props = {
   children: React.ReactNode;
@@ -32,7 +44,35 @@ type Props = {
 export default function AppShell({ children, noticeCount, displayName }: Props) {
   const pathname = usePathname();
   const router = useRouter();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+
   const initials = (displayName ?? "?").trim().charAt(0).toUpperCase();
+
+  useEffect(() => {
+    createClient()
+      .auth.getSession()
+      .then(({ data }) => {
+        setToken(data.session?.access_token ?? null);
+      });
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (
+        e.key === "/" &&
+        document.activeElement?.tagName !== "INPUT" &&
+        document.activeElement?.tagName !== "TEXTAREA"
+      ) {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <div className={styles.app}>
@@ -72,19 +112,23 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
 
         <div className={styles.sidebarNote}>
           <small>DESK STATUS</small>
-          <strong>you're all caught up</strong>
+          <strong>you&apos;re all caught up</strong>
           <p>New notices and resources will show up right here as your batch posts them.</p>
         </div>
 
         <div className={styles.sidebarFooter}>
+          <Link href="/activity" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <ActivityIcon size={14} aria-hidden="true" />
+            <span>Activity</span>
+          </Link>
           <Link href="/settings" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
             <SettingsIcon size={14} aria-hidden="true" />
             <span>Settings</span>
           </Link>
           <button
             onClick={async () => {
-              const { createClient } = await import("@/lib/supabase/client");
-              await createClient().auth.signOut();
+              const supabase = createClient();
+              await supabase.auth.signOut();
               router.push("/login");
             }}
             style={{
@@ -105,9 +149,15 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
       <main className={styles.main}>
         <div className={styles.topbar}>
           <div className={styles.topbarLeft}>
-            <button className={styles.searchTrigger} type="button" aria-label="Search">
+            <button
+              className={styles.searchTrigger}
+              type="button"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
               <SearchIcon size={16} aria-hidden="true" />
               <span>Search notices, resources, doubts, people</span>
+              <span className={styles.shortcutKey}>⌘K</span>
             </button>
           </div>
           <div className={styles.topActions}>
@@ -143,6 +193,13 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
           );
         })}
       </nav>
+
+      {/* Global Unified Search Modal */}
+      <SearchOverlay
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        token={token}
+      />
     </div>
   );
 }
