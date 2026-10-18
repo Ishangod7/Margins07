@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { SearchOverlay } from "@/components/search/SearchOverlay";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import styles from "./AppShell.module.css";
 import {
   HomeIcon,
@@ -161,6 +162,7 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
             </button>
           </div>
           <div className={styles.topActions}>
+            <NotificationBell token={token} />
             <Link
               href="/settings"
               className={styles.avatar}

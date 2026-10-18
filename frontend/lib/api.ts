@@ -125,6 +125,24 @@ export type Answer = {
   has_voted: boolean;
 };
 
+export type NotificationItem = {
+  id: string;
+  type: "notice" | "answer" | "accepted" | "resource";
+  title: string;
+  body: string;
+  link: string;
+  created_at: string;
+  actor_name: string;
+  category?: string;
+  is_pinned?: boolean;
+};
+
+export type NotificationsResponse = {
+  notifications: NotificationItem[];
+  total_count: number;
+  unread_count: number;
+};
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
