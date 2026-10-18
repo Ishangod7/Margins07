@@ -165,6 +165,40 @@ def run_tests():
     except Exception as e:
         results.append(("Frontend /doubts route unauth redirect", False, str(e)))
 
+    # 17. Backend /people auth guard
+    try:
+        r = httpx.get(f"{BACKEND_URL}/people", timeout=8)
+        passed = r.status_code in (401, 403)
+        results.append(("Backend /people auth guard", passed, f"status={r.status_code}"))
+    except Exception as e:
+        results.append(("Backend /people auth guard", False, str(e)))
+
+    # 18. Backend /me/privacy auth guard
+    try:
+        r = httpx.get(f"{BACKEND_URL}/me/privacy", timeout=8)
+        passed = r.status_code in (401, 403)
+        results.append(("Backend /me/privacy auth guard", passed, f"status={r.status_code}"))
+    except Exception as e:
+        results.append(("Backend /me/privacy auth guard", False, str(e)))
+
+    # 19. Frontend /people route protection (redirect to intro)
+    try:
+        r = httpx.get(f"{FRONTEND_URL}/people", follow_redirects=False, timeout=8)
+        loc = r.headers.get("location", "")
+        passed = r.status_code == 307 and ("/intro" in loc or "/login" in loc)
+        results.append(("Frontend /people route unauth redirect", passed, f"status={r.status_code}, redirect={loc}"))
+    except Exception as e:
+        results.append(("Frontend /people route unauth redirect", False, str(e)))
+
+    # 20. Frontend /settings route protection (redirect to intro)
+    try:
+        r = httpx.get(f"{FRONTEND_URL}/settings", follow_redirects=False, timeout=8)
+        loc = r.headers.get("location", "")
+        passed = r.status_code == 307 and ("/intro" in loc or "/login" in loc)
+        results.append(("Frontend /settings route unauth redirect", passed, f"status={r.status_code}, redirect={loc}"))
+    except Exception as e:
+        results.append(("Frontend /settings route unauth redirect", False, str(e)))
+
     print("\n" + "=" * 80)
     print("                MARGINS SYSTEM INTEGRATION TEST REPORT")
     print("=" * 80)

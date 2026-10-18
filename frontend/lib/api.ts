@@ -7,9 +7,89 @@ export type Notice = {
   is_pinned: boolean; created_at: string; published_at: string;
   author_name: string | null;
 };
+export type Profile = {
+  id: string;
+  display_name: string;
+  role: "member" | "cr";
+  avatar_path?: string | null;
+  bio?: string | null;
+  skills: string[];
+  interests: string[];
+  can_help_with: string[];
+  currently_learning: string[];
+  show_avatar: boolean;
+  show_bio: boolean;
+  show_skills: boolean;
+  show_interests: boolean;
+  show_contributions: boolean;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type PrivacySettings = {
+  show_avatar: boolean;
+  show_bio: boolean;
+  show_skills: boolean;
+  show_interests: boolean;
+  show_contributions: boolean;
+};
+
+export type Person = {
+  id: string;
+  display_name: string;
+  initials: string;
+  role: "member" | "cr";
+  avatar_path?: string | null;
+  bio?: string | null;
+  skills: string[];
+  interests: string[];
+  can_help_with: string[];
+  currently_learning: string[];
+  contributions?: {
+    resources_count: number;
+    answers_count: number;
+    accepted_count: number;
+  } | null;
+  is_self?: boolean;
+  joined_at?: string;
+};
+
+export type PersonDetail = Person & {
+  contributions?: {
+    resources_count: number;
+    answers_count: number;
+    accepted_count: number;
+    recent_resources: Array<{
+      id: string;
+      title: string;
+      kind: string;
+      unit?: string;
+      download_count: number;
+      save_count: number;
+      created_at: string;
+    }>;
+    recent_answers: Array<{
+      id: string;
+      doubt_id?: string;
+      body: string;
+      is_accepted: boolean;
+      helpful_count: number;
+      created_at: string;
+      doubt?: {
+        id: string;
+        title: string;
+        status: string;
+      };
+    }>;
+  } | null;
+};
+
 export type Me = {
-  id: string; email: string | null; class_id: string | null;
-  profile: { display_name: string; role: "member" | "cr" } | null;
+  id: string;
+  email: string | null;
+  class_id: string | null;
+  joined_at?: string | null;
+  profile: Profile | null;
 };
 export type Subject = {
   id: string; name: string; code?: string; semester?: string;

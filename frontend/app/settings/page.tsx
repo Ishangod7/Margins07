@@ -1,12 +1,23 @@
 import AppShell from "@/components/layout/AppShell";
+import { requireSession } from "@/lib/session";
+import { SettingsManager } from "@/components/settings/SettingsManager";
+import styles from "./settings.module.css";
 
-export default function Placeholder() {
+export default async function SettingsPage() {
+  const { token, me } = await requireSession();
+
   return (
-    <AppShell>
-      <section className="card" style={{ padding: "28px", marginTop: "16px" }}>
-        <h1 style={{ fontFamily: "Caveat, cursive", fontSize: 44, color: "var(--blue-dark)" }}>coming soon</h1>
-        <p style={{ marginTop: 8, fontSize: 12, color: "var(--ink-soft)" }}>this screen is next up on the build plan.</p>
+    <AppShell displayName={me.profile?.display_name}>
+      {/* Cover Header */}
+      <section className={`card ${styles.settingsCover}`}>
+        <div className={styles.coverText}>
+          <h1>settings & privacy</h1>
+          <p>manage your student profile, customize visibility, and export your personal data</p>
+        </div>
       </section>
+
+      {/* Main Settings Tabs and Form */}
+      <SettingsManager initialMe={me} token={token} />
     </AppShell>
   );
 }
