@@ -3,8 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { apiFetch, type Doubt, type Answer, type Subject } from "@/lib/api";
-import { CheckIcon, ThumbsUpIcon, MessageSquareIcon } from "@/components/ui/Icons";
+import { apiFetch, type Doubt, type Answer, type Subject, type CommentItem } from "@/lib/api";
+import {
+  CheckIcon,
+  ThumbsUpIcon,
+  MessageSquareIcon,
+  CornerDownRightIcon,
+  CodeIcon,
+  AtSignIcon,
+} from "@/components/ui/Icons";
+import { RichContentRenderer } from "@/components/doubts/RichContentRenderer";
 import styles from "@/app/doubts/doubts.module.css";
 
 function timeAgo(iso: string) {
@@ -71,7 +79,19 @@ export function DoubtCard({ doubt, token }: { doubt: Doubt; token: string }) {
         {doubt.title}
       </Link>
 
-      <p className={styles.doubtSnippet}>{doubt.body}</p>
+      <p className={styles.doubtSnippet}>
+        {doubt.body.replace(/```[a-zA-Z0-9_\-+]*\s*/g, " ").replace(/```/g, " ").replace(/\s+/g, " ").trim().slice(0, 180)}
+        {doubt.body.length > 180 ? "..." : ""}
+      </p>
+
+      {doubt.body.includes("```") && (
+        <div style={{ margin: "6px 0 8px 0" }}>
+          <span className={styles.quickChip} style={{ fontSize: "11px", pointerEvents: "none", background: "#f8f4e6", borderColor: "#c2baa1" }}>
+            <CodeIcon size={11} />
+            <span>Code Snippet Attached</span>
+          </span>
+        </div>
+      )}
 
       {doubt.tags && doubt.tags.length > 0 && (
         <div className={styles.tagRow}>
@@ -204,7 +224,35 @@ export function DoubtComposer({ subjects, token }: { subjects: Subject[]; token:
         </div>
 
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Details & code snippets</label>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+            <label className={styles.formLabel} style={{ margin: 0 }}>Details & code snippets</label>
+            <div className={styles.quickChipRow} style={{ margin: 0 }}>
+              <span className={styles.quickChipLabel}>Quick insert:</span>
+              <button
+                type="button"
+                className={styles.quickChip}
+                onClick={() => setBody((prev) => prev + (prev.endsWith("\n") ? "" : "\n") + "```python\n# Python code snippet\n\n```\n")}
+              >
+                <CodeIcon size={11} />
+                <span>+ Python</span>
+              </button>
+              <button
+                type="button"
+                className={styles.quickChip}
+                onClick={() => setBody((prev) => prev + (prev.endsWith("\n") ? "" : "\n") + "```sql\n-- SQL query\nSELECT * FROM table;\n```\n")}
+              >
+                <CodeIcon size={11} />
+                <span>+ SQL</span>
+              </button>
+              <button
+                type="button"
+                className={styles.quickChip}
+                onClick={() => setBody((prev) => prev + " `code` ")}
+              >
+                <span>+ `code`</span>
+              </button>
+            </div>
+          </div>
           <textarea
             className={`${styles.inputField} ${styles.textareaField}`}
             placeholder="Provide context, formulas, code snippets, or what you tried..."
@@ -214,7 +262,7 @@ export function DoubtComposer({ subjects, token }: { subjects: Subject[]; token:
             minLength={5}
             maxLength={5000}
           />
-          <span className={styles.codeHint}>Tip: You can paste code or error logs directly.</span>
+          <span className={styles.codeHint}>Tip: You can paste formatted code snippets with triple backticks (```python ... ```).</span>
         </div>
 
         <div className={styles.formGroup}>
@@ -249,13 +297,17 @@ export function DoubtComposer({ subjects, token }: { subjects: Subject[]; token:
 
 export function AnswerCard({
   answer,
+  doubtId,
   doubtAuthorId,
   currentUserId,
+  currentUserName,
   token,
 }: {
   answer: Answer;
+  doubtId?: string;
   doubtAuthorId: string;
   currentUserId: string;
+  currentUserName?: string;
   token: string;
 }) {
   const router = useRouter();
@@ -263,6 +315,15 @@ export function AnswerCard({
   const [helpfulCount, setHelpfulCount] = useState(answer.helpful_count);
   const [isAccepted, setIsAccepted] = useState(answer.is_accepted);
   const [loading, setLoading] = useState(false);
+
+  // Threaded Discussion state
+  const [comments, setComments] = useState<CommentItem[]>(answer.comments || []);
+  const [showComments, setShowComments] = useState(
+    Boolean(answer.comments && answer.comments.length > 0)
+  );
+  const [replyText, setReplyText] = useState("");
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [commentError, setCommentError] = useState<string | null>(null);
 
   const isDoubtAsker = currentUserId === doubtAuthorId;
 
@@ -313,6 +374,43 @@ export function AnswerCard({
     }
   }
 
+  async function handlePostComment(e: React.FormEvent) {
+    e.preventDefault();
+    if (!replyText.trim() || submittingComment) return;
+    setCommentError(null);
+    setSubmittingComment(true);
+
+    try {
+      const newComment = await apiFetch<CommentItem>(
+        `/answers/${answer.id}/comments`,
+        token,
+        {
+          method: "POST",
+          body: JSON.stringify({ body: replyText.trim() }),
+        }
+      );
+      setComments((prev) => [...prev, newComment]);
+      setReplyText("");
+      setShowComments(true);
+    } catch (err: any) {
+      setCommentError(err?.message || "Could not post follow-up reply.");
+    } finally {
+      setSubmittingComment(false);
+    }
+  }
+
+  async function handleDeleteComment(commentId: string) {
+    if (!confirm("Are you sure you want to delete this reply?")) return;
+    try {
+      await apiFetch(`/answers/${answer.id}/comments/${commentId}`, token, {
+        method: "DELETE",
+      });
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (e) {
+      alert("Could not delete reply.");
+    }
+  }
+
   return (
     <div
       className={styles.answerCard}
@@ -325,7 +423,9 @@ export function AnswerCard({
         </div>
       )}
 
-      <div className={styles.answerBody}>{answer.body}</div>
+      <div className={styles.answerBody}>
+        <RichContentRenderer content={answer.body} />
+      </div>
 
       <div className={styles.answerFooter}>
         <div>
@@ -362,6 +462,109 @@ export function AnswerCard({
           )}
         </div>
       </div>
+
+      {/* Threaded Discussion Section */}
+      <div className={styles.threadContainer}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <button
+            type="button"
+            className={styles.threadToggleBtn}
+            onClick={() => setShowComments(!showComments)}
+          >
+            <MessageSquareIcon size={13} />
+            <span>
+              {comments.length === 0
+                ? "Reply to this answer"
+                : `Discussion (${comments.length})`}
+            </span>
+            <span style={{ fontSize: "11px", color: "#8c897f", marginLeft: "4px" }}>
+              {showComments ? "▲" : "▼"}
+            </span>
+          </button>
+        </div>
+
+        {showComments && (
+          <>
+            {comments.length > 0 && (
+              <div className={styles.threadList}>
+                {comments.map((c) => (
+                  <div key={c.id} className={styles.threadItem}>
+                    <div className={styles.threadItemMeta}>
+                      <span className={styles.threadAuthor}>
+                        <CornerDownRightIcon size={13} style={{ color: "#8c897f" }} />
+                        <span>{c.author_name}</span>
+                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span>{timeAgo(c.created_at)}</span>
+                        {c.is_mine && (
+                          <button
+                            type="button"
+                            className={styles.deleteBtn}
+                            onClick={() => handleDeleteComment(c.id)}
+                            title="Delete reply"
+                          >
+                            delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <RichContentRenderer content={c.body} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Inline Comment Composer */}
+            <form onSubmit={handlePostComment} className={styles.threadComposer}>
+              <div className={styles.quickChipRow}>
+                <span className={styles.quickChipLabel}>Quick insert:</span>
+                <button
+                  type="button"
+                  className={styles.quickChip}
+                  onClick={() =>
+                    setReplyText((prev) => prev + (prev ? " " : "") + `@${answer.author_name} `)
+                  }
+                >
+                  <AtSignIcon size={11} />
+                  <span>@{answer.author_name}</span>
+                </button>
+                <button
+                  type="button"
+                  className={styles.quickChip}
+                  onClick={() =>
+                    setReplyText((prev) => prev + (prev ? " " : "") + "`code`")
+                  }
+                >
+                  <CodeIcon size={11} />
+                  <span>`code`</span>
+                </button>
+              </div>
+
+              <div className={styles.threadInputRow}>
+                <input
+                  className={styles.threadInput}
+                  placeholder={`Reply to @${answer.author_name} or ask follow-up...`}
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  disabled={submittingComment}
+                />
+                <button
+                  type="submit"
+                  className={styles.threadReplyBtn}
+                  disabled={submittingComment || !replyText.trim()}
+                >
+                  {submittingComment ? "Replying..." : "Reply →"}
+                </button>
+              </div>
+              {commentError && (
+                <p style={{ color: "#d85e55", fontSize: "12px", margin: "4px 0 0 0" }}>
+                  {commentError}
+                </p>
+              )}
+            </form>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -397,6 +600,35 @@ export function AnswerComposer({ doubtId, token }: { doubtId: string; token: str
       </h3>
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+            <label className={styles.formLabel} style={{ margin: 0 }}>Your Explanation or Code Solution</label>
+            <div className={styles.quickChipRow} style={{ margin: 0 }}>
+              <span className={styles.quickChipLabel}>Format helper:</span>
+              <button
+                type="button"
+                className={styles.quickChip}
+                onClick={() => setBody((prev) => prev + (prev.endsWith("\n") ? "" : "\n") + "```python\n# Solution snippet\n\n```\n")}
+              >
+                <CodeIcon size={11} />
+                <span>+ Python</span>
+              </button>
+              <button
+                type="button"
+                className={styles.quickChip}
+                onClick={() => setBody((prev) => prev + (prev.endsWith("\n") ? "" : "\n") + "```sql\n-- SQL query\nSELECT * FROM table;\n```\n")}
+              >
+                <CodeIcon size={11} />
+                <span>+ SQL</span>
+              </button>
+              <button
+                type="button"
+                className={styles.quickChip}
+                onClick={() => setBody((prev) => prev + " `code` ")}
+              >
+                <span>+ `code`</span>
+              </button>
+            </div>
+          </div>
           <textarea
             className={`${styles.inputField} ${styles.textareaField}`}
             placeholder="Type your explanation, formula, or code solution..."
@@ -415,3 +647,4 @@ export function AnswerComposer({ doubtId, token }: { doubtId: string; token: str
     </div>
   );
 }
+

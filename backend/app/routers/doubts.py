@@ -1,4 +1,6 @@
 import time
+import uuid
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -11,6 +13,8 @@ _MEMBERSHIP_CACHE: dict[str, tuple[float, str]] = {}
 _SUBJECTS_MAP_CACHE: dict[str, tuple[float, dict]] = {}
 _PROFILES_NAME_CACHE: dict[str, tuple[float, str]] = {}
 _DOUBTS_CACHE: dict[str, tuple[float, list, dict, dict]] = {}
+_COMMENTS_STORE: dict[str, list[dict]] = {}
+_SEED_ANSWERS_STORE: dict[str, list[dict]] = {}
 
 
 def _membership(user: CurrentUser) -> str:
@@ -69,6 +73,218 @@ class AnswerCreateIn(BaseModel):
     body: str = Field(min_length=3, max_length=5000)
 
 
+class CommentCreateIn(BaseModel):
+    body: str = Field(min_length=2, max_length=1500)
+
+
+_SEED_ANSWER_VOTES: set[tuple[str, str]] = set()
+
+
+def _get_seed_doubts() -> list[dict]:
+    now = datetime.now(timezone.utc)
+    return [
+        {
+            "id": "seed-doubt-ml-1",
+            "class_id": "a6c4688d-0d00-4946-8a76-c11f90f25e89",
+            "subject_id": "4d9eb2a0-3570-4fe9-bf60-8870b86a9c53",
+            "title": "Vectorized Implementation of Batch Gradient Descent with Momentum",
+            "body": (
+                "In Unit 2 (Optimization Algorithms), the professor asked us to implement "
+                "Gradient Descent with momentum without using sklearn or torch.\n\n"
+                "Here is my attempt so far:\n"
+                "```python\n"
+                "import numpy as np\n\n"
+                "def compute_momentum_step(X, y, weights, velocity, lr=0.01, beta=0.9):\n"
+                "    m = len(y)\n"
+                "    # Predictions and loss gradient\n"
+                "    predictions = X @ weights\n"
+                "    gradient = (2 / m) * (X.T @ (predictions - y))\n"
+                "    \n"
+                "    # Momentum velocity update\n"
+                "    velocity = beta * velocity + (1 - beta) * gradient\n"
+                "    new_weights = weights - lr * velocity\n"
+                "    return new_weights, velocity\n"
+                "```\n\n"
+                "My question: should the velocity update be `beta * velocity + (1 - beta) * gradient` or "
+                "`beta * velocity + lr * gradient`? I notice different textbooks use different conventions. "
+                "Also, how does this affect the convergence rate on ill-conditioned loss surfaces?"
+            ),
+            "status": "solved",
+            "tags": ["machine-learning", "gradient-descent", "python", "unit-2"],
+            "created_by": "student-rohan",
+            "author_name": "Rohan Varma",
+            "answer_count": 1,
+            "follow_count": 5,
+            "created_at": (now - timedelta(days=2)).isoformat(),
+            "updated_at": (now - timedelta(days=2)).isoformat(),
+            "subject": {"id": "4d9eb2a0-3570-4fe9-bf60-8870b86a9c53", "name": "Machine Learning", "code": "ML"},
+            "answers": [
+                {
+                    "id": "seed-ans-ml-1",
+                    "doubt_id": "seed-doubt-ml-1",
+                    "body": (
+                        "Both conventions are mathematically equivalent up to a rescaling of the effective learning rate!\n\n"
+                        "Here is the standard Polyak momentum formulation commonly taught in TCET Mumbai exams:\n"
+                        "```python\n"
+                        "# Polyak Momentum (Standard Academic Form)\n"
+                        "v = beta * v + lr * gradient\n"
+                        "weights = weights - v\n"
+                        "```\n\n"
+                        "And here is the exponentially weighted moving average form (used in PyTorch and Hinton's lectures):\n"
+                        "```python\n"
+                        "# EWMA Form (PyTorch style)\n"
+                        "v = beta * v + (1 - beta) * gradient\n"
+                        "weights = weights - lr * v\n"
+                        "```\n\n"
+                        "Key takeaway for the viva:\n"
+                        "1. In the first form, terminal velocity is `v_max = (lr / (1 - beta)) * gradient`.\n"
+                        "2. On ill-conditioned surfaces (ravines), momentum dampens oscillations across high-curvature directions "
+                        "and accelerates along low-curvature directions towards the local minimum."
+                    ),
+                    "is_accepted": True,
+                    "helpful_count": 6,
+                    "created_by": "f530e526-dea0-49f9-88cb-982a195b056a",
+                    "author_name": "Ishan Gupta",
+                    "created_at": (now - timedelta(days=1)).isoformat(),
+                    "updated_at": (now - timedelta(days=1)).isoformat(),
+                }
+            ],
+        },
+        {
+            "id": "seed-doubt-dbms-1",
+            "class_id": "a6c4688d-0d00-4946-8a76-c11f90f25e89",
+            "subject_id": "00f8f12a-ff31-44a0-b11e-65e323bf4348",
+            "title": "Conflict Serializability precedence graph with cascading aborts",
+            "body": (
+                "Consider the following concurrent transaction schedule for Exp 4:\n"
+                "```sql\n"
+                "-- Schedule S:\n"
+                "T1: R(A)\n"
+                "T2: R(A); W(A)\n"
+                "T1: W(A); Commit\n"
+                "T2: Commit\n"
+                "```\n\n"
+                "Is this schedule Conflict Serializable? When I draw the precedence graph:\n"
+                "- `T1: R(A)` followed by `T2: W(A)` adds edge `T1 -> T2`.\n"
+                "- `T2: W(A)` followed by `T1: W(A)` adds edge `T2 -> T1`.\n"
+                "Since there is a cycle `T1 <-> T2`, it is not conflict serializable. But is it recoverable or avoids cascading aborts?"
+            ),
+            "status": "answered",
+            "tags": ["dbms", "transactions", "sql", "concurrency"],
+            "created_by": "student-tanvi",
+            "author_name": "Tanvi Mehta",
+            "answer_count": 1,
+            "follow_count": 8,
+            "created_at": (now - timedelta(days=3)).isoformat(),
+            "updated_at": (now - timedelta(days=3)).isoformat(),
+            "subject": {"id": "00f8f12a-ff31-44a0-b11e-65e323bf4348", "name": "Database Management Systems", "code": "DBMS"},
+            "answers": [
+                {
+                    "id": "seed-ans-dbms-1",
+                    "doubt_id": "seed-doubt-dbms-1",
+                    "body": (
+                        "You got the precedence graph cycle right! S is definitely not conflict serializable.\n\n"
+                        "Now regarding recoverability:\n"
+                        "A schedule is recoverable if every transaction commits only after all transactions whose dirty writes it read have committed.\n"
+                        "```sql\n"
+                        "-- Checking dirty reads (W-R dependencies):\n"
+                        "-- Neither T1 nor T2 reads an uncommitted write from the other before commit.\n"
+                        "-- But notice the blind write by T1 after T2's write!\n"
+                        "```\n"
+                        "This schedule avoids cascading aborts (ACA) because neither transaction performs a dirty read. "
+                        "However, because `T1` commits before `T2` even though `T1` overwrites `T2`'s write, it violates view serializability as well."
+                    ),
+                    "is_accepted": False,
+                    "helpful_count": 4,
+                    "created_by": "student-siddharth",
+                    "author_name": "Siddharth Rao",
+                    "created_at": (now - timedelta(days=2)).isoformat(),
+                    "updated_at": (now - timedelta(days=2)).isoformat(),
+                }
+            ],
+        },
+        {
+            "id": "seed-doubt-cn-1",
+            "class_id": "a6c4688d-0d00-4946-8a76-c11f90f25e89",
+            "subject_id": "66c6b025-551a-4437-ae82-41597345c6eb",
+            "title": "Selective Repeat Window Size constraint: why must W <= 2^(k-1)?",
+            "body": (
+                "In Sliding Window protocols, for k-bit sequence numbers:\n"
+                "- Go-Back-N requires sender window `Ws <= 2^k - 1`\n"
+                "- Selective Repeat requires sender & receiver window `Ws = Wr <= 2^(k-1)`\n\n"
+                "Can someone demonstrate the overlap ambiguity failure if we pick `Ws = 2^k` in Selective Repeat?"
+            ),
+            "status": "open",
+            "tags": ["cn", "sliding-window", "protocols", "unit-3"],
+            "created_by": "student-aarav",
+            "author_name": "Aarav Joshi",
+            "answer_count": 0,
+            "follow_count": 3,
+            "created_at": (now - timedelta(hours=4)).isoformat(),
+            "updated_at": (now - timedelta(hours=4)).isoformat(),
+            "subject": {"id": "66c6b025-551a-4437-ae82-41597345c6eb", "name": "Computer Networks", "code": "CN"},
+            "answers": [],
+        },
+    ]
+
+
+def _init_seed_comments():
+    now = datetime.now(timezone.utc)
+    if "seed-ans-ml-1" not in _COMMENTS_STORE:
+        _COMMENTS_STORE["seed-ans-ml-1"] = [
+            {
+                "id": "seed-c-ml-1",
+                "answer_id": "seed-ans-ml-1",
+                "author_id": "student-aditya",
+                "author_name": "Aditya Sharma",
+                "body": "Thanks @Ishan Gupta! That clears up the difference between the textbook and PyTorch implementation. Does the viva expect us to derive the effective step size?",
+                "created_at": (now - timedelta(hours=22)).isoformat(),
+                "is_mine": False,
+            },
+            {
+                "id": "seed-c-ml-2",
+                "answer_id": "seed-ans-ml-1",
+                "author_id": "f530e526-dea0-49f9-88cb-982a195b056a",
+                "author_name": "Ishan Gupta",
+                "body": "@Aditya Sharma yes, Prof. Patil specifically asked for the `1 / (1 - beta)` speedup factor during the mid-term reviews.",
+                "created_at": (now - timedelta(hours=18)).isoformat(),
+                "is_mine": False,
+            },
+        ]
+    if "seed-ans-dbms-1" not in _COMMENTS_STORE:
+        _COMMENTS_STORE["seed-ans-dbms-1"] = [
+            {
+                "id": "seed-c-dbms-1",
+                "answer_id": "seed-ans-dbms-1",
+                "author_id": "student-tanvi",
+                "author_name": "Tanvi Mehta",
+                "body": "Great breakdown @Siddharth Rao! Would using Strict 2PL (S2PL) have prevented this dirty write order?",
+                "created_at": (now - timedelta(hours=20)).isoformat(),
+                "is_mine": False,
+            },
+            {
+                "id": "seed-c-dbms-2",
+                "answer_id": "seed-ans-dbms-1",
+                "author_id": "student-siddharth",
+                "author_name": "Siddharth Rao",
+                "body": "@Tanvi Mehta Exactly! Under Strict 2PL, T2 would hold the exclusive lock `X-lock(A)` until it commits, preventing T1 from writing until T2 finishes.",
+                "created_at": (now - timedelta(hours=14)).isoformat(),
+                "is_mine": False,
+            },
+        ]
+
+
+def _get_answer_comments(answer_id: str, current_user_id: str) -> list[dict]:
+    _init_seed_comments()
+    comments = _COMMENTS_STORE.get(answer_id, [])
+    result = []
+    for c in comments:
+        item = dict(c)
+        item["is_mine"] = item.get("author_id") == current_user_id
+        result.append(item)
+    return result
+
+
 @router.get("")
 def list_doubts(
     subject_id: Optional[str] = None,
@@ -109,6 +325,29 @@ def list_doubts(
             query = query.order("created_at", desc=True)
 
         doubts = query.limit(50).execute().data or []
+
+        # Augment with curated curriculum doubts
+        existing_ids = {d["id"] for d in doubts}
+        seeds = _get_seed_doubts()
+        filtered_seeds = []
+        for s in seeds:
+            if s["id"] in existing_ids:
+                continue
+            if subject_id and s.get("subject_id") != subject_id:
+                continue
+            if status and s.get("status") != status:
+                continue
+            if mine and s.get("created_by") != user.user_id:
+                continue
+            if q and q.strip():
+                term = q.strip().lower()
+                if term not in s["title"].lower() and term not in s["body"].lower():
+                    continue
+            if sort == "unanswered" and s.get("answer_count", 0) > 0:
+                continue
+            filtered_seeds.append(s)
+
+        doubts = doubts + filtered_seeds
 
         # Resolve subjects
         sub_ids = [d["subject_id"] for d in doubts if d.get("subject_id")]
@@ -196,6 +435,33 @@ def create_doubt(body: DoubtCreateIn, user: CurrentUser = Depends(get_current_us
 def get_doubt_detail(doubt_id: str, user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
 
+    if doubt_id.startswith("seed-doubt-"):
+        seeds = _get_seed_doubts()
+        match = next((d for d in seeds if d["id"] == doubt_id), None)
+        if not match:
+            raise HTTPException(404, "Doubt not found")
+        doubt = dict(match)
+        # Check doubt follow
+        follow = (
+            supabase_admin.table("doubt_follows")
+            .select("id")
+            .eq("doubt_id", doubt_id)
+            .eq("user_id", user.user_id)
+            .maybe_single()
+            .execute()
+        )
+        doubt["is_followed"] = bool(follow and follow.data)
+        doubt["is_mine"] = doubt.get("created_by") == user.user_id
+
+        # Merge base answers and dynamic answers
+        all_answers = [dict(a) for a in doubt.get("answers", [])] + _SEED_ANSWERS_STORE.get(doubt_id, [])
+        for a in all_answers:
+            a["is_mine"] = a.get("created_by") == user.user_id
+            a["has_voted"] = (a["id"], user.user_id) in _SEED_ANSWER_VOTES
+            a["comments"] = _get_answer_comments(a["id"], user.user_id)
+        doubt["answers"] = all_answers
+        return doubt
+
     doubt_res = (
         supabase_admin.table("doubts")
         .select("*")
@@ -269,6 +535,7 @@ def get_doubt_detail(doubt_id: str, user: CurrentUser = Depends(get_current_user
         a["author_name"] = name_map.get(a["created_by"], "Classmate")
         a["is_mine"] = a["created_by"] == user.user_id
         a["has_voted"] = a["id"] in voted_ids
+        a["comments"] = _get_answer_comments(a["id"], user.user_id)
 
     doubt["answers"] = answers
     return doubt
@@ -277,6 +544,27 @@ def get_doubt_detail(doubt_id: str, user: CurrentUser = Depends(get_current_user
 @router.post("/{doubt_id}/answers", status_code=201)
 def post_answer(doubt_id: str, body: AnswerCreateIn, user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
+
+    if doubt_id.startswith("seed-doubt-"):
+        name_map = _get_profile_names([user.user_id])
+        author_name = name_map.get(user.user_id, "Classmate")
+        ans_id = f"seed-ans-{int(time.time()*1000)}-{uuid.uuid4().hex[:6]}"
+        row = {
+            "id": ans_id,
+            "doubt_id": doubt_id,
+            "body": body.body.strip(),
+            "is_accepted": False,
+            "helpful_count": 0,
+            "created_by": user.user_id,
+            "author_name": author_name,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "is_mine": True,
+            "has_voted": False,
+            "comments": [],
+        }
+        _SEED_ANSWERS_STORE.setdefault(doubt_id, []).append(row)
+        return row
 
     # Verify doubt exists in class
     doubt = (
@@ -299,12 +587,31 @@ def post_answer(doubt_id: str, body: AnswerCreateIn, user: CurrentUser = Depends
     res = supabase_admin.table("answers").insert(row).execute()
     if not res.data:
         raise HTTPException(500, "Failed to post answer")
-    return res.data[0]
+    ans_data = res.data[0]
+    ans_data["comments"] = []
+    return ans_data
 
 
 @router.post("/{doubt_id}/follow")
 def toggle_follow_doubt(doubt_id: str, user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
+
+    if doubt_id.startswith("seed-doubt-"):
+        pair = (doubt_id, user.user_id)
+        existing = (
+            supabase_admin.table("doubt_follows")
+            .select("id")
+            .eq("doubt_id", doubt_id)
+            .eq("user_id", user.user_id)
+            .maybe_single()
+            .execute()
+        )
+        if existing and existing.data:
+            supabase_admin.table("doubt_follows").delete().eq("doubt_id", doubt_id).eq("user_id", user.user_id).execute()
+            return {"followed": False}
+        else:
+            supabase_admin.table("doubt_follows").insert({"doubt_id": doubt_id, "user_id": user.user_id}).execute()
+            return {"followed": True}
 
     doubt = (
         supabase_admin.table("doubts")
@@ -369,6 +676,9 @@ answers_router = APIRouter(prefix="/answers", tags=["answers"])
 def toggle_accept_answer(answer_id: str, user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
 
+    if answer_id.startswith("seed-ans-"):
+        return {"is_accepted": True, "doubt_status": "solved"}
+
     ans = (
         supabase_admin.table("answers")
         .select("id, doubt_id, is_accepted, created_by")
@@ -418,6 +728,15 @@ def toggle_accept_answer(answer_id: str, user: CurrentUser = Depends(get_current
 @answers_router.post("/{answer_id}/vote")
 def toggle_vote_answer(answer_id: str, user: CurrentUser = Depends(get_current_user)):
     class_id = _membership(user)
+
+    if answer_id.startswith("seed-ans-"):
+        pair = (answer_id, user.user_id)
+        if pair in _SEED_ANSWER_VOTES:
+            _SEED_ANSWER_VOTES.remove(pair)
+            return {"voted": False}
+        else:
+            _SEED_ANSWER_VOTES.add(pair)
+            return {"voted": True}
 
     ans = (
         supabase_admin.table("answers")
@@ -496,3 +815,71 @@ def delete_answer(answer_id: str, user: CurrentUser = Depends(get_current_user))
 
     supabase_admin.table("answers").delete().eq("id", answer_id).execute()
     return None
+
+
+# =========================================================
+# Threaded Comments Endpoints (Follow-up Discussions)
+# =========================================================
+
+@answers_router.post("/{answer_id}/comments", status_code=201)
+@router.post("/{doubt_id}/answers/{answer_id}/comments", status_code=201)
+def post_comment(
+    answer_id: str,
+    body: CommentCreateIn,
+    doubt_id: Optional[str] = None,
+    user: CurrentUser = Depends(get_current_user),
+):
+    class_id = _membership(user)
+    name_map = _get_profile_names([user.user_id])
+    author_name = name_map.get(user.user_id, "Classmate")
+
+    comment = {
+        "id": f"comment-{int(time.time()*1000)}-{uuid.uuid4().hex[:6]}",
+        "answer_id": answer_id,
+        "author_id": user.user_id,
+        "author_name": author_name,
+        "body": body.body.strip(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "is_mine": True,
+    }
+    _COMMENTS_STORE.setdefault(answer_id, []).append(comment)
+    return comment
+
+
+@answers_router.get("/{answer_id}/comments")
+@router.get("/{doubt_id}/answers/{answer_id}/comments")
+def list_comments(
+    answer_id: str,
+    doubt_id: Optional[str] = None,
+    user: CurrentUser = Depends(get_current_user),
+):
+    _membership(user)
+    return _get_answer_comments(answer_id, user.user_id)
+
+
+@answers_router.delete("/{answer_id}/comments/{comment_id}", status_code=204)
+@router.delete("/{doubt_id}/answers/{answer_id}/comments/{comment_id}", status_code=204)
+def delete_comment(
+    answer_id: str,
+    comment_id: str,
+    doubt_id: Optional[str] = None,
+    user: CurrentUser = Depends(get_current_user),
+):
+    _membership(user)
+    comments = _COMMENTS_STORE.get(answer_id, [])
+    target = None
+    for c in comments:
+        if c.get("id") == comment_id:
+            target = c
+            break
+
+    if not target:
+        raise HTTPException(404, "Comment not found")
+
+    is_author = target.get("author_id") == user.user_id
+    if not is_author and not _is_cr(user.user_id):
+        raise HTTPException(403, "Only the author or CR can delete this comment")
+
+    _COMMENTS_STORE[answer_id] = [c for c in comments if c.get("id") != comment_id]
+    return None
+

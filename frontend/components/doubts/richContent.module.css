@@ -1,0 +1,158 @@
+.contentWrapper {
+  font-family: "DM Sans", sans-serif;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #282722;
+  word-break: break-word;
+}
+
+.paragraph {
+  margin: 0 0 10px 0;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* Code Block Chalkboard Card */
+.codeCard {
+  background: #181917;
+  color: #ece8df;
+  border: 2px solid #282722;
+  box-shadow: 3px 3px 0 #282722;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+
+.codeHeader {
+  background: #242522;
+  border-bottom: 1.5px solid #383935;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.codeLang {
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #edd779;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+}
+
+.copyBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e5e0d4;
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.copyBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.copyBtnCopied {
+  background: #2e5927;
+  border-color: #4a8241;
+  color: #ffffff;
+}
+
+.codeBody {
+  display: flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 12px 0;
+  overflow-x: auto;
+}
+
+.lineNumbers {
+  user-select: none;
+  text-align: right;
+  padding: 0 10px 0 12px;
+  color: #626460;
+  border-right: 1px solid #2f302c;
+  min-width: 32px;
+  font-size: 12px;
+}
+
+.codeContent {
+  padding: 0 14px;
+  flex: 1;
+  margin: 0;
+  white-space: pre;
+  color: #f1ede4;
+}
+
+/* Syntax Token Colors */
+.tokenKeyword {
+  color: #e5c07b;
+  font-weight: 600;
+}
+
+.tokenString {
+  color: #98c379;
+}
+
+.tokenComment {
+  color: #7f848e;
+  font-style: italic;
+}
+
+.tokenNumber {
+  color: #d19a66;
+}
+
+.tokenFunction {
+  color: #61afef;
+}
+
+/* Inline Code Badge */
+.inlineCode {
+  background: #f1ebd8;
+  color: #842b1a;
+  border: 1px solid #dcd3b8;
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  vertical-align: baseline;
+}
+
+/* Student Mention Badge */
+.mentionBadge {
+  background: #e3eefc;
+  color: #1a4d85;
+  border: 1px solid #bcd7f5;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0 2px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.mentionBadge:hover {
+  background: #d4e5f9;
+  border-color: #8bbaf0;
+}

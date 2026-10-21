@@ -5,6 +5,7 @@ import { requireSession } from "@/lib/session";
 import { apiFetch, type Doubt } from "@/lib/api";
 import { CheckIcon } from "@/components/ui/Icons";
 import { AnswerCard, AnswerComposer } from "@/components/doubts/DoubtTools";
+import { RichContentRenderer } from "@/components/doubts/RichContentRenderer";
 import styles from "../doubts.module.css";
 
 function timeAgo(iso: string) {
@@ -46,7 +47,7 @@ export default async function DoubtDetailPage(props: {
     <AppShell displayName={me.profile?.display_name}>
       <div className={styles.detailHeader}>
         <Link href="/doubts" className={styles.backLink}>
-          ← Back to all doubts
+          Back to all doubts
         </Link>
       </div>
 
@@ -63,7 +64,9 @@ export default async function DoubtDetailPage(props: {
           {doubt.title}
         </h1>
 
-        <div className={styles.doubtFullBody}>{doubt.body}</div>
+        <div className={styles.doubtFullBody}>
+          <RichContentRenderer content={doubt.body} />
+        </div>
 
         {doubt.tags && doubt.tags.length > 0 && (
           <div className={styles.tagRow}>
@@ -102,8 +105,10 @@ export default async function DoubtDetailPage(props: {
             <AnswerCard
               key={ans.id}
               answer={ans}
+              doubtId={doubt.id}
               doubtAuthorId={doubt.created_by}
               currentUserId={me.id}
+              currentUserName={me.profile?.display_name}
               token={token}
             />
           ))}
@@ -113,3 +118,4 @@ export default async function DoubtDetailPage(props: {
     </AppShell>
   );
 }
+

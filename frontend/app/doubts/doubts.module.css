@@ -518,3 +518,151 @@
 .acceptButton:hover {
   background: #b5cfae;
 }
+
+/* Threaded Discussions (Phase 10) */
+.threadContainer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1.5px dashed rgba(40, 39, 34, 0.18);
+}
+
+.threadToggleBtn {
+  background: transparent;
+  border: 1px solid rgba(40, 39, 34, 0.28);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 13.5px;
+  color: #282722;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.threadToggleBtn:hover {
+  background: #fbf6e3;
+  border-color: #282722;
+}
+
+.threadList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px dashed #d5cdb5;
+  margin-left: 6px;
+}
+
+.threadItem {
+  background: #faf7ed;
+  border: 1px solid #e2dac2;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  position: relative;
+}
+
+.threadItemMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #726f65;
+  margin-bottom: 6px;
+}
+
+.threadAuthor {
+  font-weight: 600;
+  color: #282722;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.threadComposer {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quickChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.quickChipLabel {
+  font-family: "Patrick Hand", cursive;
+  font-size: 12px;
+  color: #726f65;
+}
+
+.quickChip {
+  font-family: "Patrick Hand", cursive;
+  font-size: 12px;
+  background: #f1ebd8;
+  border: 1px solid #d4cca9;
+  border-radius: 3px;
+  padding: 2px 8px;
+  cursor: pointer;
+  color: #4a4740;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s ease;
+}
+
+.quickChip:hover {
+  background: #e8dfc5;
+  color: #282722;
+  border-color: #282722;
+}
+
+.threadInputRow {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.threadInput {
+  flex: 1;
+  padding: 7px 11px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13.5px;
+  border: 1.5px solid #282722;
+  background: #ffffff;
+  outline: none;
+  border-radius: 3px;
+}
+
+.threadInput:focus {
+  border-color: #3b64a3;
+  box-shadow: 0 0 0 1px #3b64a3;
+}
+
+.threadReplyBtn {
+  font-family: "Patrick Hand", cursive;
+  font-size: 14px;
+  background: #edd779;
+  border: 1.5px solid #282722;
+  box-shadow: 2px 2px 0 #282722;
+  padding: 6px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.1s ease;
+}
+
+.threadReplyBtn:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #282722;
+}
+

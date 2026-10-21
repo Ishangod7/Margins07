@@ -177,6 +177,16 @@ export type Doubt = {
   is_followed: boolean;
   is_mine: boolean;
 };
+export type CommentItem = {
+  id: string;
+  answer_id: string;
+  author_id: string;
+  author_name: string;
+  body: string;
+  created_at: string;
+  is_mine?: boolean;
+};
+
 export type Answer = {
   id: string;
   doubt_id: string;
@@ -189,6 +199,7 @@ export type Answer = {
   author_name: string;
   is_mine: boolean;
   has_voted: boolean;
+  comments?: CommentItem[];
 };
 
 export type NotificationItem = {
