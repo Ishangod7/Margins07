@@ -65,7 +65,7 @@ export default async function PersonProfilePage(props: {
             {isSelf && (
               <div style={{ marginTop: "12px" }}>
                 <Link href="/settings" className="btn small yellow">
-                  ✎ Edit Profile & Privacy Settings
+                  Edit Profile & Privacy Settings
                 </Link>
               </div>
             )}
@@ -131,7 +131,7 @@ export default async function PersonProfilePage(props: {
                 <div className={styles.pillRow} style={{ marginTop: "6px" }}>
                   {person.can_help_with.map((h, idx) => (
                     <span key={idx} className={styles.skillPill} style={{ background: "rgba(220, 235, 220, 0.7)", borderColor: "#40683a" }}>
-                      🤝 {h}
+                      {h}
                     </span>
                   ))}
                 </div>
@@ -146,7 +146,7 @@ export default async function PersonProfilePage(props: {
                 <div className={styles.pillRow} style={{ marginTop: "6px" }}>
                   {person.currently_learning.map((l, idx) => (
                     <span key={idx} className={styles.skillPill} style={{ background: "var(--blue-soft)", borderColor: "var(--blue)" }}>
-                      📖 {l}
+                      {l}
                     </span>
                   ))}
                 </div>
@@ -218,7 +218,7 @@ export default async function PersonProfilePage(props: {
                       </div>
                       {a.is_accepted && (
                         <span style={{ fontSize: "10px", color: "#2e5927", fontWeight: 700, whiteSpace: "nowrap" }}>
-                          ✓ ACCEPTED
+                          ACCEPTED
                         </span>
                       )}
                     </div>

@@ -101,7 +101,7 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
                   <IconComponent size={18} />
                 </span>
                 <span className={styles.navLabel}>{item.label}</span>
-                {item.countKey === "notices" && typeof noticeCount === "number" && (
+                {item.countKey === "notices" && typeof noticeCount === "number" && noticeCount > 0 && (
                   <span className={styles.navCount} aria-label={`${noticeCount} notices`}>
                     {noticeCount}
                   </span>

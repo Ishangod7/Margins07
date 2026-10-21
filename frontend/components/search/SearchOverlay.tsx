@@ -133,7 +133,7 @@ export function SearchOverlay({
               {/* Notices */}
               {results.notices.length > 0 && (
                 <div className={styles.sectionGroup}>
-                  <div className={styles.sectionTitle}>📌 Notices ({results.notices.length})</div>
+                  <div className={styles.sectionTitle}>Notices ({results.notices.length})</div>
                   {results.notices.map((n) => (
                     <div
                       key={n.id}
@@ -157,7 +157,7 @@ export function SearchOverlay({
               {/* Resources */}
               {results.resources.length > 0 && (
                 <div className={styles.sectionGroup}>
-                  <div className={styles.sectionTitle}>📚 Resources ({results.resources.length})</div>
+                  <div className={styles.sectionTitle}>Resources ({results.resources.length})</div>
                   {results.resources.map((r) => (
                     <div
                       key={r.id}
@@ -181,7 +181,7 @@ export function SearchOverlay({
               {/* Doubts */}
               {results.doubts.length > 0 && (
                 <div className={styles.sectionGroup}>
-                  <div className={styles.sectionTitle}>💬 Doubts ({results.doubts.length})</div>
+                  <div className={styles.sectionTitle}>Doubts ({results.doubts.length})</div>
                   {results.doubts.map((d) => (
                     <div
                       key={d.id}
@@ -193,7 +193,7 @@ export function SearchOverlay({
                       <div className={styles.itemLeft}>
                         <span className={styles.itemTitle}>{d.title}</span>
                         <span className={styles.itemSnippet}>
-                          {d.status === "solved" ? "✓ Solved" : d.status === "answered" ? "Answered" : "Open"} · {d.answer_count ?? 0} answers
+                          {d.status === "solved" ? "Solved" : d.status === "answered" ? "Answered" : "Open"} · {d.answer_count ?? 0} answers
                         </span>
                       </div>
                       <span className={styles.itemTag} style={{ textTransform: "uppercase" }}>
@@ -207,7 +207,7 @@ export function SearchOverlay({
               {/* People */}
               {results.people.length > 0 && (
                 <div className={styles.sectionGroup}>
-                  <div className={styles.sectionTitle}>👥 Classmates ({results.people.length})</div>
+                  <div className={styles.sectionTitle}>Classmates ({results.people.length})</div>
                   {results.people.map((p) => (
                     <div
                       key={p.id}

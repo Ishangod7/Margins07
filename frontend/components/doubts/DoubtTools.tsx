@@ -48,7 +48,7 @@ export function DoubtCard({ doubt, token }: { doubt: Doubt; token: string }) {
   }
 
   const statusLabel =
-    doubt.status === "solved" ? "SOLVED ✓" : doubt.status === "answered" ? "ANSWERED" : "OPEN";
+    doubt.status === "solved" ? "SOLVED" : doubt.status === "answered" ? "ANSWERED" : "OPEN";
 
   const statusClass =
     doubt.status === "solved"
@@ -95,7 +95,7 @@ export function DoubtCard({ doubt, token }: { doubt: Doubt; token: string }) {
             disabled={loadingFollow}
             title={followed ? "Following this doubt" : "Follow this doubt"}
           >
-            <span>{followed ? "★ Following" : "☆ Follow"}</span>
+            <span>{followed ? "Following" : "Follow"}</span>
             <span>({followCount})</span>
           </button>
         </div>
@@ -351,7 +351,7 @@ export function AnswerCard({
               onClick={handleToggleAccept}
               disabled={loading}
             >
-              {isAccepted ? "Unmark Solution" : "✓ Mark as Solution"}
+              {isAccepted ? "Unmark Solution" : "Mark as Solution"}
             </button>
           )}
 

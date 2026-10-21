@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { BellIcon } from "@/components/ui/Icons";
+import { BellIcon, NoticeIcon, DoubtIcon, ResourceIcon, CheckIcon } from "@/components/ui/Icons";
 import { apiFetch, type NotificationItem, type NotificationsResponse } from "@/lib/api";
 import styles from "./notifications.module.css";
 
@@ -164,10 +164,10 @@ export function NotificationBell({ token }: { token: string | null }) {
                 const isUnread =
                   !lastReadDate || new Date(item.created_at) > new Date(lastReadDate);
 
-                let iconSymbol = "📌";
-                if (item.type === "answer") iconSymbol = "💬";
-                if (item.type === "accepted") iconSymbol = "✓";
-                if (item.type === "resource") iconSymbol = "📚";
+                let iconComponent = <NoticeIcon size={14} />;
+                if (item.type === "answer") iconComponent = <DoubtIcon size={14} />;
+                if (item.type === "accepted") iconComponent = <CheckIcon size={14} />;
+                if (item.type === "resource") iconComponent = <ResourceIcon size={14} />;
 
                 return (
                   <div
@@ -177,7 +177,7 @@ export function NotificationBell({ token }: { token: string | null }) {
                     role="button"
                     tabIndex={0}
                   >
-                    <div className={styles.notifIconWrap}>{iconSymbol}</div>
+                    <div className={styles.notifIconWrap}>{iconComponent}</div>
                     <div className={styles.notifContent}>
                       <span className={styles.itemTitle}>{item.title}</span>
                       {item.body && <span className={styles.itemSnippet}>{item.body}</span>}

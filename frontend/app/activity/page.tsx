@@ -79,7 +79,7 @@ export default async function PersonalActivityPage() {
       {/* 1. Questions Asked */}
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>
-          <span>💬 Questions You Asked</span>
+          <span>Questions You Asked</span>
           <span style={{ fontSize: "14px", color: "var(--ink-soft)" }}>({activity.doubts.length})</span>
         </h2>
       </div>
@@ -121,7 +121,7 @@ export default async function PersonalActivityPage() {
       {/* 2. Solutions Provided */}
       <div className={styles.sectionHeader} style={{ marginTop: "36px" }}>
         <h2 className={styles.sectionTitle}>
-          <span>💡 Peer Answers & Solutions</span>
+          <span>Peer Answers & Solutions</span>
           <span style={{ fontSize: "14px", color: "var(--ink-soft)" }}>({activity.answers.length})</span>
         </h2>
       </div>
@@ -145,11 +145,11 @@ export default async function PersonalActivityPage() {
               <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
                 {a.is_accepted && (
                   <span className={styles.itemBadge} style={{ background: "#cfe0c8", color: "#2e5927", fontWeight: 700 }}>
-                    ✓ SOLVED
+                    SOLVED
                   </span>
                 )}
                 <span className={styles.itemBadge}>
-                  ▲ {a.helpful_count} helpful
+                  {a.helpful_count} helpful
                 </span>
               </div>
             </Link>
@@ -160,7 +160,7 @@ export default async function PersonalActivityPage() {
       {/* 3. Resources Shared */}
       <div className={styles.sectionHeader} style={{ marginTop: "36px" }}>
         <h2 className={styles.sectionTitle}>
-          <span>📚 Shared Study Resources</span>
+          <span>Shared Study Resources</span>
           <span style={{ fontSize: "14px", color: "var(--ink-soft)" }}>({activity.resources.length})</span>
         </h2>
       </div>

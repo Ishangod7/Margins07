@@ -10,7 +10,7 @@ const STATUS_FILTERS = [
   { key: "", label: "All Status" },
   { key: "open", label: "Open" },
   { key: "answered", label: "Answered" },
-  { key: "solved", label: "Solved ✓" },
+  { key: "solved", label: "Solved" },
 ];
 
 export default async function DoubtBoardPage(props: {

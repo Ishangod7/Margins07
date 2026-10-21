@@ -33,7 +33,7 @@ export default async function DoubtDetailPage(props: {
   }
 
   const statusLabel =
-    doubt.status === "solved" ? "SOLVED ✓" : doubt.status === "answered" ? "ANSWERED" : "OPEN";
+    doubt.status === "solved" ? "SOLVED" : doubt.status === "answered" ? "ANSWERED" : "OPEN";
 
   const statusClass =
     doubt.status === "solved"

@@ -63,7 +63,7 @@ export default async function SavedShelfPage() {
           {/* Section 1: Saved Notes & Files */}
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>
-              <span>📚 Saved Resources</span>
+              <span>Saved Resources</span>
               <span className={styles.itemCount}>
                 {savedData.saved_resources.length}
               </span>
@@ -91,7 +91,7 @@ export default async function SavedShelfPage() {
           {/* Section 2: Followed Doubts */}
           <div className={styles.sectionHeader} style={{ marginTop: "36px" }}>
             <h2 className={styles.sectionTitle}>
-              <span>💬 Followed Doubts</span>
+              <span>Followed Doubts</span>
               <span className={styles.itemCount}>
                 {savedData.followed_doubts.length}
               </span>

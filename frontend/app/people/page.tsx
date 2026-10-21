@@ -43,7 +43,7 @@ export default async function PeopleDirectoryPage(props: {
           <p>AI&DS Division A peers, project collaborators & study partners</p>
         </div>
         <Link href="/settings" className={`btn yellow ${styles.myProfileBtn}`}>
-          ✎ Edit My Profile
+          Edit My Profile
         </Link>
       </section>
 
@@ -134,7 +134,7 @@ export default async function PeopleDirectoryPage(props: {
                 {p.bio ? (
                   <p className={styles.bioText}>{p.bio}</p>
                 ) : (
-                  <p className={styles.bioEmpty}>Keeping things quiet ✎</p>
+                  <p className={styles.bioEmpty}>Keeping things quiet</p>
                 )}
 
                 {/* Skills */}
@@ -154,7 +154,7 @@ export default async function PeopleDirectoryPage(props: {
                 {/* Can Help With */}
                 {p.can_help_with && p.can_help_with.length > 0 && (
                   <div className={styles.helpBox}>
-                    <span>🤝 Helps with:</span>
+                    <span>Helps with:</span>
                     <strong>{p.can_help_with.slice(0, 2).join(", ")}</strong>
                   </div>
                 )}

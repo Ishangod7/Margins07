@@ -145,26 +145,26 @@ export function SettingsManager({
           className={`${styles.tabBtn} ${activeTab === "profile" ? styles.tabBtnActive : ""}`}
           onClick={() => { setActiveTab("profile"); setSuccess(null); setError(null); }}
         >
-          ✎ Student Profile
+          Student Profile
         </button>
         <button
           type="button"
           className={`${styles.tabBtn} ${activeTab === "privacy" ? styles.tabBtnActive : ""}`}
           onClick={() => { setActiveTab("privacy"); setSuccess(null); setError(null); }}
         >
-          🔒 Privacy Controls
+          Privacy Controls
         </button>
         <button
           type="button"
           className={`${styles.tabBtn} ${activeTab === "data" ? styles.tabBtnActive : ""}`}
           onClick={() => { setActiveTab("data"); setSuccess(null); setError(null); }}
         >
-          📦 Account & Data
+          Account & Data
         </button>
       </div>
 
-      {success && <div className={styles.successMessage}>✓ {success}</div>}
-      {error && <div className={styles.errorMessage}>✕ {error}</div>}
+      {success && <div className={styles.successMessage}>{success}</div>}
+      {error && <div className={styles.errorMessage}>{error}</div>}
 
       {/* Tab 1: Profile Editor */}
       {activeTab === "profile" && (
@@ -271,7 +271,7 @@ export function SettingsManager({
               </div>
 
               <p className={bio ? peopleStyles.bioText : peopleStyles.bioEmpty}>
-                {bio || "Keeping things quiet ✎"}
+                {bio || "Keeping things quiet"}
               </p>
 
               {liveSkills.length > 0 && (
@@ -289,7 +289,7 @@ export function SettingsManager({
 
               {liveCanHelp.length > 0 && (
                 <div className={peopleStyles.helpBox}>
-                  <span>🤝 Helps with:</span>
+                  <span>Helps with:</span>
                   <strong>{liveCanHelp.slice(0, 2).join(", ")}</strong>
                 </div>
               )}
@@ -422,7 +422,7 @@ export function SettingsManager({
                 onClick={handleExportData}
                 disabled={busy}
               >
-                📥 Export My Margins Data (.json)
+                Export My Margins Data (.json)
               </button>
             </div>
 

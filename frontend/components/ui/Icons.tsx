@@ -40,8 +40,9 @@ export function NoticeIcon({ size = 20, className = "", ...props }: IconProps) {
       aria-hidden="true"
       {...props}
     >
-      <path d="M16 3l5 5-2 2-2-2-4 4v5l-2 2-2-2v-5L5 9l2-2 2 2 7-6z" />
-      <line x1="12" y1="17" x2="7" y2="22" />
+      <line x1="12" y1="17" x2="12" y2="22" />
+      <path d="M5 17h14l-2-7V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v5l-2 7z" />
+      <line x1="9" y1="4" x2="15" y2="4" />
     </svg>
   );
 }
@@ -446,5 +447,6 @@ export function BellIcon({ size = 20, className = "", ...props }: IconProps) {
     </svg>
   );
 }
+
 
 
