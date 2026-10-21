@@ -203,10 +203,31 @@ export type NotificationItem = {
   is_pinned?: boolean;
 };
 
-export type NotificationsResponse = {
-  notifications: NotificationItem[];
-  total_count: number;
-  unread_count: number;
+export type DeadlineItem = {
+  id: string;
+  title: string;
+  subject_code: string;
+  subject_name: string;
+  due_at: string;
+  type: "lab_journal" | "mini_project" | "assignment" | "presentation" | "exam_submission";
+  submission_mode: string;
+  description: string;
+  is_official: boolean;
+  created_by_name: string;
+  completed: boolean;
+  urgency: "urgent" | "soon" | "normal" | "overdue";
+  time_remaining: string;
+};
+
+export type DeadlinesResponse = {
+  deadlines: DeadlineItem[];
+  stats: {
+    total_count: number;
+    pending_count: number;
+    completed_count: number;
+    urgent_count: number;
+    next_deadline: DeadlineItem | null;
+  };
 };
 
 export class ApiError extends Error {

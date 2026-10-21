@@ -1,0 +1,577 @@
+/* Margins Assignment & Submission Deadline Tracker Stylesheet */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Page Header & Banner */
+.pageCover {
+  padding: 24px 28px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: rotate(-0.25deg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-radius: 2px;
+}
+
+.coverText h1 {
+  font: 700 48px / 0.95 "Caveat", cursive;
+  color: var(--blue-dark, #0369a1);
+  margin: 0;
+}
+
+.coverText p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.coverActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.addBtn {
+  font-family: "Patrick Hand", cursive;
+  font-size: 15px;
+  padding: 8px 18px;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--yellow, #facc15);
+  color: var(--ink);
+  font-weight: bold;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.addBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* Urgent Next Deadline Hero Card */
+.urgentHero {
+  background: #fffbeb;
+  border: 2.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 22px 26px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.urgentLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.clockIconWrap {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ink);
+  background: var(--yellow-light, #fef9c3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b45309;
+  box-shadow: 2px 2px 0 var(--ink);
+  flex-shrink: 0;
+}
+
+.urgentContent {
+  flex: 1;
+}
+
+.urgentLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  color: #b45309;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+
+.urgentTitle {
+  font: 700 24px / 1.1 "Caveat", cursive;
+  color: var(--ink);
+  margin: 4px 0 6px 0;
+}
+
+.urgentMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+
+.urgentTag {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13px;
+  padding: 2px 8px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.urgentMode {
+  font-style: italic;
+}
+
+.urgentRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.countdownPill {
+  font-family: "Patrick Hand", cursive;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 6px 14px;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Stats Overview Bar */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.statCard {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  padding: 14px 18px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.statVal {
+  font-family: "Patrick Hand", cursive;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* Control Bar: Filters & Subjects */
+.filterSection {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 16px 20px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.statusTab {
+  font-family: "Patrick Hand", cursive;
+  font-size: 14.5px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper-2, #f5f0e1);
+  color: var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusTab:hover {
+  background: #fff;
+}
+
+.statusTabActive {
+  background: var(--yellow-light, #fef9c3);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-weight: bold;
+}
+
+.tabBadge {
+  background: var(--ink);
+  color: #fff;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  line-height: 1.2;
+}
+
+.statusTabActive .tabBadge {
+  background: var(--blue-dark, #0369a1);
+}
+
+.subjectFilterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--border, #d1c7ad);
+  padding-top: 10px;
+}
+
+.filterLabel {
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
+.subjectChip {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13px;
+  padding: 3px 10px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.subjectChip:hover {
+  background: var(--paper-2, #f5f0e1);
+}
+
+.subjectChipActive {
+  background: var(--blue-light, #e0f2fe);
+  border-color: var(--ink);
+  font-weight: bold;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+/* Deadlines Cards List */
+.deadlinesList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.deadlineCard {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  border-radius: 2px;
+  padding: 18px 22px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.cardCompleted {
+  background: #f8fafc;
+  opacity: 0.82;
+  border-style: dashed;
+}
+
+.deadlineTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.checkTitleArea {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.checkboxBtn {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.12s ease;
+}
+
+.checkboxBtn:hover {
+  background: var(--yellow-light, #fef9c3);
+  transform: scale(1.05);
+}
+
+.checkboxChecked {
+  background: #22c55e;
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.deadlineMain {
+  flex: 1;
+}
+
+.deadlineBadges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.codePill {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: var(--blue-light, #e0f2fe);
+  color: var(--blue-dark, #0369a1);
+}
+
+.typePill {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-2, #f5f0e1);
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--border, #d1c7ad);
+}
+
+.officialBadge {
+  font-family: "Patrick Hand", cursive;
+  font-size: 11.5px;
+  background: #fef08a;
+  color: #713f12;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--ink);
+}
+
+.cardTitle {
+  font-family: "DM Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px 0;
+  line-height: 1.25;
+}
+
+.titleCompleted {
+  text-decoration: line-through;
+  color: var(--ink-soft);
+}
+
+.cardDescription {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin: 6px 0 10px 0;
+}
+
+.deadlineFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px dashed var(--border, #d1c7ad);
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+
+.submissionMode {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13.5px;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.timePill {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13.5px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--ink);
+  font-weight: bold;
+}
+
+.timeUrgent {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.timeSoon {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.timeNormal {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.timeOverdue {
+  background: #f1f5f9;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+/* Empty State */
+.emptyState {
+  padding: 48px 20px;
+  text-align: center;
+  background: var(--paper);
+  border: 2px dashed var(--border, #d1c7ad);
+  border-radius: 4px;
+}
+
+.emptyState h3 {
+  font: 700 32px / 1 "Caveat", cursive;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.emptyState p {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* Modal Dialog */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modalContent {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 5px 6px 0 var(--ink);
+  padding: 24px 28px;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 3px;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modalHead h2 {
+  font: 700 32px / 1 "Caveat", cursive;
+  color: var(--ink);
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-soft);
+  padding: 4px;
+}
+
+.formGroup {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.formGroup label {
+  font-family: "Patrick Hand", cursive;
+  font-size: 14.5px;
+  color: var(--ink);
+  font-weight: bold;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  padding: 8px 12px;
+  border: 1.5px solid var(--ink);
+  background: #fff;
+  border-radius: 3px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--blue, #2563eb);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}

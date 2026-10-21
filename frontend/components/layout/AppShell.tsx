@@ -18,11 +18,13 @@ import {
   SettingsIcon,
   SearchIcon,
   BookOpenIcon,
+  ClockIcon,
 } from "@/components/ui/Icons";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/notices", label: "Notices", icon: NoticeIcon, countKey: "notices" as const },
+  { href: "/deadlines", label: "Deadlines", icon: ClockIcon },
   { href: "/subjects", label: "Subjects", icon: BookOpenIcon },
   { href: "/resources", label: "Resources", icon: ResourceIcon },
   { href: "/doubts", label: "Doubts", icon: DoubtIcon },
@@ -32,10 +34,10 @@ const NAV_ITEMS = [
 
 const BOTTOM_NAV_ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
+  { href: "/deadlines", label: "Deadlines", icon: ClockIcon },
   { href: "/subjects", label: "Subjects", icon: BookOpenIcon },
   { href: "/resources", label: "Resources", icon: ResourceIcon },
   { href: "/doubts", label: "Doubts", icon: DoubtIcon },
-  { href: "/people", label: "People", icon: PeopleIcon },
 ];
 
 type Props = {
