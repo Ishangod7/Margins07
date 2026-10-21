@@ -94,6 +94,72 @@ export type Me = {
 export type Subject = {
   id: string; name: string; code?: string; semester?: string;
 };
+
+export type SubjectHubItem = {
+  id: string;
+  class_id: string;
+  name: string;
+  code?: string;
+  semester?: string;
+  resource_count: number;
+  doubt_count: number;
+  solved_doubt_count: number;
+  helper_count: number;
+};
+
+export type SubjectDetailResponse = {
+  subject: {
+    id: string;
+    class_id: string;
+    name: string;
+    code?: string;
+    semester?: string;
+  };
+  resources: Array<{
+    id: string;
+    title: string;
+    description?: string;
+    kind: string;
+    unit?: string;
+    tags?: string[];
+    file_name?: string;
+    file_size?: number;
+    mime_type?: string;
+    external_url?: string;
+    save_count: number;
+    created_at: string;
+    uploader_id: string;
+    uploader_name: string;
+    is_saved: boolean;
+    is_mine: boolean;
+  }>;
+  doubts: Array<{
+    id: string;
+    title: string;
+    body: string;
+    status: "open" | "answered" | "solved";
+    answer_count: number;
+    created_at: string;
+    author_id: string;
+    author_name: string;
+    is_mine: boolean;
+  }>;
+  helpers: Array<{
+    id: string;
+    display_name: string;
+    role: "member" | "cr";
+    bio?: string | null;
+    skills: string[];
+    can_help_with: string[];
+  }>;
+  units: Record<string, number>;
+  stats: {
+    total_resources: number;
+    total_doubts: number;
+    solved_doubts: number;
+    helper_count: number;
+  };
+};
 export type Doubt = {
   id: string;
   title: string;

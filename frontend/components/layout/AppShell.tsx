@@ -17,11 +17,13 @@ import {
   ActivityIcon,
   SettingsIcon,
   SearchIcon,
+  BookOpenIcon,
 } from "@/components/ui/Icons";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/notices", label: "Notices", icon: NoticeIcon, countKey: "notices" as const },
+  { href: "/subjects", label: "Subjects", icon: BookOpenIcon },
   { href: "/resources", label: "Resources", icon: ResourceIcon },
   { href: "/doubts", label: "Doubts", icon: DoubtIcon },
   { href: "/people", label: "People", icon: PeopleIcon },
@@ -30,7 +32,7 @@ const NAV_ITEMS = [
 
 const BOTTOM_NAV_ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
-  { href: "/notices", label: "Notices", icon: NoticeIcon },
+  { href: "/subjects", label: "Subjects", icon: BookOpenIcon },
   { href: "/resources", label: "Resources", icon: ResourceIcon },
   { href: "/doubts", label: "Doubts", icon: DoubtIcon },
   { href: "/people", label: "People", icon: PeopleIcon },
@@ -158,7 +160,7 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
             >
               <SearchIcon size={16} aria-hidden="true" />
               <span>Search notices, resources, doubts, people</span>
-              <span className={styles.shortcutKey}>⌘K</span>
+              <span className={styles.shortcutKey}>Ctrl+K</span>
             </button>
           </div>
           <div className={styles.topActions}>
