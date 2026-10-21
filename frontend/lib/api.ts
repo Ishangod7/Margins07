@@ -203,6 +203,12 @@ export type NotificationItem = {
   is_pinned?: boolean;
 };
 
+export type NotificationsResponse = {
+  notifications: NotificationItem[];
+  total_count: number;
+  unread_count: number;
+};
+
 export type DeadlineItem = {
   id: string;
   title: string;
