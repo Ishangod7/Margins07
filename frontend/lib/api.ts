@@ -236,6 +236,32 @@ export type DeadlinesResponse = {
   };
 };
 
+export type RevisionItem = {
+  id: string;
+  subject_code: string;
+  subject_name: string;
+  category: "formula" | "pyq" | "one_pager";
+  title: string;
+  summary: string;
+  content: string;
+  marks: string;
+  exam_frequency: string;
+  high_yield: boolean;
+  author_name: string;
+  resource_link?: string;
+};
+
+export type RevisionResponse = {
+  items: RevisionItem[];
+  stats: {
+    total_items: number;
+    formula_count: number;
+    pyq_count: number;
+    one_pager_count: number;
+    high_yield_count: number;
+  };
+};
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }

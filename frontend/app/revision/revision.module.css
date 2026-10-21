@@ -1,0 +1,474 @@
+/* Margins Examination Fast-Revision Shelf (Cram Mode) Stylesheet */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: background 0.2s ease;
+}
+
+/* Ambient Cram Focus Mode */
+.focusActive {
+  background: #18181b;
+  color: #f4f4f5;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+.focusActive .pageCover,
+.focusActive .filterCard,
+.focusActive .cramCard,
+.focusActive .statCard {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #f4f4f5;
+  box-shadow: 3px 3px 0 #09090b;
+}
+
+.focusActive .coverText h1 {
+  color: #fbbf24;
+}
+
+.focusActive .coverText p,
+.focusActive .statLabel,
+.focusActive .cardSummary,
+.focusActive .cardMeta {
+  color: #a1a1aa;
+}
+
+.focusActive .formulaBox {
+  background: #18181b;
+  color: #38bdf8;
+  border-color: #3f3f46;
+}
+
+/* Page Header & Cover */
+.pageCover {
+  padding: 24px 28px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: rotate(-0.25deg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-radius: 2px;
+}
+
+.coverText h1 {
+  font: 700 48px / 0.95 "Caveat", cursive;
+  color: var(--blue-dark, #0369a1);
+  margin: 0;
+}
+
+.coverText p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.coverActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.focusToggleBtn {
+  font-family: "Patrick Hand", cursive;
+  font-size: 15px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--paper-2, #f5f0e1);
+  color: var(--ink);
+  font-weight: bold;
+  transition: all 0.12s ease;
+}
+
+.focusToggleBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.focusToggleActive {
+  background: #fbbf24;
+  color: #18181b;
+}
+
+.addBtn {
+  font-family: "Patrick Hand", cursive;
+  font-size: 15px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--yellow, #facc15);
+  color: var(--ink);
+  font-weight: bold;
+}
+
+.addBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* Stats Overview Bar */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.statCard {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  padding: 14px 18px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.statNum {
+  font-family: "Patrick Hand", cursive;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* Filter Card */
+.filterCard {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 16px 20px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.categoryTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.catTab {
+  font-family: "Patrick Hand", cursive;
+  font-size: 14.5px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper-2, #f5f0e1);
+  color: var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.12s ease;
+}
+
+.catTab:hover {
+  background: #fff;
+}
+
+.catTabActive {
+  background: var(--yellow-light, #fef9c3);
+  font-weight: bold;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.subjectFilterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--border, #d1c7ad);
+  padding-top: 10px;
+}
+
+.filterLabel {
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
+.subjectChip {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13px;
+  padding: 3px 10px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.subjectChip:hover {
+  background: var(--paper-2, #f5f0e1);
+}
+
+.subjectChipActive {
+  background: var(--blue-light, #e0f2fe);
+  border-color: var(--ink);
+  font-weight: bold;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+/* Cram Cards Grid */
+.cramGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.cramCard {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 20px 22px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.cramCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0 var(--ink);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.badgeGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.codePill {
+  font-family: "Patrick Hand", cursive;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: var(--blue-light, #e0f2fe);
+  color: var(--blue-dark, #0369a1);
+}
+
+.categoryPill {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-2, #f5f0e1);
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--border, #d1c7ad);
+}
+
+.marksPill {
+  font-family: "Patrick Hand", cursive;
+  font-size: 12.5px;
+  background: #fef08a;
+  color: #713f12;
+  padding: 2px 8px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.cardTitle {
+  font: 700 22px / 1.15 "Caveat", cursive;
+  color: var(--ink);
+  margin: 4px 0 6px 0;
+}
+
+.cardSummary {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.formulaBox {
+  background: rgba(255, 253, 245, 0.95);
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--ink);
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.copyBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 11px;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  background: #fff;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.copyBtn:hover {
+  background: var(--yellow-light, #fef9c3);
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px dashed var(--border, #d1c7ad);
+  padding-top: 8px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.freqTag {
+  font-family: "Patrick Hand", cursive;
+  font-size: 12.5px;
+  color: #b45309;
+  font-weight: bold;
+}
+
+/* Empty State */
+.emptyState {
+  padding: 48px 20px;
+  text-align: center;
+  background: var(--paper);
+  border: 2px dashed var(--border, #d1c7ad);
+  border-radius: 4px;
+}
+
+.emptyState h3 {
+  font: 700 32px / 1 "Caveat", cursive;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.emptyState p {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* Modal */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modalContent {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 5px 6px 0 var(--ink);
+  padding: 24px 28px;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 3px;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modalHead h2 {
+  font: 700 32px / 1 "Caveat", cursive;
+  color: var(--ink);
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-soft);
+  padding: 4px;
+}
+
+.formGroup {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formGroup label {
+  font-family: "Patrick Hand", cursive;
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: bold;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  padding: 8px 12px;
+  border: 1.5px solid var(--ink);
+  background: #fff;
+  border-radius: 3px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
