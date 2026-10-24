@@ -5,7 +5,7 @@ import TimetableClient from "./TimetableClient";
 
 export const metadata = {
   title: "Class Timetable | Margins",
-  description: "Weekly schedule, live lecture shelf, and lab batch locations for TCET Mumbai AI&DS.",
+  description: "Weekly schedule, live lecture shelf, and lab batch locations for AI&DS A (Semester I).",
 };
 
 export default async function TimetablePage() {

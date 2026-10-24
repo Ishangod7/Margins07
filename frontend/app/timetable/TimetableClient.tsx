@@ -31,9 +31,9 @@ type Props = {
 
 const BATCH_OPTIONS = [
   { value: "ALL", label: "All Batches" },
-  { value: "A1", label: "Batch A1" },
-  { value: "A2", label: "Batch A2" },
-  { value: "A3", label: "Batch A3" },
+  { value: "Batch 1", label: "Batch 1" },
+  { value: "Batch 2", label: "Batch 2" },
+  { value: "Batch 3", label: "Batch 3" },
 ] as const;
 
 export default function TimetableClient({ initialData, isCr, token }: Props) {
@@ -57,7 +57,11 @@ export default function TimetableClient({ initialData, isCr, token }: Props) {
   useEffect(() => {
     try {
       const savedBatch = localStorage.getItem("margins_timetable_batch");
-      if (savedBatch && ["ALL", "A1", "A2", "A3"].includes(savedBatch) && savedBatch !== selectedBatch) {
+      if (
+        savedBatch &&
+        ["ALL", "Batch 1", "Batch 2", "Batch 3", "A1", "A2", "A3"].includes(savedBatch) &&
+        savedBatch !== selectedBatch
+      ) {
         handleBatchChange(savedBatch);
       }
     } catch {
@@ -134,7 +138,7 @@ export default function TimetableClient({ initialData, isCr, token }: Props) {
           </div>
           <h1 className={styles.title}>class timetable</h1>
           <p className={styles.subtitle}>
-            TCET Mumbai AI&DS — Division A (Semester 4)
+            AI&DS Division A (Semester I) | Incharge: Mr. Atul Chaturvedi | Strength: 63
           </p>
         </div>
 
@@ -203,10 +207,13 @@ export default function TimetableClient({ initialData, isCr, token }: Props) {
                 </div>
                 {activeSlot.batch && activeSlot.batch !== "all" && (
                   <div className={styles.batchSpecificBadge}>
-                    Batch {activeSlot.batch}
+                    {activeSlot.batch.startsWith("Batch")
+                      ? activeSlot.batch
+                      : `Batch ${activeSlot.batch}`}
                   </div>
                 )}
               </div>
+
 
               {activeSlot.notes && (
                 <p className={styles.statusNotes}>{activeSlot.notes}</p>
@@ -446,7 +453,9 @@ export default function TimetableClient({ initialData, isCr, token }: Props) {
                         )}
 
                         {slot.batch && slot.batch !== "all" && (
-                          <span className={styles.batchTag}>Batch {slot.batch}</span>
+                          <span className={styles.batchTag}>
+                            {slot.batch.startsWith("Batch") ? slot.batch : `Batch ${slot.batch}`}
+                          </span>
                         )}
                       </div>
                     </div>
