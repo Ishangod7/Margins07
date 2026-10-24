@@ -58,7 +58,7 @@ export default async function ResourceShelfPage(props: {
       <section className={`card ${styles.pageCover}`}>
         <div className={styles.coverText}>
           <h1>resource shelf</h1>
-          <p>notes, PYQs & study links — curated and shared by Division A</p>
+          <p>notes, PYQs and study links - curated and shared by Division A</p>
         </div>
         <ShelfHeaderActions subjects={subjects} />
       </section>

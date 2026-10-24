@@ -11,7 +11,12 @@ import {
   StarIcon,
   CrossIcon,
   CheckIcon,
+  CopyIcon,
+  DownloadIcon,
+  ExternalLinkIcon,
+  PlusIcon,
 } from "@/components/ui/Icons";
+import { useToast } from "@/components/ui/Toast";
 import styles from "@/app/resources/resources.module.css";
 
 export interface SubjectItem {
@@ -46,6 +51,25 @@ async function getAccessToken() {
   return data.session?.access_token ?? null;
 }
 
+function getKindBadgeClass(kind: string) {
+  switch (kind.toLowerCase()) {
+    case "notes":
+      return styles.badgeNotes;
+    case "pyq":
+      return styles.badgePyq;
+    case "slides":
+      return styles.badgeSlides;
+    case "book":
+      return styles.badgeBook;
+    case "link":
+      return styles.badgeLink;
+    case "assignment":
+      return styles.badgeAssignment;
+    default:
+      return styles.typeBadge;
+  }
+}
+
 export function ResourceUploadModal({
   subjects,
   isOpen,
@@ -56,6 +80,7 @@ export function ResourceUploadModal({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [tab, setTab] = useState<"file" | "link">("file");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -160,10 +185,13 @@ export function ResourceUploadModal({
         });
       }
 
+      toast.success("Resource added to the shelf!", "Resource Shared");
       onClose();
       router.refresh();
     } catch (err: any) {
-      setError(err.message || "Upload failed");
+      const msg = err.message || "Upload failed";
+      setError(msg);
+      toast.error(msg, "Upload Failed");
     } finally {
       setBusy(false);
     }
@@ -296,7 +324,7 @@ export function ResourceUploadModal({
               Cancel
             </button>
             <button type="submit" className="btn yellow" disabled={busy}>
-              {busy ? "Saving..." : "Add to Shelf →"}
+              {busy ? "Saving..." : "Add to Shelf"}
             </button>
           </div>
         </form>
@@ -316,20 +344,33 @@ export function ResourceCard({
   isCr?: boolean;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [saved, setSaved] = useState(resource.is_saved);
   const [saveCount, setSaveCount] = useState(resource.save_count);
+  const [downloadCount, setDownloadCount] = useState(resource.download_count);
   const [downloading, setDownloading] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const canDelete = isCr || (currentUserId && resource.created_by === currentUserId);
 
   async function handleToggleSave() {
     try {
       const token = await getAccessToken();
-      if (!token) return;
+      if (!token) {
+        toast.info("Please log in to save bookmarks.", "Sign In Required");
+        return;
+      }
+      const willSave = !saved;
       // Optimistic update
-      setSaved(!saved);
-      setSaveCount(saved ? Math.max(0, saveCount - 1) : saveCount + 1);
+      setSaved(willSave);
+      setSaveCount(willSave ? saveCount + 1 : Math.max(0, saveCount - 1));
+
+      if (willSave) {
+        toast.success("Saved to your study bookmarks!", "Bookmarked");
+      } else {
+        toast.info("Removed from study bookmarks.", "Bookmark Removed");
+      }
 
       const res = await apiFetch<{ is_saved: boolean; save_count: number }>(
         `/resources/${resource.id}/save`,
@@ -342,6 +383,7 @@ export function ResourceCard({
       // Revert on error
       setSaved(saved);
       setSaveCount(saveCount);
+      toast.error("Could not update bookmark. Please try again.");
     }
   }
 
@@ -349,19 +391,44 @@ export function ResourceCard({
     setDownloading(true);
     try {
       const token = await getAccessToken();
-      if (!token) throw new Error("Please log in to download");
+      if (!token) {
+        toast.info("Please log in to access resources.", "Sign In Required");
+        return;
+      }
+
+      if (resource.kind === "link") {
+        toast.info("Opening link in new tab...", "External Link");
+      } else {
+        toast.info("Starting download for " + resource.title + "...", "Downloading");
+      }
 
       const res = await apiFetch<{ download_url: string; kind: string }>(
         `/resources/${resource.id}/download`,
         token
       );
       if (res.download_url) {
+        setDownloadCount((prev) => prev + 1);
         window.open(res.download_url, "_blank", "noopener,noreferrer");
       }
     } catch (e: any) {
-      alert(e.message || "Download failed");
+      toast.error(e.message || "Download failed. Please try again.", "Download Error");
     } finally {
       setDownloading(false);
+    }
+  }
+
+  async function handleCopyResource() {
+    const textToCopy = resource.external_url
+      ? resource.external_url
+      : `[${resource.kind.toUpperCase()} - ${resource.subject?.code || "General"}] ${resource.title}${resource.unit ? ` (${resource.unit})` : ""}\n${window.location.origin}/resources?q=${encodeURIComponent(resource.title)}`;
+
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      toast.success("Resource details copied to clipboard!", "Copied");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Could not copy to clipboard.");
     }
   }
 
@@ -372,9 +439,10 @@ export function ResourceCard({
       const token = await getAccessToken();
       if (!token) return;
       await apiFetch(`/resources/${resource.id}`, token, { method: "DELETE" });
+      toast.success("Resource removed from shelf.", "Deleted");
       router.refresh();
     } catch (e: any) {
-      alert(e.message || "Delete failed");
+      toast.error(e.message || "Delete failed. Please try again.");
     } finally {
       setBusy(false);
     }
@@ -384,23 +452,38 @@ export function ResourceCard({
     <div className={`card ${styles.resourceCard}`}>
       <div className={styles.cardTop}>
         <div className={styles.badges}>
-          <span className={styles.typeBadge}>{resource.kind.toUpperCase()}</span>
+          <span className={`${styles.typeBadge} ${getKindBadgeClass(resource.kind)}`}>
+            {resource.kind.toUpperCase()}
+          </span>
           {resource.subject?.code && (
             <span className={styles.subjectBadge}>{resource.subject.code}</span>
           )}
           {resource.unit && <span className={styles.unitBadge}>{resource.unit}</span>}
         </div>
 
-        <button
-          type="button"
-          onClick={handleToggleSave}
-          className={`${styles.saveBtn} ${saved ? styles.savedActive : ""}`}
-          title={saved ? "Saved to your bookmarks" : "Save to bookmarks"}
-          aria-label={saved ? "Unsave resource" : "Save resource"}
-        >
-          <StarIcon size={14} />
-          <span>{saveCount}</span>
-        </button>
+        <div className={styles.topRightActions}>
+          <button
+            type="button"
+            onClick={handleCopyResource}
+            className={styles.copyBtn}
+            title="Copy resource details and link"
+            aria-label="Copy resource details"
+          >
+            <CopyIcon size={13} aria-hidden="true" />
+            <span>{copied ? "Copied" : "Copy"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleToggleSave}
+            className={`${styles.saveBtn} ${saved ? styles.savedActive : ""}`}
+            title={saved ? "Saved to your bookmarks" : "Save to bookmarks"}
+            aria-label={saved ? "Unsave resource" : "Save resource"}
+          >
+            <StarIcon size={14} />
+            <span>{saveCount}</span>
+          </button>
+        </div>
       </div>
 
       <h4 className={styles.cardTitle}>{resource.title}</h4>
@@ -414,6 +497,12 @@ export function ResourceCard({
           {resource.file_size ? (
             <small>• {(resource.file_size / (1024 * 1024)).toFixed(1)} MB</small>
           ) : null}
+          {downloadCount > 0 && (
+            <span className={styles.dlBadge} title={`${downloadCount} downloads`}>
+              <DownloadIcon size={11} aria-hidden="true" />
+              <span>{downloadCount}</span>
+            </span>
+          )}
         </div>
 
         <div className={styles.cardActions}>
@@ -434,7 +523,19 @@ export function ResourceCard({
             onClick={handleDownload}
             disabled={downloading}
           >
-            {downloading ? "Opening…" : resource.kind === "link" ? "Open Link ↗" : "Download ⤓"}
+            {downloading ? (
+              <span>Opening...</span>
+            ) : resource.kind === "link" ? (
+              <span className={styles.btnContent}>
+                <ExternalLinkIcon size={13} aria-hidden="true" />
+                <span>Open Link</span>
+              </span>
+            ) : (
+              <span className={styles.btnContent}>
+                <DownloadIcon size={13} aria-hidden="true" />
+                <span>Download</span>
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -456,7 +557,10 @@ export function ShelfHeaderActions({
         className="btn yellow"
         onClick={() => setModalOpen(true)}
       >
-        + Add Resource
+        <span className={styles.btnContent}>
+          <PlusIcon size={14} aria-hidden="true" />
+          <span>Add Resource</span>
+        </span>
       </button>
 
       <ResourceUploadModal
@@ -467,3 +571,4 @@ export function ShelfHeaderActions({
     </>
   );
 }
+

@@ -194,6 +194,42 @@
   letter-spacing: 0.08em;
 }
 
+.badgeNotes {
+  background: #e8eef8;
+  border-color: #2b4c7e;
+  color: #203a63;
+}
+
+.badgePyq {
+  background: #fef4df;
+  border-color: #b37700;
+  color: #8a5a00;
+}
+
+.badgeSlides {
+  background: #f3ebfc;
+  border-color: #7722cc;
+  color: #5c18a3;
+}
+
+.badgeBook {
+  background: #eaf6ee;
+  border-color: #1b6b3e;
+  color: #145530;
+}
+
+.badgeLink {
+  background: #e5f6f8;
+  border-color: #007a94;
+  color: #00586b;
+}
+
+.badgeAssignment {
+  background: #fdeee9;
+  border-color: var(--red);
+  color: var(--red);
+}
+
 .subjectBadge {
   display: inline-block;
   padding: 2px 7px;
@@ -212,6 +248,33 @@
   font-size: 9px;
   font-weight: 700;
   color: var(--ink-soft);
+}
+
+.topRightActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Patrick Hand", cursive;
+  font-size: 13px;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+
+.copyBtn:hover {
+  background: var(--yellow-soft);
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .saveBtn {
@@ -271,16 +334,41 @@
 }
 
 .uploaderInfo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
   font-family: "Patrick Hand", cursive;
   font-size: 13.5px;
   color: var(--ink-soft);
 }
 
 .uploaderInfo small {
-  margin-left: 4px;
+  margin-left: 2px;
   font-family: "DM Sans", sans-serif;
   font-size: 9px;
   opacity: 0.7;
+}
+
+.dlBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 6px;
+  padding: 1px 6px;
+  background: var(--paper-2);
+  border: 1px solid rgba(37, 36, 31, 0.25);
+  border-radius: 999px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.btnContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .cardActions {
