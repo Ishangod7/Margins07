@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import styles from "./deadlines.module.css";
 
-const SUBJECTS = ["ALL", "DBMS", "ML", "CN", "OS", "WCD", "AM-IV", "GEN"];
+const SUBJECTS = ["ALL", "MATHS-I", "PHY", "BEE", "EGD", "EGPC", "AAD-I", "WMP-I", "ACAD"];
 
 type StatusFilter = "active" | "urgent" | "completed" | "all";
 
@@ -48,7 +48,7 @@ export default function DeadlinesClient({
 
   // Form state
   const [formTitle, setFormTitle] = useState("");
-  const [formSubject, setFormSubject] = useState("GEN");
+  const [formSubject, setFormSubject] = useState("MATHS-I");
   const [formDueAt, setFormDueAt] = useState("");
   const [formType, setFormType] = useState("assignment");
   const [formMode, setFormMode] = useState("Classroom Submission");
@@ -576,7 +576,7 @@ export default function DeadlinesClient({
                 <label className={styles.formLabel}>Task / Assignment Title *</label>
                 <input
                   required
-                  placeholder="e.g. DBMS Lab Journal Exp 7 &amp; 8"
+                  placeholder="e.g. Physics Lab Journal Exp 2 &amp; 3"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   className={styles.formInput}
@@ -591,13 +591,14 @@ export default function DeadlinesClient({
                     onChange={(e) => setFormSubject(e.target.value)}
                     className={styles.formSelect}
                   >
-                    <option value="DBMS">DBMS</option>
-                    <option value="ML">Machine Learning</option>
-                    <option value="CN">Computer Networks</option>
-                    <option value="OS">Operating Systems</option>
-                    <option value="WCD">Web &amp; Cloud Dev</option>
-                    <option value="AM-IV">Applied Maths IV</option>
-                    <option value="GEN">General / Exam</option>
+                    <option value="MATHS-I">Mathematics-I</option>
+                    <option value="PHY">Physics</option>
+                    <option value="BEE">Basic Electrical Engineering</option>
+                    <option value="EGD">Engineering Graphics &amp; Design</option>
+                    <option value="EGPC">EGPC</option>
+                    <option value="AAD-I">Attitude &amp; Aptitude Dev I</option>
+                    <option value="WMP-I">Workshop Practice I</option>
+                    <option value="ACAD">Academic Sessions</option>
                   </select>
                 </div>
 

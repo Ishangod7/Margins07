@@ -229,7 +229,7 @@ export function ResourceUploadModal({
             <label className={styles.label}>Title</label>
             <input
               className="input"
-              placeholder="e.g. DBMS Unit 3 Normalization Notes"
+              placeholder="e.g. MATHS-I Unit 1 Differential Calculus Notes"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required

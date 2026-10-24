@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/Icons";
 import styles from "./revision.module.css";
 
-const SUBJECTS = ["ALL", "DBMS", "ML", "CN", "OS", "WCD", "AM-IV"];
+const SUBJECTS = ["ALL", "MATHS-I", "PHY", "BEE", "EGD", "EGPC", "AAD-I", "WMP-I"];
 
 export default function RevisionClient({
   initialData,
@@ -35,7 +35,7 @@ export default function RevisionClient({
   // Modal form state
   const [modalOpen, setModalOpen] = useState(false);
   const [formTitle, setFormTitle] = useState("");
-  const [formSubject, setFormSubject] = useState("DBMS");
+  const [formSubject, setFormSubject] = useState("MATHS-I");
   const [formCategory, setFormCategory] = useState<"formula" | "pyq" | "one_pager">("formula");
   const [formSummary, setFormSummary] = useState("");
   const [formContent, setFormContent] = useState("");
@@ -321,13 +321,13 @@ export default function RevisionClient({
                     onChange={(e) => setFormSubject(e.target.value)}
                     className={styles.formSelect}
                   >
-                    <option value="DBMS">DBMS</option>
-                    <option value="ML">Machine Learning</option>
-                    <option value="CN">Computer Networks</option>
-                    <option value="OS">Operating Systems</option>
-                    <option value="WCD">Web &amp; Cloud Dev</option>
-                    <option value="AM-IV">Applied Maths IV</option>
-                    <option value="GEN">General</option>
+                    <option value="MATHS-I">Mathematics-I</option>
+                    <option value="PHY">Physics</option>
+                    <option value="BEE">Basic Electrical Engineering</option>
+                    <option value="EGD">Engineering Graphics &amp; Design</option>
+                    <option value="EGPC">EGPC</option>
+                    <option value="AAD-I">Attitude &amp; Aptitude Dev I</option>
+                    <option value="WMP-I">Workshop Practice I</option>
                   </select>
                 </div>
 

@@ -142,7 +142,7 @@ export function NoticeComposer({ onCreated }: { onCreated?: (notice: Notice) => 
               className="input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Submissions for DBMS Mini Project Phase 1"
+              placeholder="e.g. Submissions for Physics Lab Journal Exp 2 &amp; 3"
               required
               maxLength={150}
               disabled={busy}

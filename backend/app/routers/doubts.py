@@ -84,65 +84,52 @@ def _get_seed_doubts() -> list[dict]:
     now = datetime.now(timezone.utc)
     return [
         {
-            "id": "seed-doubt-ml-1",
+            "id": "seed-doubt-maths1-1",
             "class_id": "a6c4688d-0d00-4946-8a76-c11f90f25e89",
-            "subject_id": "4d9eb2a0-3570-4fe9-bf60-8870b86a9c53",
-            "title": "Vectorized Implementation of Batch Gradient Descent with Momentum",
+            "subject_id": "5613012d-53bc-49c9-9b29-98ac1d2a1323",
+            "title": "Cayley-Hamilton Theorem: Finding A^4 and A^(-1) for a 3x3 non-diagonal matrix",
             "body": (
-                "In Unit 2 (Optimization Algorithms), the professor asked us to implement "
-                "Gradient Descent with momentum without using sklearn or torch.\n\n"
-                "Here is my attempt so far:\n"
+                "In Unit 1 (Matrices), I am trying to evaluate A^4 - 4A^3 - 5A^2 + A + 2I for:\n"
                 "```python\n"
-                "import numpy as np\n\n"
-                "def compute_momentum_step(X, y, weights, velocity, lr=0.01, beta=0.9):\n"
-                "    m = len(y)\n"
-                "    # Predictions and loss gradient\n"
-                "    predictions = X @ weights\n"
-                "    gradient = (2 / m) * (X.T @ (predictions - y))\n"
-                "    \n"
-                "    # Momentum velocity update\n"
-                "    velocity = beta * velocity + (1 - beta) * gradient\n"
-                "    new_weights = weights - lr * velocity\n"
-                "    return new_weights, velocity\n"
+                "# Matrix A:\n"
+                "# [[1, 2, 0],\n"
+                "#  [2, -1, 0],\n"
+                "#  [0, 0, -1]]\n"
                 "```\n\n"
-                "My question: should the velocity update be `beta * velocity + (1 - beta) * gradient` or "
-                "`beta * velocity + lr * gradient`? I notice different textbooks use different conventions. "
-                "Also, how does this affect the convergence rate on ill-conditioned loss surfaces?"
+                "My characteristic equation comes out to `λ^3 + λ^2 - 5λ - 5 = 0`.\n"
+                "When dividing the polynomial by the characteristic polynomial, what is the fastest reduction technique "
+                "to get both A^4 and A^(-1) without computing full matrix multiplication?"
             ),
             "status": "solved",
-            "tags": ["machine-learning", "gradient-descent", "python", "unit-2"],
+            "tags": ["maths-1", "matrices", "cayley-hamilton", "linear-algebra"],
             "created_by": "student-rohan",
             "author_name": "Rohan Varma",
             "answer_count": 1,
-            "follow_count": 5,
+            "follow_count": 6,
             "created_at": (now - timedelta(days=2)).isoformat(),
             "updated_at": (now - timedelta(days=2)).isoformat(),
-            "subject": {"id": "4d9eb2a0-3570-4fe9-bf60-8870b86a9c53", "name": "Machine Learning", "code": "ML"},
+            "subject": {"id": "5613012d-53bc-49c9-9b29-98ac1d2a1323", "name": "Mathematics-I", "code": "MATHS-I"},
             "answers": [
                 {
-                    "id": "seed-ans-ml-1",
-                    "doubt_id": "seed-doubt-ml-1",
+                    "id": "seed-ans-maths1-1",
+                    "doubt_id": "seed-doubt-maths1-1",
                     "body": (
-                        "Both conventions are mathematically equivalent up to a rescaling of the effective learning rate!\n\n"
-                        "Here is the standard Polyak momentum formulation commonly taught in TCET Mumbai exams:\n"
-                        "```python\n"
-                        "# Polyak Momentum (Standard Academic Form)\n"
-                        "v = beta * v + lr * gradient\n"
-                        "weights = weights - v\n"
-                        "```\n\n"
-                        "And here is the exponentially weighted moving average form (used in PyTorch and Hinton's lectures):\n"
-                        "```python\n"
-                        "# EWMA Form (PyTorch style)\n"
-                        "v = beta * v + (1 - beta) * gradient\n"
-                        "weights = weights - lr * v\n"
-                        "```\n\n"
-                        "Key takeaway for the viva:\n"
-                        "1. In the first form, terminal velocity is `v_max = (lr / (1 - beta)) * gradient`.\n"
-                        "2. On ill-conditioned surfaces (ravines), momentum dampens oscillations across high-curvature directions "
-                        "and accelerates along low-curvature directions towards the local minimum."
+                        "By Cayley-Hamilton theorem, `A^3 + A^2 - 5A - 5I = 0` (zero matrix).\n\n"
+                        "To evaluate higher powers like `A^4`, perform polynomial long division:\n"
+                        "```text\n"
+                        "P(λ) = Q(λ) * (λ^3 + λ^2 - 5λ - 5) + R(λ)\n"
+                        "```\n"
+                        "Since `A^3 + A^2 - 5A - 5I = 0`, `P(A)` simply evaluates to the remainder `R(A)` (which is at most degree 2)!\n\n"
+                        "For `A^(-1)`:\n"
+                        "Multiply the characteristic equation by `A^(-1)`:\n"
+                        "```text\n"
+                        "A^2 + A - 5I - 5*A^(-1) = 0\n"
+                        "=> A^(-1) = (1/5) * (A^2 + A - 5I)\n"
+                        "```\n"
+                        "This saves at least 15 minutes of matrix multiplication in the exam."
                     ),
                     "is_accepted": True,
-                    "helpful_count": 6,
+                    "helpful_count": 7,
                     "created_by": "f530e526-dea0-49f9-88cb-982a195b056a",
                     "author_name": "Ishan Gupta",
                     "created_at": (now - timedelta(days=1)).isoformat(),
@@ -151,51 +138,47 @@ def _get_seed_doubts() -> list[dict]:
             ],
         },
         {
-            "id": "seed-doubt-dbms-1",
+            "id": "seed-doubt-phy-1",
             "class_id": "a6c4688d-0d00-4946-8a76-c11f90f25e89",
-            "subject_id": "00f8f12a-ff31-44a0-b11e-65e323bf4348",
-            "title": "Conflict Serializability precedence graph with cascading aborts",
+            "subject_id": "036be447-5667-42b9-97aa-fd07f0779776",
+            "title": "Why does the central spot in Newton's Rings appear dark in reflected light?",
             "body": (
-                "Consider the following concurrent transaction schedule for Exp 4:\n"
-                "```sql\n"
-                "-- Schedule S:\n"
-                "T1: R(A)\n"
-                "T2: R(A); W(A)\n"
-                "T1: W(A); Commit\n"
-                "T2: Commit\n"
-                "```\n\n"
-                "Is this schedule Conflict Serializable? When I draw the precedence graph:\n"
-                "- `T1: R(A)` followed by `T2: W(A)` adds edge `T1 -> T2`.\n"
-                "- `T2: W(A)` followed by `T1: W(A)` adds edge `T2 -> T1`.\n"
-                "Since there is a cycle `T1 <-> T2`, it is not conflict serializable. But is it recoverable or avoids cascading aborts?"
+                "In Physics Lab Exp 1 (Newton's Rings), at the point of contact between the plano-convex lens "
+                "and the glass plate, the film thickness t = 0.\n\n"
+                "If path difference is `2μt*cos(r)`, then at t = 0, shouldn't the path difference be 0, "
+                "which is the condition for constructive interference (bright fringe)? "
+                "Why is the central ring always dark under reflection?"
             ),
             "status": "answered",
-            "tags": ["dbms", "transactions", "sql", "concurrency"],
+            "tags": ["physics", "interference", "newtons-rings", "optics"],
             "created_by": "student-tanvi",
             "author_name": "Tanvi Mehta",
             "answer_count": 1,
-            "follow_count": 8,
+            "follow_count": 9,
             "created_at": (now - timedelta(days=3)).isoformat(),
             "updated_at": (now - timedelta(days=3)).isoformat(),
-            "subject": {"id": "00f8f12a-ff31-44a0-b11e-65e323bf4348", "name": "Database Management Systems", "code": "DBMS"},
+            "subject": {"id": "036be447-5667-42b9-97aa-fd07f0779776", "name": "Physics", "code": "PHY"},
             "answers": [
                 {
-                    "id": "seed-ans-dbms-1",
-                    "doubt_id": "seed-doubt-dbms-1",
+                    "id": "seed-ans-phy-1",
+                    "doubt_id": "seed-doubt-phy-1",
                     "body": (
-                        "You got the precedence graph cycle right! S is definitely not conflict serializable.\n\n"
-                        "Now regarding recoverability:\n"
-                        "A schedule is recoverable if every transaction commits only after all transactions whose dirty writes it read have committed.\n"
-                        "```sql\n"
-                        "-- Checking dirty reads (W-R dependencies):\n"
-                        "-- Neither T1 nor T2 reads an uncommitted write from the other before commit.\n"
-                        "-- But notice the blind write by T1 after T2's write!\n"
+                        "You must account for the Stokes phase shift on reflection at a denser medium boundary!\n\n"
+                        "In reflected light, ray 1 reflects from the glass-air boundary (rarer medium, no phase change). "
+                        "Ray 2 reflects from the air-glass boundary (denser medium, introduces a phase shift of π or path shift of λ/2).\n\n"
+                        "Therefore, the effective path difference is:\n"
+                        "```text\n"
+                        "Δ = 2μt*cos(r) + λ/2\n"
                         "```\n"
-                        "This schedule avoids cascading aborts (ACA) because neither transaction performs a dirty read. "
-                        "However, because `T1` commits before `T2` even though `T1` overwrites `T2`'s write, it violates view serializability as well."
+                        "At the point of contact (t = 0):\n"
+                        "```text\n"
+                        "Δ = 0 + λ/2 = λ/2\n"
+                        "```\n"
+                        "A path difference of λ/2 satisfies destructive interference: `(2n + 1)*λ/2` for n = 0. "
+                        "Hence, the central spot is always perfectly dark!"
                     ),
                     "is_accepted": False,
-                    "helpful_count": 4,
+                    "helpful_count": 5,
                     "created_by": "student-siddharth",
                     "author_name": "Siddharth Rao",
                     "created_at": (now - timedelta(days=2)).isoformat(),
@@ -204,25 +187,26 @@ def _get_seed_doubts() -> list[dict]:
             ],
         },
         {
-            "id": "seed-doubt-cn-1",
+            "id": "seed-doubt-bee-1",
             "class_id": "a6c4688d-0d00-4946-8a76-c11f90f25e89",
-            "subject_id": "66c6b025-551a-4437-ae82-41597345c6eb",
-            "title": "Selective Repeat Window Size constraint: why must W <= 2^(k-1)?",
+            "subject_id": "a9419596-22ef-4734-84a7-a126b4ec6c18",
+            "title": "Thevenin equivalent resistance with dependent sources in AC circuits",
             "body": (
-                "In Sliding Window protocols, for k-bit sequence numbers:\n"
-                "- Go-Back-N requires sender window `Ws <= 2^k - 1`\n"
-                "- Selective Repeat requires sender & receiver window `Ws = Wr <= 2^(k-1)`\n\n"
-                "Can someone demonstrate the overlap ambiguity failure if we pick `Ws = 2^k` in Selective Repeat?"
+                "In BEE Unit 1 (Network Theorems), when finding R_th across load terminals A-B "
+                "for a circuit with a dependent current source `2*I_x`:\n"
+                "- Deactivating independent sources leaves the dependent source intact.\n"
+                "Can someone confirm if applying a 1V test source or 1A test source is preferred, "
+                "and how I_x is related to the test source current?"
             ),
             "status": "open",
-            "tags": ["cn", "sliding-window", "protocols", "unit-3"],
+            "tags": ["bee", "thevenin", "dependent-sources", "network-theorems"],
             "created_by": "student-aarav",
             "author_name": "Aarav Joshi",
             "answer_count": 0,
-            "follow_count": 3,
+            "follow_count": 4,
             "created_at": (now - timedelta(hours=4)).isoformat(),
             "updated_at": (now - timedelta(hours=4)).isoformat(),
-            "subject": {"id": "66c6b025-551a-4437-ae82-41597345c6eb", "name": "Computer Networks", "code": "CN"},
+            "subject": {"id": "a9419596-22ef-4734-84a7-a126b4ec6c18", "name": "Basic Electrical Engineering", "code": "BEE"},
             "answers": [],
         },
     ]
@@ -230,44 +214,44 @@ def _get_seed_doubts() -> list[dict]:
 
 def _init_seed_comments():
     now = datetime.now(timezone.utc)
-    if "seed-ans-ml-1" not in _COMMENTS_STORE:
-        _COMMENTS_STORE["seed-ans-ml-1"] = [
+    if "seed-ans-maths1-1" not in _COMMENTS_STORE:
+        _COMMENTS_STORE["seed-ans-maths1-1"] = [
             {
-                "id": "seed-c-ml-1",
-                "answer_id": "seed-ans-ml-1",
+                "id": "seed-c-maths1-1",
+                "answer_id": "seed-ans-maths1-1",
                 "author_id": "student-aditya",
                 "author_name": "Aditya Sharma",
-                "body": "Thanks @Ishan Gupta! That clears up the difference between the textbook and PyTorch implementation. Does the viva expect us to derive the effective step size?",
+                "body": "Thanks @Ishan Gupta! That polynomial division trick is much faster than multiplying out 3x3 matrices.",
                 "created_at": (now - timedelta(hours=22)).isoformat(),
                 "is_mine": False,
             },
             {
-                "id": "seed-c-ml-2",
-                "answer_id": "seed-ans-ml-1",
+                "id": "seed-c-maths1-2",
+                "answer_id": "seed-ans-maths1-1",
                 "author_id": "f530e526-dea0-49f9-88cb-982a195b056a",
                 "author_name": "Ishan Gupta",
-                "body": "@Aditya Sharma yes, Prof. Patil specifically asked for the `1 / (1 - beta)` speedup factor during the mid-term reviews.",
+                "body": "@Aditya Sharma yes, Ms. Pooja Pote highlighted this in tutorial 1 as the exact method expected in end-sem papers.",
                 "created_at": (now - timedelta(hours=18)).isoformat(),
                 "is_mine": False,
             },
         ]
-    if "seed-ans-dbms-1" not in _COMMENTS_STORE:
-        _COMMENTS_STORE["seed-ans-dbms-1"] = [
+    if "seed-ans-phy-1" not in _COMMENTS_STORE:
+        _COMMENTS_STORE["seed-ans-phy-1"] = [
             {
-                "id": "seed-c-dbms-1",
-                "answer_id": "seed-ans-dbms-1",
+                "id": "seed-c-phy-1",
+                "answer_id": "seed-ans-phy-1",
                 "author_id": "student-tanvi",
                 "author_name": "Tanvi Mehta",
-                "body": "Great breakdown @Siddharth Rao! Would using Strict 2PL (S2PL) have prevented this dirty write order?",
+                "body": "Great explanation @Siddharth Rao! Does this also explain why transmitted Newton's Rings have a bright center?",
                 "created_at": (now - timedelta(hours=20)).isoformat(),
                 "is_mine": False,
             },
             {
-                "id": "seed-c-dbms-2",
-                "answer_id": "seed-ans-dbms-1",
+                "id": "seed-c-phy-2",
+                "answer_id": "seed-ans-phy-1",
                 "author_id": "student-siddharth",
                 "author_name": "Siddharth Rao",
-                "body": "@Tanvi Mehta Exactly! Under Strict 2PL, T2 would hold the exclusive lock `X-lock(A)` until it commits, preventing T1 from writing until T2 finishes.",
+                "body": "@Tanvi Mehta Exactly! In transmitted light, both rays undergo either two reflections or zero phase-reversing reflections, so no net λ/2 shift occurs at t = 0.",
                 "created_at": (now - timedelta(hours=14)).isoformat(),
                 "is_mine": False,
             },

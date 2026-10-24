@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
     optimizePackageImports: ["@supabase/supabase-js", "@supabase/ssr"],
+    cpus: 1,
   },
 };
 

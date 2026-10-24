@@ -345,7 +345,7 @@ export default function TimetableClient({ initialData, isCr, token }: Props) {
               type="text"
               value={noticeText}
               onChange={(e) => setNoticeText(e.target.value)}
-              placeholder="e.g. Tomorrow 10:00 AM DBMS lecture shifted to Classroom 405"
+              placeholder="e.g. Tomorrow 10:00 AM Physics lecture shifted to Room 503"
               className={styles.crInput}
               disabled={isPostingNotice}
               maxLength={300}

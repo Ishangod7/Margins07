@@ -11,7 +11,7 @@ const QUICK_SKILLS = [
   { key: "DSA", label: "DSA" },
   { key: "ML", label: "Machine Learning" },
   { key: "React", label: "React" },
-  { key: "DBMS", label: "DBMS" },
+  { key: "C / C++", label: "C / C++" },
   { key: "Web Dev", label: "Web Dev" },
   { key: "Maths", label: "Maths" },
 ];

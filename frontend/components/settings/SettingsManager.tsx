@@ -228,7 +228,7 @@ export function SettingsManager({
                   className={styles.inputField}
                   value={canHelpStr}
                   onChange={(e) => setCanHelpStr(e.target.value)}
-                  placeholder="e.g. DBMS Normalization, Linear Algebra, React Hooks"
+                  placeholder="e.g. Linear Algebra, Physics Optics, Python, C / C++"
                 />
                 <span className={styles.formHint}>Helpful for study groups and doubt solving</span>
               </div>
@@ -332,7 +332,7 @@ export function SettingsManager({
               <div className={styles.toggleRow}>
                 <div className={styles.toggleInfo}>
                   <h4>Show Skills Tags</h4>
-                  <p>Allows classmates searching for specific skills (e.g. Python, DBMS) to discover you.</p>
+                  <p>Allows classmates searching for specific skills (e.g. Python, Linear Algebra) to discover you.</p>
                 </div>
                 <label className={styles.switchLabel}>
                   <input

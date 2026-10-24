@@ -69,7 +69,7 @@ export default async function SubjectsDirectoryPage(props: {
           <input
             name="q"
             defaultValue={searchParams.q ?? ""}
-            placeholder="Search subjects by code (e.g. DBMS, ML, CN) or name..."
+            placeholder="Search subjects by code (e.g. MATHS-I, PHY, BEE, EGD) or name..."
             className={styles.searchInput}
             aria-label="Search subjects"
           />
