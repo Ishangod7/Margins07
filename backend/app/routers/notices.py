@@ -46,6 +46,7 @@ class NoticeIn(BaseModel):
     title: str = Field(min_length=1, max_length=150)
     content: str = Field(min_length=1, max_length=5000)
     category: str = "General"
+    is_pinned: bool = False
 
 
 @router.get("")
@@ -85,8 +86,14 @@ def create_notice(body: NoticeIn, user: CurrentUser = Depends(get_current_user))
         raise HTTPException(400, "Invalid category")
     res = (
         supabase_admin.table("notices")
-        .insert({"class_id": class_id, "title": body.title.strip(), "content": body.content.strip(),
-                 "category": body.category, "created_by": user.user_id})
+        .insert({
+            "class_id": class_id,
+            "title": body.title.strip(),
+            "content": body.content.strip(),
+            "category": body.category,
+            "is_pinned": body.is_pinned,
+            "created_by": user.user_id,
+        })
         .execute()
     )
     _NOTICES_CACHE.pop(class_id, None)
