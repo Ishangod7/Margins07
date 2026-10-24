@@ -273,6 +273,45 @@ export type RevisionResponse = {
   };
 };
 
+export type TimetableSlot = {
+  id: string;
+  start_time: string;
+  end_time: string;
+  time_display: string;
+  subject_code: string;
+  subject_name: string;
+  type: "lecture" | "lab" | "tutorial" | "break";
+  room: string;
+  faculty: string;
+  batch?: "A1" | "A2" | "A3" | "all";
+  notes?: string;
+  subject_id?: string;
+  is_live?: boolean;
+  is_past?: boolean;
+  minutes_until?: number;
+};
+
+export type DaySchedule = {
+  day: string;
+  day_code: string;
+  slots: TimetableSlot[];
+};
+
+export type TimetableResponse = {
+  current_day: string;
+  current_time_ist: string;
+  current_slot: TimetableSlot | null;
+  next_slot: TimetableSlot | null;
+  selected_batch: string;
+  days: DaySchedule[];
+  announcements: Array<{
+    id: string;
+    text: string;
+    posted_by: string;
+    created_at: string;
+  }>;
+};
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }

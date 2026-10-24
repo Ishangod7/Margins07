@@ -19,12 +19,14 @@ import {
   SearchIcon,
   BookOpenIcon,
   ClockIcon,
+  CalendarIcon,
   ZapIcon,
 } from "@/components/ui/Icons";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/notices", label: "Notices", icon: NoticeIcon, countKey: "notices" as const },
+  { href: "/timetable", label: "Timetable", icon: CalendarIcon },
   { href: "/deadlines", label: "Deadlines", icon: ClockIcon },
   { href: "/revision", label: "Cram Mode", icon: ZapIcon },
   { href: "/subjects", label: "Subjects", icon: BookOpenIcon },
@@ -33,6 +35,7 @@ const NAV_ITEMS = [
   { href: "/people", label: "People", icon: PeopleIcon },
   { href: "/saved", label: "Saved", icon: StarIcon },
 ];
+
 
 const BOTTOM_NAV_ITEMS = [
   { href: "/", label: "Home", icon: HomeIcon },

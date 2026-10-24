@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from .config import ALLOWED_ORIGINS
-from .routers import auth_routes, me, notices, resources, doubts, people, search, notifications, subjects, deadlines, revision
+from .routers import auth_routes, me, notices, resources, doubts, people, search, notifications, subjects, deadlines, revision, timetable
 
 app = FastAPI(title="Margins API")
 
@@ -31,6 +31,8 @@ app.include_router(notifications.router)
 app.include_router(subjects.router)
 app.include_router(deadlines.router)
 app.include_router(revision.router)
+app.include_router(timetable.router)
+
 
 
 @app.get("/health")

@@ -97,14 +97,16 @@ export default async function HomePage() {
 
         <aside className={styles.stack}>
           <section className={`card ${styles.sticky}`}>
-            <div className={styles.stickyTitle}>upcoming stuff</div>
-            <div className={styles.event}>
-              <div className={styles.eventDate}>—<br />—</div>
-              <div>
-                <div className={styles.eventTitle}>No events added yet</div>
-                <div className={styles.eventMeta}>CR can add these soon</div>
+            <div className={styles.stickyTitle}>today&apos;s schedule</div>
+            <a href="/timetable" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+              <div className={styles.event}>
+                <div className={styles.eventDate}>LIVE<br />TT</div>
+                <div>
+                  <div className={styles.eventTitle}>Class Timetable &amp; Labs</div>
+                  <div className={styles.eventMeta}>Check live lecture &amp; lab room →</div>
+                </div>
               </div>
-            </div>
+            </a>
           </section>
 
           <section className={`card ${styles.panel}`}>
