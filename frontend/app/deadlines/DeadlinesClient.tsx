@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -14,7 +15,13 @@ import {
   CalendarIcon,
   CrossIcon,
   DocIcon,
+  CopyIcon,
+  SearchIcon,
+  BookOpenIcon,
+  NoticeIcon,
+  PlusIcon,
 } from "@/components/ui/Icons";
+import { useToast } from "@/components/ui/Toast";
 import styles from "./deadlines.module.css";
 
 const SUBJECTS = ["ALL", "DBMS", "ML", "CN", "OS", "WCD", "AM-IV", "GEN"];
@@ -29,9 +36,13 @@ export default function DeadlinesClient({
   isCr?: boolean;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [deadlines, setDeadlines] = useState<DeadlineItem[]>(initialData.deadlines);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("active");
   const [selectedSubject, setSelectedSubject] = useState<string>("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -44,30 +55,62 @@ export default function DeadlinesClient({
   const [formDesc, setFormDesc] = useState("");
   const [formIsOfficial, setFormIsOfficial] = useState(false);
 
-  // Filter deadlines
-  const filtered = deadlines.filter((d) => {
-    // Subject filter
-    if (selectedSubject !== "ALL" && d.subject_code !== selectedSubject) {
-      return false;
-    }
-    // Status filter
-    if (statusFilter === "active") return !d.completed;
-    if (statusFilter === "urgent") return !d.completed && (d.urgency === "urgent" || d.urgency === "overdue");
-    if (statusFilter === "completed") return d.completed;
-    return true;
-  });
+  // Filter deadlines by search, subject, and status
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+
+    return deadlines.filter((d) => {
+      // Subject filter
+      if (selectedSubject !== "ALL" && d.subject_code !== selectedSubject) {
+        return false;
+      }
+      // Status filter
+      if (statusFilter === "active" && d.completed) return false;
+      if (
+        statusFilter === "urgent" &&
+        (d.completed || (d.urgency !== "urgent" && d.urgency !== "overdue"))
+      )
+        return false;
+      if (statusFilter === "completed" && !d.completed) return false;
+
+      // Search keyword filter
+      if (q) {
+        const matchesQ =
+          d.title.toLowerCase().includes(q) ||
+          d.subject_code.toLowerCase().includes(q) ||
+          (d.submission_mode && d.submission_mode.toLowerCase().includes(q)) ||
+          (d.description && d.description.toLowerCase().includes(q));
+        if (!matchesQ) return false;
+      }
+
+      return true;
+    });
+  }, [deadlines, selectedSubject, statusFilter, searchQuery]);
 
   // Dynamic counts
   const pendingCount = deadlines.filter((d) => !d.completed).length;
   const completedCount = deadlines.filter((d) => d.completed).length;
-  const urgentCount = deadlines.filter((d) => !d.completed && (d.urgency === "urgent" || d.urgency === "overdue")).length;
+  const urgentCount = deadlines.filter(
+    (d) => !d.completed && (d.urgency === "urgent" || d.urgency === "overdue")
+  ).length;
   const nextImminent = deadlines.find((d) => !d.completed && d.urgency !== "overdue");
 
   async function handleToggle(id: string) {
+    const target = deadlines.find((d) => d.id === id);
+    if (!target) return;
+
+    const willBeCompleted = !target.completed;
+
     // Optimistic UI update
     setDeadlines((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, completed: !d.completed } : d))
+      prev.map((d) => (d.id === id ? { ...d, completed: willBeCompleted } : d))
     );
+
+    if (willBeCompleted) {
+      toast.success(`Completed "${target.title}"!`, "Submission Tracked");
+    } else {
+      toast.info(`Moved "${target.title}" back to pending desk.`, "Task Restored");
+    }
 
     try {
       const { data } = await createClient().auth.getSession();
@@ -82,8 +125,45 @@ export default function DeadlinesClient({
     } catch {
       // Revert if error
       setDeadlines((prev) =>
-        prev.map((d) => (d.id === id ? { ...d, completed: !d.completed } : d))
+        prev.map((d) => (d.id === id ? { ...d, completed: !willBeCompleted } : d))
       );
+      toast.error("Could not update submission state. Please try again.");
+    }
+  }
+
+  function handleCopySubmission(d: DeadlineItem) {
+    const textToCopy = `[Assignment Deadline - ${d.subject_code}]\n${d.title}\nDue Date: ${formatDueDate(
+      d.due_at
+    )}\nSubmission Mode: ${d.submission_mode}\n${
+      d.description ? `Instructions: ${d.description}\n` : ""
+    }— Margins AI&DS Division A`;
+
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        setCopiedId(d.id);
+        toast.success(`Copied submission info for "${d.title}"!`, "Copied");
+        setTimeout(() => setCopiedId(null), 2500);
+      })
+      .catch(() => {
+        toast.error("Could not copy to clipboard.");
+      });
+  }
+
+  async function handleDeleteDeadline(id: string, title: string) {
+    if (!confirm(`Remove "${title}" from deadlines desk?`)) return;
+
+    setDeadlines((prev) => prev.filter((d) => d.id !== id));
+    toast.info(`Removed "${title}" from deadlines.`, "Task Deleted");
+
+    try {
+      const { data } = await createClient().auth.getSession();
+      const token = data.session?.access_token ?? null;
+      if (!token) return;
+
+      await apiFetch(`/deadlines/${id}`, token, { method: "DELETE" });
+    } catch {
+      // Fail silently or keep optimistic
     }
   }
 
@@ -100,12 +180,12 @@ export default function DeadlinesClient({
       const created = await apiFetch<DeadlineItem>("/deadlines", token, {
         method: "POST",
         body: JSON.stringify({
-          title: formTitle,
+          title: formTitle.trim(),
           subject_code: formSubject,
           due_at: new Date(formDueAt).toISOString(),
           type: formType,
           submission_mode: formMode,
-          description: formDesc,
+          description: formDesc.trim(),
           is_official: formIsOfficial,
         }),
       });
@@ -114,9 +194,10 @@ export default function DeadlinesClient({
       setModalOpen(false);
       setFormTitle("");
       setFormDesc("");
+      toast.success(`Deadline "${created.title}" added to submission desk!`, "Task Created");
       router.refresh();
     } catch (err: any) {
-      alert(err.message || "Failed to save deadline");
+      toast.error(err.message || "Failed to save deadline");
     } finally {
       setSubmitting(false);
     }
@@ -148,13 +229,17 @@ export default function DeadlinesClient({
           </p>
         </div>
         <div className={styles.coverActions}>
+          <Link href="/notices" className="btn small">
+            <NoticeIcon size={15} aria-hidden="true" />
+            <span>Notice Board</span>
+          </Link>
           <button
             type="button"
             className={styles.addBtn}
             onClick={() => setModalOpen(true)}
           >
-            <CalendarIcon size={16} aria-hidden="true" />
-            <span>{isCr ? "+ Post Class Deadline" : "+ Add Personal Task"}</span>
+            <PlusIcon size={16} aria-hidden="true" />
+            <span>{isCr ? "Post Class Deadline" : "Add Personal Task"}</span>
           </button>
         </div>
       </section>
@@ -199,7 +284,10 @@ export default function DeadlinesClient({
           <span className={styles.statLabel}>Pending Tasks</span>
         </div>
         <div className={styles.statCard}>
-          <span className={styles.statVal} style={{ color: urgentCount > 0 ? "#b91c1c" : "inherit" }}>
+          <span
+            className={styles.statVal}
+            style={{ color: urgentCount > 0 ? "#b91c1c" : "inherit" }}
+          >
             {urgentCount}
           </span>
           <span className={styles.statLabel}>Due Next 48h</span>
@@ -216,8 +304,33 @@ export default function DeadlinesClient({
         </div>
       </div>
 
-      {/* Filter Section */}
+      {/* Filter and Search Section */}
       <section className={styles.filterSection}>
+        {/* Search bar */}
+        <div className={styles.searchRow}>
+          <div className={styles.searchBox}>
+            <SearchIcon size={17} className={styles.searchIcon} aria-hidden="true" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search assignments by title, submission portal, or keywords..."
+              className={styles.searchInput}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className={styles.clearSearchBtn}
+                aria-label="Clear search query"
+              >
+                <CrossIcon size={15} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Status Tabs */}
         <div className={styles.statusTabs}>
           <button
             type="button"
@@ -261,6 +374,7 @@ export default function DeadlinesClient({
           </button>
         </div>
 
+        {/* Subject Chips */}
         <div className={styles.subjectFilterRow}>
           <span className={styles.filterLabel}>Subject:</span>
           {SUBJECTS.map((s) => (
@@ -281,22 +395,42 @@ export default function DeadlinesClient({
       {/* Deadlines List */}
       {filtered.length === 0 ? (
         <div className={styles.emptyState}>
-          <h3>All clear! No deadlines matching this filter</h3>
-          <p>You have no pending assignments or journals in this view.</p>
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={() => setModalOpen(true)}
-          >
-            + Add New Deadline
-          </button>
+          <DocIcon size={36} className={styles.emptyIcon} aria-hidden="true" />
+          <h2 className={styles.emptyTitle}>
+            {searchQuery
+              ? `No deadlines matching "${searchQuery}"`
+              : "All clear! No deadlines matching this filter"}
+          </h2>
+          <p className={styles.emptyText}>
+            {searchQuery
+              ? "Try searching for a different keyword or reset your subject filter."
+              : "You have no pending assignments or journals in this view."}
+          </p>
+          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            {searchQuery && (
+              <button
+                type="button"
+                className="btn small"
+                onClick={() => setSearchQuery("")}
+              >
+                Clear Search
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.addBtn}
+              onClick={() => setModalOpen(true)}
+            >
+              + Add New Deadline
+            </button>
+          </div>
         </div>
       ) : (
         <div className={styles.deadlinesList}>
           {filtered.map((d) => (
-            <div
+            <article
               key={d.id}
-              className={`${styles.deadlineCard} ${
+              className={`card ${styles.deadlineCard} ${
                 d.completed ? styles.cardCompleted : ""
               }`}
             >
@@ -319,18 +453,20 @@ export default function DeadlinesClient({
                       <span className={styles.typePill}>
                         {d.type.replace("_", " ")}
                       </span>
-                      {d.is_official && (
+                      {d.is_official ? (
                         <span className={styles.officialBadge}>CR Announcement</span>
+                      ) : (
+                        <span className={styles.personalBadge}>Personal Task</span>
                       )}
                     </div>
 
-                    <h3
+                    <h2
                       className={`${styles.cardTitle} ${
                         d.completed ? styles.titleCompleted : ""
                       }`}
                     >
                       {d.title}
-                    </h3>
+                    </h2>
 
                     {d.description && (
                       <p className={styles.cardDescription}>{d.description}</p>
@@ -356,13 +492,58 @@ export default function DeadlinesClient({
               </div>
 
               <div className={styles.deadlineFooter}>
-                <span className={styles.submissionMode}>
-                  <DocIcon size={14} aria-hidden="true" />
-                  <span>{d.submission_mode}</span>
-                </span>
-                <span>Due: {formatDueDate(d.due_at)}</span>
+                <div className={styles.footerLeft}>
+                  <span className={styles.submissionMode}>
+                    <DocIcon size={14} aria-hidden="true" />
+                    <span>{d.submission_mode}</span>
+                  </span>
+                  <span className={styles.dueDateText}>Due: {formatDueDate(d.due_at)}</span>
+                </div>
+
+                <div className={styles.cardActionGroup}>
+                  <button
+                    type="button"
+                    onClick={() => handleCopySubmission(d)}
+                    className={styles.miniActionBtn}
+                    title="Copy submission details"
+                  >
+                    {copiedId === d.id ? (
+                      <>
+                        <CheckIcon size={13} aria-hidden="true" />
+                        <span>Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <CopyIcon size={13} aria-hidden="true" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+
+                  {d.subject_code && d.subject_code !== "GEN" && (
+                    <Link
+                      href={`/subjects?q=${encodeURIComponent(d.subject_code)}`}
+                      className={styles.miniActionBtn}
+                      title="Open Subject Hub"
+                    >
+                      <BookOpenIcon size={13} aria-hidden="true" />
+                      <span>Hub</span>
+                    </Link>
+                  )}
+
+                  {d.id.startsWith("custom-") && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteDeadline(d.id, d.title)}
+                      className={`${styles.miniActionBtn} ${styles.deleteActionBtn}`}
+                      title="Delete task"
+                    >
+                      <CrossIcon size={13} aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       )}
@@ -375,25 +556,27 @@ export default function DeadlinesClient({
             if (e.target === e.currentTarget) setModalOpen(false);
           }}
         >
-          <div className={styles.modalContent}>
+          <div className={`card ${styles.modalContent}`}>
             <div className={styles.modalHead}>
-              <h2>{isCr ? "post class deadline" : "add personal task"}</h2>
+              <h2 className={styles.modalTitle}>
+                {isCr ? "post class deadline" : "add personal task"}
+              </h2>
               <button
                 type="button"
                 className={styles.closeBtn}
                 onClick={() => setModalOpen(false)}
                 aria-label="Close"
               >
-                <CrossIcon size={20} />
+                <CrossIcon size={18} aria-hidden="true" />
               </button>
             </div>
 
-            <form onSubmit={handleCreate}>
+            <form onSubmit={handleCreate} className={styles.modalForm}>
               <div className={styles.formGroup}>
-                <label>Task / Assignment Title *</label>
+                <label className={styles.formLabel}>Task / Assignment Title *</label>
                 <input
                   required
-                  placeholder="e.g. DBMS Lab Journal Exp 7 & 8"
+                  placeholder="e.g. DBMS Lab Journal Exp 7 &amp; 8"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   className={styles.formInput}
@@ -402,7 +585,7 @@ export default function DeadlinesClient({
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div className={styles.formGroup}>
-                  <label>Subject</label>
+                  <label className={styles.formLabel}>Subject</label>
                   <select
                     value={formSubject}
                     onChange={(e) => setFormSubject(e.target.value)}
@@ -419,7 +602,7 @@ export default function DeadlinesClient({
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Submission Type</label>
+                  <label className={styles.formLabel}>Submission Type</label>
                   <select
                     value={formType}
                     onChange={(e) => setFormType(e.target.value)}
@@ -435,7 +618,7 @@ export default function DeadlinesClient({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Due Date &amp; Time *</label>
+                <label className={styles.formLabel}>Due Date &amp; Time *</label>
                 <input
                   type="datetime-local"
                   required
@@ -446,7 +629,7 @@ export default function DeadlinesClient({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Submission Mode / Location</label>
+                <label className={styles.formLabel}>Submission Mode / Location</label>
                 <input
                   placeholder="e.g. Physical Lab 402, Google Classroom, Moodle"
                   value={formMode}
@@ -456,7 +639,7 @@ export default function DeadlinesClient({
               </div>
 
               <div className={styles.formGroup}>
-                <label>Notes &amp; Instructions</label>
+                <label className={styles.formLabel}>Notes &amp; Instructions</label>
                 <textarea
                   rows={3}
                   placeholder="Deliverables checklist, batch details, or special instructions..."

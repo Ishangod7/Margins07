@@ -321,3 +321,15 @@ def toggle_deadline_completion(deadline_id: str, user: CurrentUser = Depends(get
         is_completed = True
 
     return {"id": deadline_id, "completed": is_completed}
+
+
+@router.delete("/{deadline_id}", status_code=204)
+def delete_deadline(deadline_id: str, user: CurrentUser = Depends(get_current_user)):
+    """
+    Deletes a custom deadline task.
+    """
+    if user.user_id in _CUSTOM_DEADLINES:
+        _CUSTOM_DEADLINES[user.user_id] = [
+            d for d in _CUSTOM_DEADLINES[user.user_id] if d["id"] != deadline_id
+        ]
+    return None

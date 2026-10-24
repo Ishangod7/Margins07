@@ -28,10 +28,15 @@ export const metadata: Metadata = {
   description: "A private space for AI&DS Division A",
 };
 
+import { ToastProvider } from "@/components/ui/Toast";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`h-full antialiased ${dmSans.variable} ${caveat.variable} ${patrickHand.variable}`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ToastProvider>{children}</ToastProvider>
+      </body>
     </html>
   );
 }
+
