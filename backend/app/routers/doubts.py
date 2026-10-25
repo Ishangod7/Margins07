@@ -45,20 +45,27 @@ def _is_cr(user_id: str) -> bool:
 
 
 def _get_profile_names(user_ids: list[str]) -> dict[str, str]:
+    import re
     now = time.time()
     name_map = {}
     missing_ids = []
+    uuid_pat = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.IGNORECASE)
     for uid in set(user_ids):
+        if not uid:
+            continue
         if uid in _PROFILES_NAME_CACHE and now < _PROFILES_NAME_CACHE[uid][0]:
             name_map[uid] = _PROFILES_NAME_CACHE[uid][1]
-        else:
+        elif uuid_pat.match(str(uid)):
             missing_ids.append(uid)
 
     if missing_ids:
-        profiles = supabase_admin.table("profiles").select("id, display_name").in_("id", missing_ids).execute().data or []
-        for p in profiles:
-            name_map[p["id"]] = p["display_name"]
-            _PROFILES_NAME_CACHE[p["id"]] = (now + 300.0, p["display_name"])
+        try:
+            profiles = supabase_admin.table("profiles").select("id, display_name").in_("id", missing_ids).execute().data or []
+            for p in profiles:
+                name_map[p["id"]] = p["display_name"]
+                _PROFILES_NAME_CACHE[p["id"]] = (now + 300.0, p["display_name"])
+        except Exception as e:
+            print("[PROFILE NAME ERROR]:", e)
     return name_map
 
 
@@ -102,13 +109,13 @@ def _get_seed_doubts() -> list[dict]:
             ),
             "status": "solved",
             "tags": ["maths-1", "matrices", "cayley-hamilton", "linear-algebra"],
-            "created_by": "student-rohan",
+            "created_by": "44177222-8f46-47f3-ba35-107ae544c83f",
             "author_name": "Rohan Varma",
             "answer_count": 1,
             "follow_count": 6,
             "created_at": (now - timedelta(days=2)).isoformat(),
             "updated_at": (now - timedelta(days=2)).isoformat(),
-            "subject": {"id": "5613012d-53bc-49c9-9b29-98ac1d2a1323", "name": "Mathematics-I", "code": "MATHS-I"},
+            "subject": {"id": "5613012d-53bc-49c9-9b29-98ac1d2a1323", "name": "Applied Mathematics-I", "code": "MATHS-I"},
             "answers": [
                 {
                     "id": "seed-ans-maths1-1",
@@ -130,7 +137,7 @@ def _get_seed_doubts() -> list[dict]:
                     ),
                     "is_accepted": True,
                     "helpful_count": 7,
-                    "created_by": "f530e526-dea0-49f9-88cb-982a195b056a",
+                    "created_by": "3f38cb7d-895d-44b6-815a-914b6e8e631e",
                     "author_name": "Ishan Gupta",
                     "created_at": (now - timedelta(days=1)).isoformat(),
                     "updated_at": (now - timedelta(days=1)).isoformat(),
@@ -151,13 +158,13 @@ def _get_seed_doubts() -> list[dict]:
             ),
             "status": "answered",
             "tags": ["physics", "interference", "newtons-rings", "optics"],
-            "created_by": "student-tanvi",
+            "created_by": "4e687c54-9621-43e2-8016-4ced4d500a77",
             "author_name": "Tanvi Mehta",
             "answer_count": 1,
             "follow_count": 9,
             "created_at": (now - timedelta(days=3)).isoformat(),
             "updated_at": (now - timedelta(days=3)).isoformat(),
-            "subject": {"id": "036be447-5667-42b9-97aa-fd07f0779776", "name": "Physics", "code": "PHY"},
+            "subject": {"id": "036be447-5667-42b9-97aa-fd07f0779776", "name": "Engineering Physics-I", "code": "PHY"},
             "answers": [
                 {
                     "id": "seed-ans-phy-1",
@@ -179,7 +186,7 @@ def _get_seed_doubts() -> list[dict]:
                     ),
                     "is_accepted": False,
                     "helpful_count": 5,
-                    "created_by": "student-siddharth",
+                    "created_by": "ac5bfe42-dc66-410f-88ad-e156fbdbf6f4",
                     "author_name": "Siddharth Rao",
                     "created_at": (now - timedelta(days=2)).isoformat(),
                     "updated_at": (now - timedelta(days=2)).isoformat(),
@@ -200,7 +207,7 @@ def _get_seed_doubts() -> list[dict]:
             ),
             "status": "open",
             "tags": ["bee", "thevenin", "dependent-sources", "network-theorems"],
-            "created_by": "student-aarav",
+            "created_by": "7fa79a0c-d753-47b7-a6d6-e61c952ce12d",
             "author_name": "Aarav Joshi",
             "answer_count": 0,
             "follow_count": 4,
@@ -219,7 +226,7 @@ def _init_seed_comments():
             {
                 "id": "seed-c-maths1-1",
                 "answer_id": "seed-ans-maths1-1",
-                "author_id": "student-aditya",
+                "author_id": "d96d885e-1fd7-47a0-99d2-f1b3ac1f054d",
                 "author_name": "Aditya Sharma",
                 "body": "Thanks @Ishan Gupta! That polynomial division trick is much faster than multiplying out 3x3 matrices.",
                 "created_at": (now - timedelta(hours=22)).isoformat(),
@@ -228,7 +235,7 @@ def _init_seed_comments():
             {
                 "id": "seed-c-maths1-2",
                 "answer_id": "seed-ans-maths1-1",
-                "author_id": "f530e526-dea0-49f9-88cb-982a195b056a",
+                "author_id": "3f38cb7d-895d-44b6-815a-914b6e8e631e",
                 "author_name": "Ishan Gupta",
                 "body": "@Aditya Sharma yes, Ms. Pooja Pote highlighted this in tutorial 1 as the exact method expected in end-sem papers.",
                 "created_at": (now - timedelta(hours=18)).isoformat(),
@@ -240,7 +247,7 @@ def _init_seed_comments():
             {
                 "id": "seed-c-phy-1",
                 "answer_id": "seed-ans-phy-1",
-                "author_id": "student-tanvi",
+                "author_id": "4e687c54-9621-43e2-8016-4ced4d500a77",
                 "author_name": "Tanvi Mehta",
                 "body": "Great explanation @Siddharth Rao! Does this also explain why transmitted Newton's Rings have a bright center?",
                 "created_at": (now - timedelta(hours=20)).isoformat(),
@@ -249,7 +256,7 @@ def _init_seed_comments():
             {
                 "id": "seed-c-phy-2",
                 "answer_id": "seed-ans-phy-1",
-                "author_id": "student-siddharth",
+                "author_id": "ac5bfe42-dc66-410f-88ad-e156fbdbf6f4",
                 "author_name": "Siddharth Rao",
                 "body": "@Tanvi Mehta Exactly! In transmitted light, both rays undergo either two reflections or zero phase-reversing reflections, so no net λ/2 shift occurs at t = 0.",
                 "created_at": (now - timedelta(hours=14)).isoformat(),

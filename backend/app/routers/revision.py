@@ -42,7 +42,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-maths1-1",
             "subject_code": "MATHS-I",
-            "subject_name": "Mathematics-I",
+            "subject_name": "Applied Mathematics-I",
             "category": "formula",
             "title": "Matrices, Eigenvalues & Cayley-Hamilton Theorem",
             "summary": "Characteristic equations, Cayley-Hamilton for A^(-1) and higher powers, and quadratic form diagonalization.",
@@ -55,7 +55,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-maths1-2",
             "subject_code": "MATHS-I",
-            "subject_name": "Mathematics-I",
+            "subject_name": "Applied Mathematics-I",
             "category": "pyq",
             "title": "Euler's Theorem on Homogeneous Functions & Successive Differentiation",
             "summary": "Standard 10-mark question for partial differentiation and Leibniz rule.",
@@ -68,7 +68,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-maths1-3",
             "subject_code": "MATHS-I",
-            "subject_name": "Mathematics-I",
+            "subject_name": "Applied Mathematics-I",
             "category": "one_pager",
             "title": "Taylor's & Maclaurin's Multivariable Expansion Quick Reference",
             "summary": "Formula sheet for multivariable series expansion and maxima/minima test.",
@@ -83,7 +83,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-phy-1",
             "subject_code": "PHY",
-            "subject_name": "Physics",
+            "subject_name": "Engineering Physics-I",
             "category": "formula",
             "title": "Interference, Thin Films & Newton's Rings Formulas",
             "summary": "Path difference, conditions for maxima/minima, and diameter calculations.",
@@ -96,7 +96,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-phy-2",
             "subject_code": "PHY",
-            "subject_name": "Physics",
+            "subject_name": "Engineering Physics-I",
             "category": "pyq",
             "title": "Derive 1D Time-Independent Schrodinger Equation & Particle in a Box",
             "summary": "De Broglie hypothesis, wave function normalization, and quantized energy eigenvalues.",
@@ -109,7 +109,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-phy-3",
             "subject_code": "PHY",
-            "subject_name": "Physics",
+            "subject_name": "Engineering Physics-I",
             "category": "one_pager",
             "title": "Lasers & Optical Fibres Cheat Sheet",
             "summary": "Einstein coefficients, population inversion, acceptance angle, and numerical aperture.",
@@ -223,7 +223,7 @@ def _get_curated_cram_data() -> list[dict]:
         {
             "id": "cram-wmp1-1",
             "subject_code": "WMP-I",
-            "subject_name": "Workshop Practice - I",
+            "subject_name": "Workshop / Manufacturing Practices - I",
             "category": "one_pager",
             "title": "Workshop Safety Protocols, Carpentry & Fitting Joints Quick Reference",
             "summary": "Personal protective equipment (PPE), marking tools, hack sawing, and lap/mortise joint rules.",

@@ -251,7 +251,7 @@ def get_my_activity(user: CurrentUser = Depends(get_current_user)):
     doubts = (
         supabase_admin.table("doubts")
         .select("id, title, status, answer_count, follow_count, created_at, subjects(name, code)")
-        .eq("asked_by", user.user_id)
+        .eq("created_by", user.user_id)
         .order("created_at", desc=True)
         .limit(20)
         .execute()
@@ -266,24 +266,35 @@ def get_my_activity(user: CurrentUser = Depends(get_current_user)):
     # My answers
     answers = (
         supabase_admin.table("answers")
-        .select("id, doubt_id, body, is_accepted, helpful_count, created_at, doubts(id, title, status)")
-        .eq("answered_by", user.user_id)
+        .select("id, doubt_id, body, is_accepted, helpful_count, created_at")
+        .eq("created_by", user.user_id)
         .order("created_at", desc=True)
         .limit(20)
         .execute()
         .data
         or []
     )
-    for a in answers:
-        d = a.pop("doubts", None)
-        if isinstance(d, dict):
-            a["doubt"] = d
+    if answers:
+        doubt_ids = list({a["doubt_id"] for a in answers if a.get("doubt_id")})
+        d_map = {}
+        if doubt_ids:
+            d_res = (
+                supabase_admin.table("doubts")
+                .select("id, title, status")
+                .in_("id", doubt_ids)
+                .execute()
+                .data
+                or []
+            )
+            d_map = {d["id"]: d for d in d_res}
+        for a in answers:
+            a["doubt"] = d_map.get(a.get("doubt_id"))
 
     # My resources
     resources = (
         supabase_admin.table("resources")
         .select("id, title, kind, unit, download_count, save_count, created_at, subjects(name, code)")
-        .eq("uploaded_by", user.user_id)
+        .eq("created_by", user.user_id)
         .order("created_at", desc=True)
         .limit(20)
         .execute()

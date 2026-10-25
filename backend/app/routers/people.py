@@ -77,7 +77,7 @@ def list_people(
     # 3. Aggregate contribution stats across class
     res_data = (
         supabase_admin.table("resources")
-        .select("uploaded_by")
+        .select("created_by")
         .eq("class_id", class_id)
         .execute()
         .data
@@ -85,14 +85,13 @@ def list_people(
     )
     resources_counts: Dict[str, int] = {}
     for r in res_data:
-        uid = r.get("uploaded_by")
+        uid = r.get("created_by")
         if uid:
             resources_counts[uid] = resources_counts.get(uid, 0) + 1
 
     ans_data = (
         supabase_admin.table("answers")
-        .select("answered_by, is_accepted")
-        .eq("class_id", class_id)
+        .select("created_by, is_accepted")
         .execute()
         .data
         or []
@@ -100,7 +99,7 @@ def list_people(
     answers_counts: Dict[str, int] = {}
     accepted_counts: Dict[str, int] = {}
     for a in ans_data:
-        uid = a.get("answered_by")
+        uid = a.get("created_by")
         if uid:
             answers_counts[uid] = answers_counts.get(uid, 0) + 1
             if a.get("is_accepted"):
@@ -224,7 +223,7 @@ def get_person(
         res_list = (
             supabase_admin.table("resources")
             .select("id, title, kind, unit, download_count, save_count, created_at, subject_id")
-            .eq("uploaded_by", person_id)
+            .eq("created_by", person_id)
             .eq("class_id", class_id)
             .order("created_at", desc=True)
             .limit(10)
@@ -238,8 +237,7 @@ def get_person(
         ans_list = (
             supabase_admin.table("answers")
             .select("id, body, is_accepted, helpful_count, created_at, doubt_id")
-            .eq("answered_by", person_id)
-            .eq("class_id", class_id)
+            .eq("created_by", person_id)
             .order("created_at", desc=True)
             .limit(10)
             .execute()

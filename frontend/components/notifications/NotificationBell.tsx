@@ -194,7 +194,10 @@ export function NotificationBell({ token }: { token: string | null }) {
           </div>
 
           <div className={styles.dropdownFooter}>
-            <span>Div A · Live Notifications</span>
+            <span className={styles.liveBadge}>
+              <span className={styles.liveDot} /> Div A Live Stream
+            </span>
+            <span style={{ fontSize: "12px", opacity: 0.85 }}>TCET Autonomous</span>
           </div>
         </div>
       )}
