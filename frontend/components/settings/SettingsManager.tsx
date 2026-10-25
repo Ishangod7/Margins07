@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { apiFetch, type Me, type Profile } from "@/lib/api";
 import styles from "@/app/settings/settings.module.css";
@@ -111,6 +112,8 @@ export function SettingsManager({
 
   async function handleExportData() {
     setBusy(true);
+    setSuccess(null);
+    setError(null);
     try {
       const data = await apiFetch<any>("/me/export", token);
       const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -122,9 +125,32 @@ export function SettingsManager({
       a.download = `margins-export-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
+      setSuccess("Your personal data export was downloaded successfully.");
     } catch (err: any) {
-      alert("Could not export data: " + (err?.message || "Unknown error"));
+      setError("Could not export data: " + (err?.message || "Unknown error"));
     } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const confirmation = prompt(
+      'Permanent Account Deletion (DPDP Act):\n\nThis will permanently erase your profile, membership, and bookmark records from Margins. This action cannot be undone.\n\nType "DELETE" to confirm:'
+    );
+    if (confirmation !== "DELETE") {
+      return;
+    }
+
+    setBusy(true);
+    setError(null);
+    try {
+      await apiFetch("/me/account", token, { method: "DELETE" });
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      alert("Your Margins account and personal data have been completely erased.");
+      router.push("/intro");
+    } catch (err: any) {
+      setError("Could not delete account: " + (err?.message || "Unknown error"));
       setBusy(false);
     }
   }
@@ -389,6 +415,14 @@ export function SettingsManager({
               <p>
                 Your login email, password, session timestamps, and saved resources are strictly private. Margins has zero ads, no third-party tracking, and is exclusive to Division A.
               </p>
+              <div style={{ marginTop: "10px", fontSize: "12px", display: "flex", gap: "14px" }}>
+                <Link href="/privacy" style={{ textDecoration: "underline", color: "var(--blue)" }}>
+                  Read Privacy Notice (DPDP Act) →
+                </Link>
+                <Link href="/terms" style={{ textDecoration: "underline", color: "var(--blue)" }}>
+                  Terms of Use →
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -411,10 +445,10 @@ export function SettingsManager({
 
             <div style={{ borderTop: "1.5px dashed rgba(37,36,31,0.2)", paddingTop: "18px", marginBottom: "22px" }}>
               <h3 style={{ fontFamily: "Patrick Hand, cursive", fontSize: "18px", marginBottom: "6px" }}>
-                download my data
+                download my data (dpdp data portability)
               </h3>
               <p style={{ fontSize: "12.5px", color: "var(--ink-soft)", marginBottom: "12px" }}>
-                Download a complete, machine-readable JSON archive of your profile, uploaded notes, doubts, and solutions.
+                Download a complete, machine-readable JSON archive of your profile, memberships, uploaded notes, doubts, and solutions in accordance with India's DPDP Act 2023.
               </p>
               <button
                 type="button"
@@ -422,11 +456,11 @@ export function SettingsManager({
                 onClick={handleExportData}
                 disabled={busy}
               >
-                Export My Margins Data (.json)
+                {busy ? "Exporting Data..." : "Export My Margins Data (.json)"}
               </button>
             </div>
 
-            <div style={{ borderTop: "1.5px dashed rgba(37,36,31,0.2)", paddingTop: "18px" }}>
+            <div style={{ borderTop: "1.5px dashed rgba(37,36,31,0.2)", paddingTop: "18px", marginBottom: "22px" }}>
               <h3 style={{ fontFamily: "Patrick Hand, cursive", fontSize: "18px", marginBottom: "6px" }}>
                 session management
               </h3>
@@ -436,10 +470,28 @@ export function SettingsManager({
               <button
                 type="button"
                 className="btn small"
-                style={{ background: "var(--red-soft)", borderColor: "var(--red)" }}
+                style={{ background: "var(--paper-dark)", borderColor: "var(--border)" }}
                 onClick={handleSignOut}
               >
                 Sign Out
+              </button>
+            </div>
+
+            <div style={{ borderTop: "1.5px dashed rgba(37,36,31,0.2)", paddingTop: "18px" }}>
+              <h3 style={{ fontFamily: "Patrick Hand, cursive", fontSize: "18px", marginBottom: "6px", color: "var(--red)" }}>
+                delete account (right to erasure)
+              </h3>
+              <p style={{ fontSize: "12.5px", color: "var(--ink-soft)", marginBottom: "12px" }}>
+                Permanently purge your account, profile, class memberships, and bookmarks from the database. This action is irreversible and honors your statutory right to erasure under the DPDP Act 2023.
+              </p>
+              <button
+                type="button"
+                className="btn small"
+                style={{ background: "#fff2f2", borderColor: "#e05252", color: "#ab3f38" }}
+                onClick={handleDeleteAccount}
+                disabled={busy}
+              >
+                Permanently Delete My Margins Account
               </button>
             </div>
           </div>

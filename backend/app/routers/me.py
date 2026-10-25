@@ -311,3 +311,138 @@ def get_my_activity(user: CurrentUser = Depends(get_current_user)):
         "answers": answers,
         "resources": resources,
     }
+
+
+@router.get("/me/export")
+def export_my_data(user: CurrentUser = Depends(get_current_user)):
+    """Exports all personal and contributed data associated with the authenticated user
+
+    under the Digital Personal Data Protection (DPDP) Act 2023 / Rules 2025.
+    """
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    # 1. Profile information
+    p = (
+        supabase_admin.table("profiles")
+        .select("*")
+        .eq("id", user.user_id)
+        .maybe_single()
+        .execute()
+    )
+
+    # 2. Class memberships
+    m = (
+        supabase_admin.table("class_memberships")
+        .select("*, classes(name, division, academic_year)")
+        .eq("user_id", user.user_id)
+        .execute()
+    )
+
+    # 3. User's doubts
+    d = (
+        supabase_admin.table("doubts")
+        .select("id, title, body, status, created_at, updated_at, subject_id, subjects(name, code)")
+        .eq("created_by", user.user_id)
+        .execute()
+    )
+
+    # 4. User's answers
+    a = (
+        supabase_admin.table("answers")
+        .select("id, doubt_id, body, is_accepted, helpful_count, created_at")
+        .eq("created_by", user.user_id)
+        .execute()
+    )
+
+    # 5. User's uploaded resources
+    r = (
+        supabase_admin.table("resources")
+        .select("id, title, description, kind, unit, download_count, save_count, created_at, subject_id, subjects(name, code)")
+        .eq("created_by", user.user_id)
+        .execute()
+    )
+
+    # 6. Saved resources
+    s = (
+        supabase_admin.table("resource_saves")
+        .select("resource_id, created_at")
+        .eq("user_id", user.user_id)
+        .execute()
+    )
+
+    # 7. Followed doubts
+    f = (
+        supabase_admin.table("doubt_follows")
+        .select("doubt_id, created_at")
+        .eq("user_id", user.user_id)
+        .execute()
+    )
+
+    return {
+        "margins_data_export": {
+            "version": "1.0",
+            "statutory_framework": "India Digital Personal Data Protection Act 2023 / Rules 2025",
+            "exported_at": now_iso,
+            "user_id": user.user_id,
+            "email": user.email,
+            "profile": p.data if p else None,
+            "memberships": m.data if m else [],
+            "contributions": {
+                "doubts_asked": d.data if d else [],
+                "answers_posted": a.data if a else [],
+                "resources_uploaded": r.data if r else [],
+            },
+            "bookmarks": {
+                "saved_resources": s.data if s else [],
+                "followed_doubts": f.data if f else [],
+            },
+        }
+    }
+
+
+@router.delete("/me/account")
+def delete_my_account(user: CurrentUser = Depends(get_current_user)):
+    """Permanently deletes the user's account and personal profile data
+
+    pursuant to the Right to Erasure under the DPDP Act 2023.
+    """
+    uid = user.user_id
+
+    # 1. Delete user bookmark records
+    try:
+        supabase_admin.table("resource_saves").delete().eq("user_id", uid).execute()
+        supabase_admin.table("doubt_follows").delete().eq("user_id", uid).execute()
+    except Exception:
+        pass
+
+    try:
+        supabase_admin.table("notification_reads").delete().eq("user_id", uid).execute()
+    except Exception:
+        pass
+
+    # 2. Delete membership
+    try:
+        supabase_admin.table("class_memberships").delete().eq("user_id", uid).execute()
+    except Exception:
+        pass
+
+    # 3. Delete profile
+    try:
+        supabase_admin.table("profiles").delete().eq("id", uid).execute()
+    except Exception as e:
+        raise HTTPException(500, f"Failed to purge user profile record: {e}")
+
+    # 4. Delete auth record from Supabase
+    try:
+        supabase_admin.auth.admin.delete_user(uid)
+    except Exception as e:
+        raise HTTPException(500, f"Failed to delete auth identity: {e}")
+
+    # Invalidate in-memory cache
+    _ME_CACHE.pop(uid, None)
+
+    return {
+        "ok": True,
+        "message": "Your Margins account, profile, and personal records have been permanently erased."
+    }
+

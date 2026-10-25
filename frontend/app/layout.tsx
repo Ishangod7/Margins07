@@ -24,9 +24,43 @@ const patrickHand = Patrick_Hand({
 });
 
 export const metadata: Metadata = {
-  title: "Margins",
-  description: "A private space for AI&DS Division A",
+  metadataBase: new URL("https://frontend-nine-kohl-79.vercel.app"),
+  title: {
+    default: "Margins — TCET AI&DS Division A",
+    template: "%s — Margins",
+  },
+  description:
+    "Private campus study desk, peer doubt board, notes archive, and timetable for TCET Mumbai AI&DS Division A (Batch 2026–30).",
+  keywords: [
+    "Margins",
+    "TCET Mumbai",
+    "AI&DS",
+    "Division A",
+    "Thakur College of Engineering and Technology",
+    "Campus Desk",
+  ],
+  authors: [{ name: "Ishan Gupta & AI&DS Division A" }],
+  creator: "TCET Mumbai AI&DS Division A",
+  openGraph: {
+    title: "Margins — TCET AI&DS Division A",
+    description:
+      "A private study desk and campus hub for TCET Mumbai AI&DS Division A. Notes, PYQs, notices, and peer doubt board.",
+    url: "https://frontend-nine-kohl-79.vercel.app",
+    siteName: "Margins",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Margins — TCET AI&DS Division A",
+    description:
+      "A private study desk and campus hub for TCET Mumbai AI&DS Division A.",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
+
 
 import { ToastProvider } from "@/components/ui/Toast";
 

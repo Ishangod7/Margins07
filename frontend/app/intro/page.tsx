@@ -53,14 +53,14 @@ export default function IntroPage() {
       {/* Intro Heading matching main */}
       <section className={styles.homeIntro}>
         <div>
-          <div className="eyebrow">TCET MUMBAI · AI&DS BATCH 2026</div>
+          <div className="eyebrow">TCET MUMBAI · AI&DS BATCH 2026–30</div>
           <h1>welcome to margins.</h1>
           <p>your division's private study desk & campus hub.</p>
         </div>
         <div className={styles.dateNote}>
           <small>BATCH</small>
           <strong>DIV A</strong>
-          <small>TCET 2026</small>
+          <small>2026–30</small>
         </div>
       </section>
 
@@ -206,9 +206,9 @@ export default function IntroPage() {
                 </div>
                 <h4>Notice Board</h4>
                 <p>
-                  Official announcements posted directly by your Class Representative.
-                  Timetables, KT exam forms, syllabus revisions, and submission deadlines pinned
-                  so you never miss an academic date.
+                  Class announcements posted directly by your Class Representative.
+                  Timetables, KT exam forms, syllabus revisions, and deadlines pinned
+                  for class convenience. Official college notice boards and ERP circulars remain the source of truth.
                 </p>
               </div>
 
@@ -300,8 +300,13 @@ export default function IntroPage() {
                 </div>
                 <p>
                   You control what classmates see on your profile. You can export or delete
-                  your data at any time.
+                  your data at any time via Settings under India's DPDP Act 2023.
                 </p>
+                <div style={{ marginTop: 8 }}>
+                  <Link href="/privacy" style={{ fontSize: "12px", textDecoration: "underline", color: "var(--blue)" }}>
+                    Read our Privacy Notice →
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
@@ -323,7 +328,7 @@ export default function IntroPage() {
               <div className={styles.factPill}>63</div>
               <div>
                 <div className={styles.factTitle}>Batchmates</div>
-                <div className={styles.factDesc}>Class of 2026 division roster</div>
+                <div className={styles.factDesc}>Batch 2026–30 division roster</div>
               </div>
             </div>
             <div className={styles.factRow}>
@@ -397,6 +402,8 @@ export default function IntroPage() {
           <Link href="/login">Log In</Link>
           <Link href="/signup">Sign Up</Link>
           <Link href="/notices">Notice Board</Link>
+          <Link href="/privacy">Privacy Notice</Link>
+          <Link href="/terms">Terms of Use</Link>
         </div>
       </footer>
     </main>

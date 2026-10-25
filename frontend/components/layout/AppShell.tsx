@@ -154,6 +154,12 @@ export default function AppShell({ children, noticeCount, displayName }: Props) 
             log out
           </button>
         </div>
+
+        <div style={{ padding: "0 14px 12px", fontSize: "11px", display: "flex", gap: "8px", color: "var(--ink-soft)" }}>
+          <Link href="/privacy" style={{ textDecoration: "underline", color: "inherit" }}>Privacy</Link>
+          <span>·</span>
+          <Link href="/terms" style={{ textDecoration: "underline", color: "inherit" }}>Terms</Link>
+        </div>
       </aside>
 
       <main className={styles.main}>

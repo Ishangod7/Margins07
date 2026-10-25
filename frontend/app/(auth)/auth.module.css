@@ -221,3 +221,82 @@
   box-shadow: 1px 1px 0 #282722;
   background: #f5eed0;
 }
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #282722;
+  letter-spacing: 0.03em;
+  text-transform: lowercase;
+}
+
+.hint {
+  font-size: 11px;
+  color: #59564f;
+  margin-top: 1px;
+}
+
+.consentSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0 4px;
+  padding: 10px 12px;
+  background: #fbf8ec;
+  border: 1px solid rgba(40, 39, 34, 0.2);
+  border-radius: 4px;
+  text-align: left;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  cursor: pointer;
+}
+
+.checkbox {
+  margin-top: 3px;
+  width: 15px;
+  height: 15px;
+  accent-color: #345f9e;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxLabel {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #282722;
+  user-select: none;
+}
+
+.checkboxLink {
+  color: #345f9e;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.checkboxLink:hover {
+  color: #204175;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
